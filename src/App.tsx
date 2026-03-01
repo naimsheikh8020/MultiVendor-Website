@@ -1,11 +1,15 @@
+import { BrowserRouter, useRoutes } from "react-router"
+import { routes } from "./Routes/Router"
+
+const AppRoutes = () => {
+  return useRoutes(routes);
+}
 
 const App = () => {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
-    </div>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   )
 }
 
