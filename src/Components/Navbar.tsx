@@ -58,8 +58,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full bg-blue-50 p-4 border-b border-gray-100">
-      <div className="w-full  px-8 flex items-center justify-between">
+    <nav className="w-full bg-blue-50 p-4 border-b border-gray-100 relative z-50">
+      <div className="w-full px-8 flex items-center justify-between">
 
         <div>
           <Link to="/"><img src={assets.logo} alt="logo" /></Link>
@@ -67,16 +67,16 @@ const Navbar = () => {
 
 
 
-        <div className="relative flex items-center w-2xl h-12 bg-white rounded-md shadow-sm">
+        <div className="relative flex items-center w-2xl h-12 bg-white rounded-md shadow-sm z-50">
 
           {/* Dropdown */}
           <div
             ref={dropdownRef}
-            className="relative h-full z-50"
+            className="relative h-full"
           >
             <div
               onClick={() => setIsOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-4 text-sm text-gray-700 border-r border-gray-100 cursor-pointer h-full hover:bg-gray-50 z-100"
+              className="flex items-center gap-2 px-4 text-sm text-gray-700 border-r border-gray-100 cursor-pointer h-full hover:bg-gray-50"
             >
               <span>
                 {selectedCategory ?? "All Categories"}
@@ -89,7 +89,7 @@ const Navbar = () => {
             </div>
 
             {isOpen && (
-              <div className="absolute top-full left-0 mt-2 w-60 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-[50] overflow-y-auto">
+              <div className="absolute top-full left-0 mt-2 w-60 bg-white border border-gray-200 rounded-md shadow-lg z-100 max-h-96 overflow-y-auto">
                 <div
                   onClick={() => handleSelect("All Categories")}
                   className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer font-medium"
