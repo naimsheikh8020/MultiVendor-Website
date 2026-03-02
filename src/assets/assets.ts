@@ -21,3 +21,22 @@ export const assets = {
   Popular_Product7,
   Popular_Product8
 }
+
+export const categoryNames = [
+  "Men's Fashion",
+  "Women's Fashion",
+  "Health & Beauty",
+  "Electronics",
+  "Home & Living",
+  "Lifestyle & Hobbies",
+  "Sports & Outdoors",
+  "Home & Kitchen",
+  "Watches & Bags",
+  "Mother & Baby",
+  "Office Supplies",
+  "Toys & Games",
+  "Jewelry",
+] as const;
+
+export type CategoryName = typeof categoryNames[number];
+
