@@ -76,7 +76,7 @@ const Navbar = () => {
           >
             <div
               onClick={() => setIsOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-4 text-sm text-gray-700 border-r border-gray-100 cursor-pointer h-full hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 text-sm text-gray-700 border-r border-gray-100 cursor-pointer h-full hover:bg-gray-50 z-100"
             >
               <span>
                 {selectedCategory ?? "All Categories"}
