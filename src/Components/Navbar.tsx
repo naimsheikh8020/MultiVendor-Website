@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
   Heart,
@@ -11,16 +11,21 @@ import type { CategoryName } from "../assets/assets";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryName | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!dropdownRef.current?.contains(e.target as Node)) {
         setIsOpen(false);
+      }
+      if (!profileRef.current?.contains(e.target as Node)) {
+        setIsProfileOpen(false);
       }
     };
 
@@ -41,12 +46,23 @@ const Navbar = () => {
     }
   };
 
+  const handleViewProfile = () => {
+    setIsProfileOpen(false);
+    navigate("/my-profile");
+  };
+
+  const handleLogout = () => {
+    setIsProfileOpen(false);
+    // Add your logout logic here
+    console.log("Logging out...");
+  };
+
   return (
     <nav className="w-full bg-blue-50 p-4 border-b border-gray-100">
       <div className="w-full  px-8 flex items-center justify-between">
 
         <div>
-          <img src={assets.logo} alt="logo" />
+          <Link to="/"><img src={assets.logo} alt="logo" /></Link>
         </div>
 
 
@@ -125,7 +141,11 @@ const Navbar = () => {
             <span>My Cart</span>
           </div>
 
-          <div className="flex items-center gap-2 cursor-pointer">
+          <div
+            ref={profileRef}
+            className="relative flex items-center gap-2 cursor-pointer"
+            onClick={() => setIsProfileOpen((prev) => !prev)}
+          >
             <img
               src="https://i.pravatar.cc/40"
               alt="user"
@@ -134,7 +154,33 @@ const Navbar = () => {
             <span className="text-sm font-medium text-gray-600">
               Akash
             </span>
-            <ChevronDown size={16} />
+            <ChevronDown
+              size={16}
+              className={`transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
+            />
+
+            {isProfileOpen && (
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewProfile();
+                  }}
+                  className="px-4 py-3 text-sm hover:bg-blue-50 cursor-pointer border-b border-gray-100"
+                >
+                  View Profile
+                </div>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLogout();
+                  }}
+                  className="px-4 py-3 text-sm hover:bg-red-50 hover:text-red-600 cursor-pointer"
+                >
+                  Log out
+                </div>
+              </div>
+            )}
           </div>
 
         </div>
