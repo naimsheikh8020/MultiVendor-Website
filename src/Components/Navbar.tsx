@@ -42,15 +42,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full bg-blue-50 p-4 border-b border-[#dde3ea]">
-      <div className="w-full  mx-auto px-8 flex items-center justify-between">
+    <nav className="w-full bg-blue-50 p-4 border-b border-gray-100">
+      <div className="w-full  px-8 flex items-center justify-between">
 
-        {/* Logo */}
         <div>
           <img src={assets.logo} alt="logo" />
         </div>
 
-        {/* Search Section */}
+
+
         <div className="relative flex items-center w-2xl h-12 bg-white rounded-md shadow-sm">
 
           {/* Dropdown */}
@@ -104,6 +104,8 @@ const Navbar = () => {
             <Search size={20} className="text-white" />
           </button>
         </div>
+
+
 
         {/* Right Section */}
         <div className="flex items-center gap-8">
