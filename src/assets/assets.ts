@@ -12,6 +12,7 @@ import Hero_headPhone from "./Hero_headPhone.svg"
 import Hero_laptop from "./Hero_laptop.svg"
 import Hero_phone from "./hero_phone.png"
 import hero_vegetable from "./Hero_vegetable-removebg-preview.png"
+import type { TopCategory } from "../types/topcatagory";
 
 export const assets = {
   Category,
@@ -48,3 +49,100 @@ export const categoryNames = [
 
 export type CategoryName = typeof categoryNames[number];
 
+// src/data/categories.ts
+
+
+
+export const categories: TopCategory[] = [
+  {
+    id: "mens-fashion",
+    name: "Men's Fashion",
+    slug: "mens-fashion",
+    image: Category,
+    items: 110,
+  },
+  {
+    id: "womens-fashion",
+    name: "Women's Fashion",
+    slug: "womens-fashion",
+    image: Category,
+    items: 198,
+  },
+  {
+    id: "health-beauty",
+    name: "Health & Beauty",
+    slug: "health-beauty",
+    image: Category,
+    items: 312,
+  },
+  {
+    id: "electronics",
+    name: "Electronics",
+    slug: "electronics",
+    image: Category,
+    items: 245,
+  },
+  {
+    id: "home-living",
+    name: "Home & Living",
+    slug: "home-living",
+    image: Category,
+    items: 500,
+  },
+  {
+    id: "lifestyle-hobbies",
+    name: "Lifestyle & Hobbies",
+    slug: "lifestyle-hobbies",
+    image: Category,
+    items: 150,
+  },
+  {
+    id: "sports-outdoors",
+    name: "Sports & Outdoors",
+    slug: "sports-outdoors",
+    image: Category,
+    items: 300,
+  },
+  {
+    id: "home-kitchen",
+    name: "Home & Kitchen",
+    slug: "home-kitchen",
+    image: Category,
+    items: 198,
+  },
+  {
+    id: "watches-bags",
+    name: "Watches & Bags",
+    slug: "watches-bags",
+    image: Category,
+    items: 85,
+  },
+  {
+    id: "mother-baby",
+    name: "Mother & Baby",
+    slug: "mother-baby",
+    image: Category,
+    items: 220,
+  },
+  {
+    id: "office-supplies",
+    name: "Office Supplies",
+    slug: "office-supplies",
+    image: Category,
+    items: 175,
+  },
+  {
+    id: "toys-games",
+    name: "Toys & Games",
+    slug: "toys-games",
+    image: Category,
+    items: 400,
+  },
+  {
+    id: "jewelry",
+    name: "Jewelry",
+    slug: "jewelry",
+    image: Category,
+    items: 85,
+  },
+];

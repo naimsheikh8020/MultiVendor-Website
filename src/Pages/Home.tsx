@@ -1,4 +1,5 @@
 import HeroSection from "../features/Home/HeroSection";
+import TopCategory from "../features/Home/TopCategory";
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
         <HeroSection />
 
         {/* Top Category Section */}
+        <TopCategory/>
 
         {/* Popular Product */}
 
