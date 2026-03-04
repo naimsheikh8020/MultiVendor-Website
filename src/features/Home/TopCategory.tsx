@@ -4,7 +4,7 @@ import { categories } from "../../assets/assets"
 const TopCategory = () => {
   return (
     <>
-      <div className="py-6 px-8">
+      <div className="py-6 ">
         <h2 className="text-4xl font-bold text-gray-800 mb-10">Top Categories</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-8">
           {categories.map((category) => (
