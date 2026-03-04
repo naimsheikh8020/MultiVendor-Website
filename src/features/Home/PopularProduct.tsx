@@ -1,4 +1,4 @@
-import { assets, popularProducts } from "../../assets/assets"
+import {  popularProducts } from "../../assets/assets"
 import PopularProductCard from "../../Components/PopularProductCard"
 
 const PopularProduct = () => {
