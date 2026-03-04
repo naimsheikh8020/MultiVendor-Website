@@ -12,12 +12,22 @@ import Hero_headPhone from "./Hero_headPhone.svg"
 import Hero_laptop from "./Hero_laptop.svg"
 import Hero_phone from "./hero_phone.png"
 import hero_vegetable from "./Hero_vegetable-removebg-preview.png"
+import AddToCart from "./AddToCart.svg"
 import type { TopCategory } from "../types/topcatagory";
+import BlackJacket from "./BlackJacket.png"
+import Cloth from "./Cloth.png"
+import Watch from "./Watch.png"
+import Coffee from "./Coffee.png"
+import Laptop from "./Laptop.png"
+import MobilePhone from "./MobilePhone.png"
+import redBag from "./redBag.png"
+import HeadPhone from "./HeadPhone.svg"
 
 export const assets = {
   Category,
   hero_vegetable,
   logo,
+  AddToCart,
   Popular_Product1,
   Popular_Product2,
   Popular_Product3,
@@ -29,6 +39,14 @@ export const assets = {
   Hero_headPhone,
   Hero_laptop,
   Hero_phone,
+  BlackJacket,
+  Cloth,
+  Watch,
+  Coffee,
+  Laptop,
+  MobilePhone,
+  redBag,
+  HeadPhone,
 }
 
 export const categoryNames = [
