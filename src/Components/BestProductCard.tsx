@@ -86,7 +86,7 @@ const BestProductCard = ({
           )}
         </div>
 
-        <button className="flex items-center gap-1 sm:gap-2 border border-blue-500 text-blue-500 px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-50 transition whitespace-nowrap">
+        <button className="flex items-center gap-1 sm:gap-2 border border-blue-500 text-blue-500 px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-50 transition whitespace-nowrap cursor-pointer">
           <ShoppingCart size={14} className="sm:w-4 sm:h-4" />
           <span className="hidden sm:inline">Add</span>
         </button>
