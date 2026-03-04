@@ -22,9 +22,15 @@ import Laptop from "./Laptop.png"
 import MobilePhone from "./MobilePhone.png"
 import redBag from "./redBag.png"
 import HeadPhone from "./HeadPhone.svg"
+import Best_Price from "./Best_Price.svg"
+import Refund from "./Refund.svg"
+import Shipping from "./Shipping.svg"
 
 export const assets = {
   Category,
+  Best_Price,
+  Refund,
+  Shipping,
   hero_vegetable,
   logo,
   AddToCart,

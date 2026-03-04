@@ -1,7 +1,8 @@
 import BestProduct from "../features/Home/BestProduct";
 import HeroSection from "../features/Home/HeroSection";
+import PlatformHighlights from "../features/Home/PlatformHighlights";
 import PopularProduct from "../features/Home/PopularProduct";
-import ProductHighlightsSection from "../features/Home/ProductHighlightsSection";
+
 import TopCategory from "../features/Home/TopCategory";
 import TopStore from "../features/Home/TopStore";
 
@@ -24,7 +25,8 @@ const Home = () => {
         {/* Top Store */}
         <TopStore/>
 
-        
+        {/* Platform Highlights */}
+        <PlatformHighlights/>
       </div>
     </>
   );
