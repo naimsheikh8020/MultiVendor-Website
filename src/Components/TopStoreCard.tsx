@@ -59,7 +59,7 @@ const TopStoreCard = ({
       </div>
 
       {/* Right Image */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden shadow-md">
           <img
             src={image}
