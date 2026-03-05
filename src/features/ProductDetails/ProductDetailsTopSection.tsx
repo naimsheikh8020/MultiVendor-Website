@@ -294,7 +294,10 @@ const ProductDetailsTopSection = () => {
               {/* Visit Store Link */}
               <div className="flex items-center gap-2 mb-4 text-sm">
                 <Store className="w-4 h-4" />
-                <span>Visit <a href="#" className="text-blue-600 hover:underline">TechGear Pro</a></span>
+                <span>Visit <button
+                  onClick={() => navigate(`/stores/${product.author.toLowerCase().replace(/\s+/g, '-')}`)}
+                  className="text-blue-600 hover:underline cursor-pointer"
+                >{product.author}</button></span>
               </div>
 
               {/* Login Prompt */}
