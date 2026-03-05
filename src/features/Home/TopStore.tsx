@@ -12,6 +12,7 @@ const TopStore = () => {
             topStores.map(store => (
               <TopStoreCard
                 key={store.id}
+                id={store.id}
                 year={store.label}
                 title={store.title}
                 products={store.products}
@@ -21,6 +22,7 @@ const TopStore = () => {
             ))
           }
           <TopStoreCard
+            id={999}
             year="Since 2023"
             title="Just Look"
             products={6}

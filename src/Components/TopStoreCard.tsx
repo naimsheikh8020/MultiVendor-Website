@@ -1,6 +1,8 @@
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router";
 
 interface TopStoreCardProps {
+  id: number
   year: string
   title: string
   products: number
@@ -10,6 +12,7 @@ interface TopStoreCardProps {
 }
 
 const TopStoreCard = ({
+  id,
   year,
   title,
   products,
@@ -17,8 +20,13 @@ const TopStoreCard = ({
   reviews,
   image
 }: TopStoreCardProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 sm:p-4 md:p-5 lg:p-6 flex flex-row items-center justify-between gap-2 sm:gap-3 md:gap-4">
+    <div
+      onClick={() => navigate(`/stores/${id}`)}
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 sm:p-4 md:p-5 lg:p-6 flex flex-row items-center justify-between gap-2 sm:gap-3 md:gap-4 cursor-pointer hover:shadow-lg hover:border-blue-300 transition-all"
+    >
 
       {/* Left Content */}
       <div className="flex flex-col gap-1 sm:gap-2 text-left flex-1 min-w-0">

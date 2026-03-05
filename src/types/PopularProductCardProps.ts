@@ -8,5 +8,5 @@ export type PopularProductCardProps = {
   price: number;
   oldPrice?: number;
   discount?: number;
-  onAddToCart?: () => void;
+  onAddToCart?: (e: React.MouseEvent) => void;
 };

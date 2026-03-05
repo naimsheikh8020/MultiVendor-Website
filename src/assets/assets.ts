@@ -25,10 +25,12 @@ import HeadPhone from "./HeadPhone.svg"
 import Best_Price from "./Best_Price.svg"
 import Refund from "./Refund.svg"
 import Shipping from "./Shipping.svg"
+import HeadPhoneImg2 from "./HeadPhone-img2.png"
 
 export const assets = {
   Category,
   Best_Price,
+  HeadPhoneImg2,
   Refund,
   Shipping,
   hero_vegetable,
@@ -218,6 +220,8 @@ export const popularProducts = [
     price: 2,
     oldPrice: 3.99,
     discount: 20,
+    image2: assets.HeadPhoneImg2,
+    Description:"High-quality wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and professionals."
   },
   {
     id: 2,

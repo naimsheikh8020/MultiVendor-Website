@@ -24,7 +24,7 @@ const PopularProductCard = ({
         <img
           src={image}
           alt={title}
-            className="w-full h-32 sm:h-40 md:h-48 object-cover"
+          className="w-full h-32 sm:h-40 md:h-48 object-cover"
 
         />
 
@@ -77,7 +77,10 @@ const PopularProductCard = ({
           </div>
 
           <button
-            onClick={onAddToCart}
+            onClick={(e) => {
+              e.preventDefault();
+              onAddToCart?.(e);
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white p-1.5 sm:p-2.5 md:p-3 rounded-lg sm:rounded-xl transition"
           >
             <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
