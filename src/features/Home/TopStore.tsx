@@ -1,4 +1,4 @@
-import { assets, topStores } from "../../assets/assets"
+import { topStores } from "../../assets/assets"
 import TopStoreCard from "../../Components/TopStoreCard"
 
 const TopStore = () => {
@@ -21,15 +21,7 @@ const TopStore = () => {
                 image={store.image} />
             ))
           }
-          <TopStoreCard
-            id={999}
-            year="Since 2023"
-            title="Just Look"
-            products={6}
-            rating={4}
-            reviews={100}
-            image={assets.Laptop}
-          />
+          
         </div>
       </div>
     </>
