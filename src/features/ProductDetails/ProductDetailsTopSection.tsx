@@ -1,19 +1,44 @@
 import { useNavigate, useParams } from "react-router";
-
 import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
-import { popularProducts } from "../../assets/assets";
+import { getProductById, getProductReviews } from "../../utils/productHelpers";
+import type { UnifiedProduct } from "../../utils/productHelpers";
+
 const ProductDetailsTopSection = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
 
-  const product = popularProducts.find((p) => p.id === Number(productId));
+  // State for product data
+  const [product, setProduct] = useState<UnifiedProduct | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // UI State
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(product?.image);
+  const [activeImage, setActiveImage] = useState<string>("");
   const [activeTab, setActiveTab] = useState("details");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+
+  // Fetch product data
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const productData = await getProductById(Number(productId));
+        setProduct(productData);
+        if (productData) {
+          setActiveImage(productData.image);
+        }
+      } catch (error) {
+        console.error("Error loading product:", error);
+        setProduct(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   // Reset state when product changes
   useEffect(() => {
@@ -25,43 +50,10 @@ const ProductDetailsTopSection = () => {
       setReviewText("");
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [productId, product]);
+  }, [product]);
 
-  // Mock reviews data
-  const mockReviews = [
-    {
-      id: 1,
-      name: "Ax Alex",
-      timeAgo: "2 month ago",
-      rating: 4,
-      comment: "Second or third time that I buy a Botble product",
-      images: 3
-    },
-    {
-      id: 2,
-      name: "Ax Alex",
-      timeAgo: "2 month ago",
-      rating: 4,
-      comment: "Second or third time that I buy a Botble product",
-      images: 3
-    },
-    {
-      id: 3,
-      name: "Ax Alex",
-      timeAgo: "2 month ago",
-      rating: 4,
-      comment: "Second or third time that I buy a Botble product",
-      images: 3
-    },
-    {
-      id: 4,
-      name: "Ax Alex",
-      timeAgo: "2 month ago",
-      rating: 4,
-      comment: "Second or third time that I buy a Botble product",
-      images: 3
-    }
-  ];
+  // Get reviews
+  const mockReviews = getProductReviews(Number(productId));
 
   const tabs = [
     { id: "details", label: "Product Details" },
@@ -70,7 +62,36 @@ const ProductDetailsTopSection = () => {
     { id: "delivery", label: "Delivery Charge" },
   ];
 
-  if (!product) return <p>Product not found</p>;
+  // Loading state
+  if (loading) {
+    return (
+      <div className="w-full px-2 md:px-6 lg:px-6 py-10">
+        <div className="flex items-center justify-center min-h-100">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading product...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Product not found
+  if (!product) {
+    return (
+      <div className="w-full px-2 md:px-6 lg:px-6 py-10">
+        <div className="flex flex-col items-center justify-center min-h-100">
+          <p className="text-xl text-gray-600 mb-4">Product not found</p>
+          <button
+            onClick={() => navigate(-1)}
+            className="text-blue-600 hover:underline"
+          >
+            Go back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
 
   const renderStars = () =>
@@ -112,21 +133,24 @@ const ProductDetailsTopSection = () => {
             </div>
 
             <div className="flex gap-3">
-              {[product.image, product.image2].filter(Boolean).map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveImage(img)}
-                  className={`rounded-lg overflow-hidden border ${activeImage === img
-                    ? "border-blue-500"
-                    : "border-gray-200"
-                    }`}
-                >
-                  <img
-                    src={img}
-                    className="w-20 h-20 object-cover"
-                  />
-                </button>
-              ))}
+              {[product.image, product.image2]
+                .filter(Boolean)
+                .filter((img, index, self) => self.indexOf(img) === index) // Remove duplicates
+                .map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => img && setActiveImage(img)}
+                    className={`rounded-lg overflow-hidden border ${activeImage === img
+                      ? "border-blue-500"
+                      : "border-gray-200"
+                      }`}
+                  >
+                    <img
+                      src={img}
+                      className="w-20 h-20 object-cover"
+                    />
+                  </button>
+                ))}
             </div>
 
           </div>

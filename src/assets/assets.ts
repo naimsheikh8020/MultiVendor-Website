@@ -334,7 +334,7 @@ export const popularProducts = [
 
 export const bestProducts = [
   {
-    id: 1,
+    id: 101,
     title: "Gaming Laptop Pro",
     category: "Laptop",
     image: assets.Laptop,
@@ -346,7 +346,7 @@ export const bestProducts = [
     discount: "20%",
   },
   {
-    id: 2,
+    id: 102,
     title: "Ipod's",
     category: "Pod's",
     image: assets.HeadPhone,
@@ -358,7 +358,7 @@ export const bestProducts = [
     discount: "20%",
   },
   {
-    id: 3,
+    id: 103,
     title: "Mobile phone",
     category: "Mobile",
     image: assets.MobilePhone,
@@ -370,7 +370,7 @@ export const bestProducts = [
     discount: "20%",
   },
   {
-    id: 4,
+    id: 104,
     title: "Head Phone",
     category: "Head Phone",
     image: assets.HeadPhone,
@@ -382,7 +382,7 @@ export const bestProducts = [
     discount: "20%",
   },
    {
-    id: 3,
+    id: 1043,
     title: "Mobile phone",
     category: "Mobile",
     image: assets.MobilePhone,
