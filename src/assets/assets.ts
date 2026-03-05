@@ -210,19 +210,42 @@ export const categories: TopCategory[] = [
 
 export const popularProducts = [
   {
-    id: 1,
-    image: assets.HeadPhone,
-    title: "Premium Headphones",
-    category: "Laptop",
-    rating: 4,
-    reviewCount: 4,
-    author: "Mr.Shop",
-    price: 2,
-    oldPrice: 3.99,
-    discount: 20,
-    image2: assets.HeadPhoneImg2,
-    Description:"High-quality wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and professionals."
+  id: 1,
+  image: assets.HeadPhone,
+  image2: assets.HeadPhoneImg2,
+  title: "Premium Headphones",
+  category: "Laptop",
+  rating: 4,
+  reviewCount: 4,
+  author: "Mr.Shop",
+  price: 2,
+  oldPrice: 3.99,
+  discount: 20,
+
+  description:
+    "High-quality wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and professionals.",
+
+  specifications: {
+    brand: "Not specified",
+    type: "Cookware Set",
+    material: "Likely non-stick coated",
+    color: "Red with black interiors",
+    pieces: "8 pieces"
   },
+
+  includedItems: [
+    "Two saucepans with lids",
+    "Two frying pans",
+    "Three cooking utensils (spatula, ladle, pasta server)"
+  ],
+
+  features: [
+    "Non-stick coating for easy food release and cleaning",
+    "Ergonomic handles for comfortable and safe handling",
+    "Heat-resistant lids with steam vent holes",
+    "Compatible with gas, electric, and induction cooktops"
+  ]
+},
   {
     id: 2,
     image: assets.Watch,
