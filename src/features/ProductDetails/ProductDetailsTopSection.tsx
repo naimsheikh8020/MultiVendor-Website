@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router";
 
 import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { popularProducts } from "../../assets/assets";
 const ProductDetailsTopSection = () => {
   const { productId } = useParams();
@@ -14,6 +14,18 @@ const ProductDetailsTopSection = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+
+  // Reset state when product changes
+  useEffect(() => {
+    if (product) {
+      setActiveImage(product.image);
+      setQuantity(1);
+      setActiveTab("details");
+      setReviewRating(0);
+      setReviewText("");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [productId, product]);
 
   // Mock reviews data
   const mockReviews = [
