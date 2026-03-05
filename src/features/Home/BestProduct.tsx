@@ -12,7 +12,7 @@ const BestProduct = () => {
             bestProducts.map((i) => (
               <Link key={i.id} to={`/product/${i.id}`}>
                 <BestProductCard
-                  key={i.id}
+                  id={i.id}
                   image={i.image}
                   title={i.title}
                   category={i.category}

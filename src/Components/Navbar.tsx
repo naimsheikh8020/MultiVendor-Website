@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { assets, categoryNames } from "../assets/assets";
 import type { CategoryName } from "../assets/assets";
+import { useCartStore } from "../store/cartStore";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ const Navbar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const itemCount = useCartStore((state) => state.getItemCount());
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -131,12 +133,17 @@ const Navbar = () => {
             <span>Wishlist</span>
           </div>
 
-          <div className="relative flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700">
+          <div
+            onClick={() => navigate("/cart")}
+            className="relative flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700"
+          >
             <ShoppingCart size={24} />
 
-            <span className="absolute -top-2 -left-2 bg-blue-600 text-white text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center">
-              3
-            </span>
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -left-2 bg-blue-600 text-white text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center">
+                {itemCount}
+              </span>
+            )}
 
             <span>My Cart</span>
           </div>

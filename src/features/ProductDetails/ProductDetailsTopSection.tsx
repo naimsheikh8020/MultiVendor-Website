@@ -3,10 +3,12 @@ import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "
 import { useState, useEffect } from "react";
 import { getProductById, getProductReviews } from "../../utils/productHelpers";
 import type { UnifiedProduct } from "../../utils/productHelpers";
+import { useCartStore } from "../../store/cartStore";
 
 const ProductDetailsTopSection = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
+  const addItem = useCartStore((state) => state.addItem);
 
   // State for product data
   const [product, setProduct] = useState<UnifiedProduct | null>(null);
@@ -225,7 +227,25 @@ const ProductDetailsTopSection = () => {
 
             {/* Add to cart */}
 
-            <button className="flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition w-full">
+            <button
+              onClick={() => {
+                if (product) {
+                  for (let i = 0; i < quantity; i++) {
+                    addItem({
+                      id: product.id,
+                      image: product.image,
+                      title: product.title,
+                      category: product.category,
+                      author: product.author,
+                      price: product.price,
+                    });
+                  }
+                  // Reset quantity after adding
+                  setQuantity(1);
+                }
+              }}
+              className="flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition w-full"
+            >
               <ShoppingCart size={18} />
               Add to Cart
             </button>

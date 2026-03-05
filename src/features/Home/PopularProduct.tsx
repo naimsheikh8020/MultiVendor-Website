@@ -12,6 +12,7 @@ const PopularProduct = () => {
             popularProducts.map((product) => (
               <Link key={product.id} to={`/product/${product.id}`}>
                 <PopularProductCard
+                  id={product.id}
                   image={product.image}
                   title={product.title}
                   category={product.category}

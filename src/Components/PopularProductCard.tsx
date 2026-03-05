@@ -1,7 +1,9 @@
 import { ShoppingCart } from "lucide-react";
 import type { PopularProductCardProps } from "../types/PopularProductCardProps";
+import { useCartStore } from "../store/cartStore";
 
 const PopularProductCard = ({
+  id,
   image,
   title,
   category,
@@ -13,6 +15,7 @@ const PopularProductCard = ({
   discount,
   onAddToCart,
 }: PopularProductCardProps) => {
+  const addItem = useCartStore((state) => state.addItem);
   const fullStars = Math.floor(rating);
   const emptyStars = 5 - fullStars;
 
@@ -79,6 +82,7 @@ const PopularProductCard = ({
           <button
             onClick={(e) => {
               e.preventDefault();
+              addItem({ id, image, title, category, author, price });
               onAddToCart?.(e);
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white p-1.5 sm:p-2.5 md:p-3 rounded-lg sm:rounded-xl transition"
