@@ -1,7 +1,17 @@
 import { MapPin, Plus } from "lucide-react"
+import { useState } from "react"
+import EditAddressModal from "../../Components/EditAddressModal"
+
+type AddressType = {
+  id: number
+  name: string
+  phone: string
+  address: string
+  type: string
+}
 
 const Address = () => {
-  const addresses = [
+  const addresses: AddressType[] = [
     {
       id: 1,
       name: "Akash",
@@ -19,7 +29,7 @@ const Address = () => {
       type: "Office"
     },
     {
-      id: 2,
+      id: 3,
       name: "Akash",
       phone: "+1 234 567 8900",
       address:
@@ -27,7 +37,7 @@ const Address = () => {
       type: "Office"
     },
     {
-      id: 2,
+      id: 4,
       name: "Akash",
       phone: "+1 234 567 8900",
       address:
@@ -35,7 +45,8 @@ const Address = () => {
       type: "Office"
     }
   ]
-
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(null)
   return (
     <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6">
 
@@ -78,9 +89,20 @@ const Address = () => {
                 {item.address}
               </p>
               <div className="flex gap-4 mt-4">
-                <button className="text-base px-6 py-2 bg-blue-600 text-white cursor-pointer rounded-lg border border-blue-600 hover:bg-transparent hover:text-blue-600 transition-colors duration-200">
+                <button
+                  onClick={() => {
+                    setSelectedAddress(item)
+                    setIsOpen(true)
+                  }}
+                  className="text-base px-6 py-2 bg-blue-600 text-white cursor-pointer rounded-lg border border-blue-600 hover:bg-transparent hover:text-blue-600 transition-colors duration-200"
+                >
                   Edit
                 </button>
+                <EditAddressModal
+                  isOpen={isOpen}
+                  onClose={() => setIsOpen(false)}
+                  address={selectedAddress}
+                />
                 <button className="text-base px-6 py-2 bg-red-600 text-white cursor-pointer rounded-lg border border-red-600 hover:bg-transparent hover:text-red-600 transition-colors duration-200">
                   Delete
                 </button>
