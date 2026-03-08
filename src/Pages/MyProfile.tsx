@@ -25,8 +25,6 @@ const MyProfile = () => {
         return <Payment />
       case "orders":
         return <RecentOrders />
-      case "reviews":
-        return <Reviews />
       default:
         return <ProfileInfo />
     }
