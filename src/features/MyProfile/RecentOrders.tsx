@@ -6,16 +6,14 @@ const RecentOrders = () => {
   ]
 
   return (
-    <div className="bg-white border rounded-xl p-6">
+    <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6">
 
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-gray-800">
+        <h2 className="font-bold text-2xl text-gray-900">
           Recent Orders
         </h2>
 
-        <button className="text-blue-600 text-sm hover:underline">
-          View All
-        </button>
+        
       </div>
 
       <div className="space-y-3">
@@ -23,18 +21,18 @@ const RecentOrders = () => {
         {orders.map((order) => (
           <div
             key={order.id}
-            className="border rounded-lg p-4 flex justify-between items-center"
+            className="border border-gray-200 rounded-lg p-4 flex justify-between items-center"
           >
             <div>
-              <p className="font-medium text-sm">{order.id}</p>
-              <p className="text-xs text-gray-500">{order.date}</p>
+              <p className="font-medium text-base">{order.id}</p>
+              <p className="text-base text-gray-500">{order.date}</p>
             </div>
 
             <div className="text-right">
-              <p className="text-blue-600 font-semibold text-sm">
+              <p className="text-blue-600 font-semibold text-base">
                 {order.price}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-base text-gray-500">
                 {order.status}
               </p>
             </div>
