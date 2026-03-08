@@ -1,6 +1,7 @@
 import { MapPin, Plus } from "lucide-react"
 import { useState } from "react"
 import EditAddressModal from "../../Components/EditAddressModal"
+import AddAddressModal from "../../Components/AddAddressModal"
 
 type AddressType = {
   id: number
@@ -45,8 +46,21 @@ const Address = () => {
       type: "Office"
     }
   ]
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedAddress, setSelectedAddress] = useState<AddressType | null>(null)
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [activeAddress, setActiveAddress] = useState<AddressType | null>(null)
+  const [addressList, setAddressList] = useState<AddressType[]>(addresses)
+
+  const handleEditClick = (address: AddressType) => {
+    setActiveAddress(address)
+    setIsEditModalOpen(true)
+  }
+
+  const handleAddAddress = (newAddress: AddressType) => {
+    setAddressList((prev) => [...prev, newAddress])
+  }
+
   return (
     <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6">
 
@@ -55,7 +69,10 @@ const Address = () => {
           Saved Addresses
         </h2>
 
-        <button className="flex items-center gap-2 text-sm text-blue-600 hover:underline">
+        <button
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center cursor-pointer gap-2 text-sm text-blue-600 hover:underline"
+        >
           <Plus size={16} />
           Add Address
         </button>
@@ -63,56 +80,57 @@ const Address = () => {
 
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
 
-        {addresses.map((item) => (
+        {addressList.map((item) => (
           <div
             key={item.id}
             className="border border-gray-200 rounded-lg p-4 flex flex-col gap-5"
           >
-            <div className="flex items-center justify-between">
-
-              <div className="flex items-center gap-2">
-                <MapPin size={16} className="text-gray-500" />
-                <span className="text-lg font-medium">
-                  {item.type}
-                </span>
-              </div>
-
+            <div className="flex items-center gap-2">
+              <MapPin size={16} className="text-gray-500" />
+              <span className="text-lg font-medium">
+                {item.type}
+              </span>
             </div>
 
             <div className="text-sm text-gray-700 space-y-1">
 
               <p className="font-medium text-base">{item.name}</p>
-
               <p className="text-gray-500 text-base">{item.phone}</p>
+              <p className="text-gray-600 text-base">{item.address}</p>
 
-              <p className="text-gray-600 text-base">
-                {item.address}
-              </p>
               <div className="flex gap-4 mt-4">
+
                 <button
-                  onClick={() => {
-                    setSelectedAddress(item)
-                    setIsOpen(true)
-                  }}
+                  onClick={() => handleEditClick(item)}
                   className="text-base px-6 py-2 bg-blue-600 text-white cursor-pointer rounded-lg border border-blue-600 hover:bg-transparent hover:text-blue-600 transition-colors duration-200"
                 >
                   Edit
                 </button>
-                <EditAddressModal
-                  isOpen={isOpen}
-                  onClose={() => setIsOpen(false)}
-                  address={selectedAddress}
-                />
+
                 <button className="text-base px-6 py-2 bg-red-600 text-white cursor-pointer rounded-lg border border-red-600 hover:bg-transparent hover:text-red-600 transition-colors duration-200">
                   Delete
                 </button>
-              </div>
-            </div>
 
+              </div>
+
+            </div>
           </div>
         ))}
 
       </div>
+
+      {/* Modals */}
+      <EditAddressModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        address={activeAddress}
+      />
+
+      <AddAddressModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAdd={handleAddAddress}
+      />
 
     </div>
   )
