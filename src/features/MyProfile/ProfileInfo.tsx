@@ -1,7 +1,11 @@
+import { useState } from "react";
 import AvatarUpload from "./AvatarUpload"
 import RecentOrders from "./RecentOrders"
+import { SquarePen } from 'lucide-react';
+import ProfileEditModal from "../../Components/ProfileEditModal";
 
 const ProfileInfo = () => {
+  const [openModal, setOpenModal] = useState(false)
   return (
     <>
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
@@ -12,9 +16,14 @@ const ProfileInfo = () => {
             Personal Information
           </h2>
 
-          <button className="text-sm font-medium text-blue-600 hover:underline">
-            Edit
+          <button onClick={() => setOpenModal(true)}>
+            <SquarePen className="w-6 h-6 cursor-pointer text-blue-600"/>
           </button>
+
+          <ProfileEditModal
+            isOpen={openModal}
+            onClose={() => setOpenModal(false)}
+          />
         </div>
 
         {/* Avatar */}
@@ -68,7 +77,7 @@ const ProfileInfo = () => {
         </div>
       </div>
       <div >
-        <RecentOrders/>
+        <RecentOrders />
       </div>
     </>
   )
