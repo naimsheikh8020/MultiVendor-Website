@@ -28,7 +28,7 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     { id: "address", label: "Address", icon: MapPin },
     { id: "payment", label: "My Payment Option", icon: CreditCard },
     { id: "orders", label: "My Orders", icon: Package },
-    { id: "reviews", label: "My Reviews", icon: Star }
+    
   ]
 
   return (
