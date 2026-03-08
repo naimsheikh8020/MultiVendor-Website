@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import toast from 'react-hot-toast';
 
 export interface CartItem {
   id: number;
@@ -38,6 +39,7 @@ export const useCartStore = create<CartStore>()(
           
           if (existingItem) {
             // If item exists, increment quantity
+            toast.success(`${item.title} added to cart!`);
             return {
               items: state.items.map((i) =>
                 i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
@@ -45,6 +47,7 @@ export const useCartStore = create<CartStore>()(
             };
           } else {
             // Add new item with quantity 1
+            toast.success(`${item.title} added to cart!`);
             return {
               items: [...state.items, { ...item, quantity: 1 }],
             };
