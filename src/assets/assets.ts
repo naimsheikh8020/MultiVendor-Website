@@ -26,8 +26,42 @@ import Best_Price from "./Best_Price.svg"
 import Refund from "./Refund.svg"
 import Shipping from "./Shipping.svg"
 import HeadPhoneImg2 from "./HeadPhone-img2.png"
+import automotive from "./automotive.jpg"
+import books from "./books.jpg"
+import electronics from "./electronics.jpg"
+import groceries from "./groceries.jpg"
+import health from "./health-beauty.jpg"
+import homeKitchen from "./home-kitchen.jpg"
+import homeLiving from "./home-living.jpg"
+import jewelry from "./jewelry.jpg"
+import lifeStyel from "./lifestyle-hobbies.jpg"
+import medicine from "./medicine.jpg"
+import motherBaby from "./mother-baby.jpg"
+import officeSupplies from "./office-supplies.jpg"
+import PetToy from "./PetToy.jpg"
+import sportsOutdoors from "./sports-outdoors.jpg"
+import toyGames from "./toys-games.jpg"
+import watchBags from "./watches-bags.jpg"
+import WomenFashion from "./Women-Fashinon.jpg"
 
 export const assets = {
+  automotive,
+  books,
+  electronics,
+  groceries,
+  health,
+  homeKitchen,
+  homeLiving,
+  jewelry,
+  lifeStyel,
+  medicine,
+  motherBaby,
+  officeSupplies,
+  PetToy,
+  sportsOutdoors,
+  toyGames,
+  watchBags,
+  WomenFashion,
   Category,
   Best_Price,
   HeadPhoneImg2,
