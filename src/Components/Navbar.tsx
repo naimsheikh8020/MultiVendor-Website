@@ -60,136 +60,158 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full bg-blue-50 p-4 border-b border-gray-100 relative z-50">
-      <div className="w-full px-8 flex items-center justify-between">
+    <nav className="w-full bg-blue-50 border-b border-gray-100 relative z-50">
+      <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4">
+        {/* Main Navbar Container - Three Column Layout */}
+        <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
 
-        <div>
-          <Link to="/"><img src={assets.logo} alt="logo" /></Link>
-        </div>
+          {/* Left Section - Logo */}
+          <div className="shrink-0">
+            <Link to="/">
+              <img
+                src={assets.logo}
+                alt="logo"
+                className="h-8 sm:h-10 md:h-12 lg:h-16 w-auto"
+              />
+            </Link>
+          </div>
 
+          {/* Middle Section - Search Bar */}
+          <div className="flex-1 max-w-3xl mx-2 sm:mx-3 md:mx-4">
+            <div className="relative flex items-center w-full h-9 sm:h-10 md:h-11 lg:h-12 bg-white rounded-md shadow-sm">
 
+              {/* Category Dropdown */}
+              <div ref={dropdownRef} className="relative h-full">
+                <div
+                  onClick={() => setIsOpen((prev) => !prev)}
+                  className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 px-1.5 sm:px-2 lg:px-4 text-xs lg:text-sm text-gray-700 border-r border-gray-100 cursor-pointer h-full hover:bg-gray-50 whitespace-nowrap"
+                >
+                  <span className="hidden lg:inline">
+                    {selectedCategory ?? "All Categories"}
+                  </span>
+                  <span className="lg:hidden text-[10px] sm:text-xs">
+                    {selectedCategory ? selectedCategory.slice(0, 6) + ".." : "All"}
+                  </span>
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform sm:w-4 sm:h-4 ${isOpen ? "rotate-180" : ""}`}
+                  />
+                </div>
 
-        <div className="relative flex items-center w-2xl h-12 bg-white rounded-md shadow-sm z-50">
+                {isOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-56 lg:w-60 bg-white border border-gray-200 rounded-md shadow-lg z-100 max-h-96 overflow-y-auto">
+                    <div
+                      onClick={() => handleSelect("All Categories")}
+                      className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer font-medium"
+                    >
+                      All Categories
+                    </div>
+                    {categoryNames.map((category) => (
+                      <div
+                        key={category}
+                        onClick={() => handleSelect(category)}
+                        className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer"
+                      >
+                        {category}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-          {/* Dropdown */}
-          <div
-            ref={dropdownRef}
-            className="relative h-full"
-          >
-            <div
-              onClick={() => setIsOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-4 text-sm text-gray-700 border-r border-gray-100 cursor-pointer h-full hover:bg-gray-50"
+              {/* Search Input */}
+              <input
+                type="text"
+                placeholder="Search..."
+                className="flex-1 h-full px-2 sm:px-3 lg:px-4 text-xs sm:text-sm outline-none"
+              />
+
+              {/* Search Button */}
+              <button className="h-full px-2 sm:px-3 md:px-4 lg:px-5 bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center rounded-r-md">
+                <Search size={16} className="text-white sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Section - Cart & Profile */}
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 shrink-0">
+
+            {/* Wishlist - Hidden on mobile */}
+            <Link
+              to="/wishlist"
+              className="hidden lg:flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700 transition-colors"
             >
-              <span>
-                {selectedCategory ?? "All Categories"}
+              <Heart size={22} />
+              <span className="text-sm">Wishlist</span>
+            </Link>
+
+            {/* Wishlist Icon Only - Shown on tablet */}
+            <Link
+              to="/wishlist"
+              className="hidden md:flex lg:hidden text-gray-600 hover:text-blue-700 transition-colors"
+            >
+              <Heart size={20} />
+            </Link>
+
+            {/* Cart */}
+            <div
+              onClick={() => navigate("/cart")}
+              className="relative flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700 transition-colors"
+            >
+              <div className="relative">
+                <ShoppingCart size={20} className="sm:w-5.5 sm:h-5.5 md:w-6 md:h-6" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] sm:text-xs font-medium w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </div>
+              <span className="hidden lg:inline text-sm">My Cart</span>
+            </div>
+
+            {/* Profile */}
+            <div
+              ref={profileRef}
+              className="relative flex items-center gap-1 sm:gap-2 cursor-pointer"
+              onClick={() => setIsProfileOpen((prev) => !prev)}
+            >
+              <img
+                src="https://i.pravatar.cc/40"
+                alt="user"
+                className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full ring-2 ring-gray-200"
+              />
+              <span className="hidden lg:inline text-sm font-medium text-gray-600">
+                Akash
               </span>
               <ChevronDown
                 size={16}
-                className={`transition-transform ${isOpen ? "rotate-180" : ""
-                  }`}
+                className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
               />
-            </div>
 
-            {isOpen && (
-              <div className="absolute top-full left-0 mt-2 w-60 bg-white border border-gray-200 rounded-md shadow-lg z-100 max-h-96 overflow-y-auto">
-                <div
-                  onClick={() => handleSelect("All Categories")}
-                  className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer font-medium"
-                >
-                  All Categories
-                </div>
-                {categoryNames.map((category) => (
+              {isProfileOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                   <div
-                    key={category}
-                    onClick={() => handleSelect(category)}
-                    className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewProfile();
+                    }}
+                    className="px-4 py-3 text-sm hover:bg-blue-50 cursor-pointer border-b border-gray-100"
                   >
-                    {category}
+                    View Profile
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Search for items..."
-            className="flex-1  h-full px-4 text-sm outline-none"
-          />
-
-          <button className="h-full px-5 bg-blue-600 hover:bg-blue-700 flex items-center justify-center">
-            <Search size={20} className="text-white" />
-          </button>
-        </div>
-
-
-
-        {/* Right Section */}
-        <div className="flex items-center gap-8">
-
-          <div className="flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700">
-            <Heart size={24} />
-            <span>Wishlist</span>
-          </div>
-
-          <div
-            onClick={() => navigate("/cart")}
-            className="relative flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700"
-          >
-            <ShoppingCart size={24} />
-
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -left-2 bg-blue-600 text-white text-xs font-medium w-5 h-5 rounded-full flex items-center justify-center">
-                {itemCount}
-              </span>
-            )}
-
-            <span>My Cart</span>
-          </div>
-
-          <div
-            ref={profileRef}
-            className="relative flex items-center gap-2 cursor-pointer"
-            onClick={() => setIsProfileOpen((prev) => !prev)}
-          >
-            <img
-              src="https://i.pravatar.cc/40"
-              alt="user"
-              className="w-10 h-10 rounded-full"
-            />
-            <span className="text-sm font-medium text-gray-600">
-              Akash
-            </span>
-            <ChevronDown
-              size={16}
-              className={`transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
-            />
-
-            {isProfileOpen && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleViewProfile();
-                  }}
-                  className="px-4 py-3 text-sm hover:bg-blue-50 cursor-pointer border-b border-gray-100"
-                >
-                  View Profile
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLogout();
+                    }}
+                    className="px-4 py-3 text-sm hover:bg-red-50 hover:text-red-600 cursor-pointer"
+                  >
+                    Log out
+                  </div>
                 </div>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleLogout();
-                  }}
-                  className="px-4 py-3 text-sm hover:bg-red-50 hover:text-red-600 cursor-pointer"
-                >
-                  Log out
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-
         </div>
       </div>
     </nav>
