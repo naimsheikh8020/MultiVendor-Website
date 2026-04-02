@@ -83,7 +83,7 @@ const SignIn: React.FC = () => {
           {/* FORGOT */}
           <div className="flex justify-end mb-6">
             <span className="text-[13px] text-blue-600 hover:underline cursor-pointer">
-              Forgot password?
+              <Link to="/forgot-password">Forgot Password?</Link>
             </span>
           </div>
 

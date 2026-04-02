@@ -3,6 +3,7 @@ import type { RouteObject } from "react-router";
 import Layout from "./Layout";
 import Loadable from "./Loadable";
 import Vendor from "../Pages/Vendor";
+import ForgotPassword from "../Pages/ForgotPassword";
 
 
 const Home = lazy(() => import("../Pages/Home"));
@@ -29,6 +30,7 @@ export const routes: RouteObject[] = [
       // Auth
       { path: "login", element: <Loadable><Login /></Loadable> },
       { path: "signup", element: <Loadable><SignUp /></Loadable> },
+      { path: "forgot-password", element: <Loadable><ForgotPassword /></Loadable> },
 
       // Stores
       { path: "stores", element: <Loadable><Store /></Loadable> },
