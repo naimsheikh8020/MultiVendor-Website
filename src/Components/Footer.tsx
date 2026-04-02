@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 
@@ -40,12 +41,14 @@ const Footer = () => {
           </h3>
           <ul className="mt-8 text-white flex flex-col gap-3">
             {["Vendor Login", "Start Selling"].map((item) => (
-              <li
+              <Link to={'/vendor'}>
+                <li
                 key={item}
                 className="text-lg cursor-pointer hover:text-gray-200"
               >
                 {item}
               </li>
+              </Link>
             ))}
           </ul>
         </div>

@@ -43,11 +43,12 @@ import sportsOutdoors from "./sports-outdoors.jpg"
 import toyGames from "./toys-games.jpg"
 import watchBags from "./watches-bags.jpg"
 import WomenFashion from "./Women-Fashinon.jpg"
-
+import loginImg from "./loginImg.svg"
 export const assets = {
   automotive,
   books,
   electronics,
+  loginImg,
   groceries,
   health,
   homeKitchen,

@@ -1,9 +1,19 @@
+import { assets } from "../assets/assets"
+
 
 const SignIn = () => {
   return (
-    <div>
-      Sign In
-    </div>
+    <>
+      <div>
+        {/* Left Side */}
+
+        <div>
+          <img src={assets.loginImg}/>
+        </div>
+
+        {/* Right Side */}
+      </div>
+    </>
   )
 }
 

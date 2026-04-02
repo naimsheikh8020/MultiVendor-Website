@@ -2,6 +2,7 @@ import { lazy } from "react";
 import type { RouteObject } from "react-router";
 import Layout from "./Layout";
 import Loadable from "./Loadable";
+import Vendor from "../Pages/Vendor";
 
 
 const Home = lazy(() => import("../Pages/Home"));
@@ -52,6 +53,9 @@ export const routes: RouteObject[] = [
 
       // Profile
       { path: "my-profile", element: <Loadable><MyProfile /></Loadable> },
+
+      // Vendor
+      { path: "vendor", element: <Loadable><Vendor /></Loadable> },
 
       // 404
       { path: "*", element: <Loadable><NotFound /></Loadable> },
