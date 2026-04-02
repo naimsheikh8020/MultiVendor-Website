@@ -1,8 +1,9 @@
+import SignIn from "./SignIn"
 
 const Login = () => {
   return (
     <>
-    <h1>Login</h1>
+    <SignIn />
     </>
   )
 }
