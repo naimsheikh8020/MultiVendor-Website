@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { Eye, EyeOff } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -96,7 +97,7 @@ const SignIn: React.FC = () => {
           <p className="text-center text-[13px] text-gray-500 mt-5">
             Don’t have an account?{" "}
             <span className="text-blue-600 cursor-pointer hover:underline">
-              Sign Up
+              <Link to="/signup">Sign Up</Link>
             </span>
           </p>
         </div>
