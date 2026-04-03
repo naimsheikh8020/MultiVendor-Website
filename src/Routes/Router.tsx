@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router";
 import Layout from "./Layout";
+import VendorLayout from "./VendorLayout";
 import Loadable from "./Loadable";
-import Vendor from "../Pages/Vendor";
 import ForgotPassword from "../Pages/ForgotPassword";
 
-
+// Lazy pages
 const Home = lazy(() => import("../Pages/Home"));
 const CartPage = lazy(() => import("../Pages/CartPage"));
 const Login = lazy(() => import("../Pages/Login"));
@@ -17,10 +17,10 @@ const ProductCategory = lazy(() => import("../Pages/ProductCategory"));
 const ProductDetails = lazy(() => import("../Pages/ProductDetails"));
 const Checkout = lazy(() => import("../Pages/Checkout"));
 const NotFound = lazy(() => import("../Pages/NotFound"));
-
-
+const Vendor = lazy(() => import("../Pages/Vendor"));
 
 export const routes: RouteObject[] = [
+  // 🔹 USER LAYOUT (your existing system)
   {
     path: "/",
     element: <Layout />,
@@ -34,20 +34,11 @@ export const routes: RouteObject[] = [
 
       // Stores
       { path: "stores", element: <Loadable><Store /></Loadable> },
-      {
-        path: "stores/:storeId",
-        element: <Loadable><StoreDetails /></Loadable>,
-      },
+      { path: "stores/:storeId", element: <Loadable><StoreDetails /></Loadable> },
 
       // Products
-      {
-        path: "category/:categoryName",
-        element: <Loadable><ProductCategory /></Loadable>,
-      },
-      {
-        path: "product/:productId",
-        element: <Loadable><ProductDetails /></Loadable>,
-      },
+      { path: "category/:categoryName", element: <Loadable><ProductCategory /></Loadable> },
+      { path: "product/:productId", element: <Loadable><ProductDetails /></Loadable> },
 
       // Cart
       { path: "cart", element: <Loadable><CartPage /></Loadable> },
@@ -56,11 +47,24 @@ export const routes: RouteObject[] = [
       // Profile
       { path: "my-profile", element: <Loadable><MyProfile /></Loadable> },
 
-      // Vendor
-      { path: "vendor", element: <Loadable><Vendor /></Loadable> },
-
       // 404
       { path: "*", element: <Loadable><NotFound /></Loadable> },
+    ],
+  },
+
+  // 🔥 VENDOR LAYOUT (new, separate)
+  {
+    path: "/vendor",
+    element: <VendorLayout />,
+    children: [
+      {
+        index: true,
+        element: <Loadable><Vendor /></Loadable>,
+      },
+      {
+        path: "dashboard",
+        element: <Loadable><Vendor /></Loadable>,
+      },
     ],
   },
 ];
