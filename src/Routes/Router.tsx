@@ -10,6 +10,7 @@ import VendorCategory from "../features/vendors/VendorCategory";
 import VendorOrder from "../features/vendors/VendorOrder";
 import VendorPayout from "../features/vendors/VendorPayout";
 import VendorProfile from "../features/vendors/VendorProfile";
+import VendorEarnings from "../features/vendors/VendorEarnings";
 
 // Lazy pages
 const Home = lazy(() => import("../Pages/Home"));
@@ -65,7 +66,7 @@ export const routes: RouteObject[] = [
     children: [
       {
         index: true,
-        element: <Loadable><Vendor /></Loadable>,
+        element: <Loadable><VendorDashboard /></Loadable>,
       },
       {
         path: "dashboard",
@@ -82,6 +83,10 @@ export const routes: RouteObject[] = [
       {
         path: "orders",
         element: <Loadable><VendorOrder /></Loadable>
+      },
+      {
+        path: "earnings",
+        element: <Loadable><VendorEarnings /></Loadable>
       },
       {
         path: "payouts",

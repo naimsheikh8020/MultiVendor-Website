@@ -15,7 +15,7 @@ const VendorLayout: React.FC = () => {
       <div className="flex-1 flex flex-col">
 
         {/* TOP BAR (right side header) */}
-        <div className="h-17.5 bg-white border-b flex items-center justify-end px-6">
+        <div className="h-17.5 bg-white border-b flex items-center justify-end px-6 border-gray-200 shadow">
           
           <div className="flex items-center gap-3">
             <div className="text-right">
