@@ -1,8 +1,21 @@
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { dummyProducts } from "../../../assets/assets";
+import VendorProductEdit from "./VendorProductEdit";
 
 const ITEMS_PER_PAGE = 8;
+
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+  category: string;
+  price: number;
+  variants: number;
+  stock: number;
+  status: string;
+  sell?: number;
+}
 
 const getPagination = (current: number, total: number) => {
   if (total <= 1) return [1];
@@ -37,6 +50,8 @@ const getPagination = (current: number, total: number) => {
 const VendorProductTable = () => {
   const [selected, setSelected] = useState<number[]>([]);
   const [page, setPage] = useState(1);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const totalPages = Math.ceil(dummyProducts.length / ITEMS_PER_PAGE);
 
@@ -61,8 +76,27 @@ const VendorProductTable = () => {
     );
   };
 
+  const handleEditClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveProduct = (updatedProduct: Product) => {
+    // Here you would typically update the product in your state or backend
+    console.log("Updated product:", updatedProduct);
+    // You can add logic to update the dummyProducts array or make an API call
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 w-full">
+    <>
+      <VendorProductEdit
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        product={selectedProduct}
+        onSave={handleSaveProduct}
+      />
+      
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 w-full">
 
       {/* MOBILE CARD VIEW - Hidden on md and above */}
       <div className="block md:hidden">
@@ -143,18 +177,19 @@ const VendorProductTable = () => {
               {/* Card Actions */}
               <div className="flex gap-2 pl-7">
                 <button
+                  onClick={() => handleEditClick(item)}
                   className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm font-medium text-blue-600 cursor-pointer"
                   aria-label="Edit product"
                 >
-                  <Pencil className="cursor-pointer" size={16} />
-                  <span className="cursor-pointer">Edit</span>
+                  <Pencil size={16} />
+                  <span>Edit</span>
                 </button>
                 <button
                   className="flex-1 flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors text-sm font-medium text-red-600 cursor-pointer"
                   aria-label="Delete product"
                 >
-                  <Trash2 className="cursor-pointer" size={16} />
-                  <span className="cursor-pointer">Delete</span>
+                  <Trash2 size={16} />
+                  <span>Delete</span>
                 </button>
               </div>
             </div>
@@ -258,6 +293,7 @@ const VendorProductTable = () => {
                 <td className="px-3 sm:px-4 py-3">
                   <div className="flex justify-center gap-1 sm:gap-2">
                     <button
+                      onClick={() => handleEditClick(item)}
                       className="p-1.5 sm:p-2 border border-gray-200 rounded-md hover:bg-blue-50 hover:border-blue-300 transition-colors duration-150 cursor-pointer"
                       aria-label="Edit product"
                     >
@@ -328,6 +364,7 @@ const VendorProductTable = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 
