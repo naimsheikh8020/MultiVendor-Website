@@ -496,3 +496,76 @@ export const topStores = [
     image: assets.Laptop,
   },
 ];
+
+
+
+export const dummyProducts = [
+  {
+    id: 1,
+    name: "Premium Wireless Headphones",
+    image: "https://picsum.photos/60?random=1",
+    category: "Electronic Accessories",
+    price: 159.99,
+    variants: 3,
+    stock: 45,
+    status: "In Stock",
+    sell: 20,
+  },
+  {
+    id: 2,
+    name: "Smart Watch Series X",
+    image: "https://picsum.photos/60?random=2",
+    category: "Watches & Bags",
+    price: 299.99,
+    variants: 0,
+    stock: 26,
+    status: "In Stock",
+    sell: 15,
+  },
+  {
+    id: 3,
+    name: "Gaming Laptop Pro",
+    image: "https://picsum.photos/60?random=3",
+    category: "Computer & Gaming",
+    price: 1299.99,
+    variants: 0,
+    stock: 35,
+    status: "In Stock",
+    sell: 10,
+  },
+  {
+    id: 4,
+    name: "Smartphone Pro Max",
+    image: "https://picsum.photos/60?random=4",
+    category: "Phones & Accessories",
+    price: 999.99,
+    variants: 0,
+    stock: 65,
+    status: "In Stock",
+    sell: 25,
+  },
+  {
+    id: 5,
+    name: "Coffee Maker Deluxe",
+    image: "https://picsum.photos/60?random=5",
+    category: "Home Appliances",
+    price: 89.99,
+    variants: 0,
+    stock: 76,
+    status: "In Stock",
+    sell: 30,
+  },
+
+  // pagination testing
+  ...Array.from({ length: 150 }, (_, i) => ({
+    id: i + 6,
+    name: `Product ${i + 6}`,
+    image: `https://picsum.photos/60?random=${i + 6}`,
+    category: "Category",
+    price: 50 + i,
+    variants: i % 2,
+    stock: 10 + i,
+    status: "In Stock",
+    sell: Math.floor(Math.random() * 50) + 5,
+  })),
+];

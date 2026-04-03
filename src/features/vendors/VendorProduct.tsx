@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Search, ChevronDown } from "lucide-react";
 import PrimaryButton from "../../Components/PrimaryButton";
+import VendorProductTable from "../../Components/VendorDashBoard/Products/VendorProductTable";
 
 const categories = ["All Category", "Electronics", "Clothing"];
 
@@ -110,6 +111,8 @@ const VendorProduct = () => {
         </div>
       </div>
 
+      {/* TABLE */}
+      <VendorProductTable />
     </div>
   );
 };
