@@ -1,5 +1,6 @@
 import { assets } from "../../assets/assets";
 import DashboardCard from "../../Components/VendorDashBoard/Dashboard/DashboardCard";
+import DashboardTopProduct from "../../Components/VendorDashBoard/Dashboard/DashboardTopProduct";
 import RecentOrders from "../../Components/VendorDashBoard/Dashboard/RecentOrders";
 
 const VendorDashboard = () => {
@@ -41,6 +42,36 @@ const VendorDashboard = () => {
       status: "Processing",
     },
   ];
+  const products = [
+  {
+    id: "1",
+    name: "Premium Wireless Headphones",
+    price: "$159.99",
+    stock: 45,
+    image: assets.HeadPhone,
+  },
+  {
+    id: "2",
+    name: "Designer Leather Handbag",
+    price: "$189.99",
+    stock: 25,
+    image: assets.redBag,
+  },
+  {
+    id: "3",
+    name: "Casual Denim Jacket",
+    price: "$79.99",
+    stock: 60,
+    image: assets.BlackJacket,
+  },
+  {
+    id: "4",
+    name: "Smartphone Pro Max",
+    price: "$999.99",
+    stock: 40,
+    image: assets.MobilePhone,
+  },
+];
   return (
     <div>
       {/* Header */}
@@ -68,7 +99,9 @@ const VendorDashboard = () => {
         ))}
       </div>
 
-      <RecentOrders orders={orders} />;
+      <RecentOrders orders={orders} />
+
+      <DashboardTopProduct products={products} />
     </div>
   );
 };
