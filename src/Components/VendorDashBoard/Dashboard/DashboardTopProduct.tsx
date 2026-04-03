@@ -14,7 +14,7 @@ type Props = {
 
 const DashboardTopProduct = ({ products }: Props) => {
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mt-8">
+    <div className="bg-white border border-gray-200 rounded-xl p-6 mt-8">
       
       {/* Title */}
       <h2 className="text-lg font-semibold text-gray-800 mb-4">
