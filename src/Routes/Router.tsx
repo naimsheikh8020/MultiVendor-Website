@@ -24,7 +24,6 @@ const ProductCategory = lazy(() => import("../Pages/ProductCategory"));
 const ProductDetails = lazy(() => import("../Pages/ProductDetails"));
 const Checkout = lazy(() => import("../Pages/Checkout"));
 const NotFound = lazy(() => import("../Pages/NotFound"));
-const Vendor = lazy(() => import("../Pages/Vendor"));
 
 export const routes: RouteObject[] = [
   // 🔹 USER LAYOUT (your existing system)

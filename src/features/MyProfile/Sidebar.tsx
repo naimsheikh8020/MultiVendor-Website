@@ -3,7 +3,6 @@ import {
   MapPin,
   CreditCard,
   Package,
-  Star,
   LogOut
 } from "lucide-react"
 

@@ -5,7 +5,6 @@ import ProfileInfo from "../features/MyProfile/ProfileInfo"
 import Address from "../features/MyProfile/Address"
 import RecentOrders from "../features/MyProfile/RecentOrders"
 import Payment from "../features/MyProfile/Payment"
-import Reviews from "../features/MyProfile/Reviews"
 import Sidebar from "../features/MyProfile/Sidebar"
 import PlatformHighlights from "../features/Home/PlatformHighlights"
 
@@ -51,7 +50,7 @@ const MyProfile = () => {
         </div>
 
       </div>
-      <PlatformHighlights/>
+      <PlatformHighlights />
     </div>
   )
 }
