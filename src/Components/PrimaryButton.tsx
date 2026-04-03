@@ -11,7 +11,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   label,
   icon,
   onClick,
-  className = "",
+  
 }) => {
   return (
     <button
@@ -22,7 +22,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       transition-all duration-300 ease-in-out
       hover:bg-white hover:text-blue-600
       active:scale-95
-      ${className}`}
+      `}
     >
       {icon && <span className="text-base flex items-center">{icon}</span>}
       <span>{label}</span>
