@@ -169,7 +169,7 @@ const VendorProductTable = () => {
           {/* HEADER */}
           <thead className="bg-gray-50 text-gray-500 sticky top-0">
             <tr className="text-left border-b border-gray-200">
-              <th className="px-3 sm:px-4 py-3 w-[40px] sm:w-[50px]">
+              <th className="px-3 sm:px-4 py-3 w-10 sm:w-12.5">
                 <input
                   type="checkbox"
                   onChange={handleSelectAll}
