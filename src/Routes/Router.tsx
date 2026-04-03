@@ -4,6 +4,12 @@ import Layout from "./Layout";
 import VendorLayout from "./VendorLayout";
 import Loadable from "./Loadable";
 import ForgotPassword from "../Pages/ForgotPassword";
+import VendorDashboard from "../features/vendors/VendorDashboard";
+import VendorProduct from "../features/vendors/VendorProduct";
+import VendorCategory from "../features/vendors/VendorCategory";
+import VendorOrder from "../features/vendors/VendorOrder";
+import VendorPayout from "../features/vendors/VendorPayout";
+import VendorProfile from "../features/vendors/VendorProfile";
 
 // Lazy pages
 const Home = lazy(() => import("../Pages/Home"));
@@ -63,7 +69,27 @@ export const routes: RouteObject[] = [
       },
       {
         path: "dashboard",
-        element: <Loadable><Vendor /></Loadable>,
+        element: <Loadable><VendorDashboard /></Loadable>,
+      },
+      {
+        path: "products",
+        element: <Loadable><VendorProduct /></Loadable>,
+      },
+      {
+        path: "category",
+        element: <Loadable><VendorCategory /></Loadable>,
+      },
+      {
+        path: "orders",
+        element: <Loadable><VendorOrder /></Loadable>
+      },
+      {
+        path: "payouts",
+        element: <Loadable><VendorPayout /></Loadable>
+      },
+      {
+        path: "profiles",
+        element: <Loadable><VendorProfile /></Loadable>
       },
     ],
   },

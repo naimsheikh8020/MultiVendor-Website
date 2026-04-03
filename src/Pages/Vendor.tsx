@@ -1,4 +1,3 @@
-
 const Vendor = () => {
   return (
     <div>
