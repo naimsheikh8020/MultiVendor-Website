@@ -8,31 +8,50 @@ import {
   User,
   Store,
   LogOut,
+  X,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../../assets/assets";
 
 const menu = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/vendor/dashboard" },
-  
+
   { name: "Products", icon: Box, path: "/vendor/products" },
   { name: "Category", icon: Layers, path: "/vendor/category" },
   { name: "Orders", icon: ShoppingCart, path: "/vendor/orders" },
-  { name: "Earnings", icon: DollarSign, path: "/vendor/earnings" }, 
+  { name: "Earnings", icon: DollarSign, path: "/vendor/earnings" },
   { name: "Payouts", icon: Wallet, path: "/vendor/payouts" },
-  { name: "Profile", icon: User, path: "/vendor/profiles" }, 
+  { name: "Profile", icon: User, path: "/vendor/profiles" },
   { name: "Store Front", icon: Store, path: "/" },
 ];
 
-const VendorSidebar: React.FC = () => {
+interface VendorSidebarProps {
+  onClose?: () => void;
+}
+
+const VendorSidebar: React.FC<VendorSidebarProps> = ({ onClose }) => {
   return (
-    <aside className="w-65  border-r min-h-screen px-4 py-6 flex flex-col justify-between border-gray-200 shadow-sm bg-white">
-      
+    <aside className="w-64 border-r min-h-screen px-4 py-6 flex flex-col justify-between border-gray-200 shadow-sm bg-white">
+
       {/* TOP */}
       <div>
-        <div className="flex items-center gap-4 mb-6">
-          <img src={assets.Vendor_Plane} alt="" className="w-10 h-10" />
-          <h2 className="text-xl font-bold text-gray-600">Vendor Panel</h2>
+        {/* Header with Close Button for Mobile */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <img src={assets.Vendor_Plane} alt="" className="w-10 h-10" />
+            <h2 className="text-xl font-bold text-gray-600">Vendor Panel</h2>
+          </div>
+
+          {/* Close button - only visible on mobile */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-1 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Close sidebar"
+            >
+              <X size={20} />
+            </button>
+          )}
         </div>
 
         <nav className="flex flex-col gap-1 text-base">
@@ -42,11 +61,11 @@ const VendorSidebar: React.FC = () => {
               <NavLink
                 key={i}
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition ${
-                    isActive
-                      ? "bg-blue-600 text-white"
-                      : "hover:bg-gray-100 text-gray-700"
+                  `flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition ${isActive
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-gray-100 text-gray-700"
                   }`
                 }
               >

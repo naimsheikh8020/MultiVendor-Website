@@ -38,14 +38,14 @@ const RecentOrders = ({ orders, loading = false }: RecentOrdersProps) => {
         <p className="text-sm text-gray-500">No orders found</p>
       ) : (
         /* Table */
-        <div className="w-full overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="w-full overflow-x-auto -mx-2 px-2">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="text-sm text-gray-500 border-b border-gray-200">
-                <th className="py-3">Order ID</th>
-                <th className="py-3">Customer</th>
-                <th className="py-3">Date</th>
-                <th className="py-3">Total</th>
+                <th className="py-3 pr-4">Order ID</th>
+                <th className="py-3 pr-4">Customer</th>
+                <th className="py-3 pr-4">Date</th>
+                <th className="py-3 pr-4">Total</th>
                 <th className="py-3">Status</th>
               </tr>
             </thead>
@@ -56,19 +56,19 @@ const RecentOrders = ({ orders, loading = false }: RecentOrdersProps) => {
                   key={order.id}
                   className="border-b border-gray-200 last:border-none hover:bg-gray-100/50 transition"
                 >
-                  <td className="py-4 text-gray-700">{order.id}</td>
+                  <td className="py-4 pr-4 text-gray-700 font-medium">{order.id}</td>
 
-                  <td className="py-4 text-gray-700">
+                  <td className="py-4 pr-4 text-gray-700">
                     {order.customer || "Unknown"}
                   </td>
 
-                  <td className="py-4 text-gray-500">{order.date}</td>
+                  <td className="py-4 pr-4 text-gray-500 text-sm">{order.date}</td>
 
-                  <td className="py-4 text-gray-700">{order.total}</td>
+                  <td className="py-4 pr-4 text-gray-700 font-semibold">{order.total}</td>
 
                   <td className="py-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusStyle(
                         order.status
                       )}`}
                     >

@@ -43,35 +43,35 @@ const VendorDashboard = () => {
     },
   ];
   const products = [
-  {
-    id: "1",
-    name: "Premium Wireless Headphones",
-    price: "$159.99",
-    stock: 45,
-    image: assets.HeadPhone,
-  },
-  {
-    id: "2",
-    name: "Designer Leather Handbag",
-    price: "$189.99",
-    stock: 25,
-    image: assets.redBag,
-  },
-  {
-    id: "3",
-    name: "Casual Denim Jacket",
-    price: "$79.99",
-    stock: 60,
-    image: assets.BlackJacket,
-  },
-  {
-    id: "4",
-    name: "Smartphone Pro Max",
-    price: "$999.99",
-    stock: 40,
-    image: assets.MobilePhone,
-  },
-];
+    {
+      id: "1",
+      name: "Premium Wireless Headphones",
+      price: "$159.99",
+      stock: 45,
+      image: assets.HeadPhone,
+    },
+    {
+      id: "2",
+      name: "Designer Leather Handbag",
+      price: "$189.99",
+      stock: 25,
+      image: assets.redBag,
+    },
+    {
+      id: "3",
+      name: "Casual Denim Jacket",
+      price: "$79.99",
+      stock: 60,
+      image: assets.BlackJacket,
+    },
+    {
+      id: "4",
+      name: "Smartphone Pro Max",
+      price: "$999.99",
+      stock: 40,
+      image: assets.MobilePhone,
+    },
+  ];
   return (
     <div>
       {/* Header */}
@@ -88,7 +88,7 @@ const VendorDashboard = () => {
       </p>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5 mt-6">
         {stats.map((item, index) => (
           <DashboardCard
             key={index}
