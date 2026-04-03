@@ -44,9 +44,12 @@ import toyGames from "./toys-games.jpg"
 import watchBags from "./watches-bags.jpg"
 import WomenFashion from "./Women-Fashinon.jpg"
 import loginImg from "./loginImg.svg"
+import Vendor_Plane from "./Vendor_Plane.png"
+import Vendor from "../Pages/Vendor";
 export const assets = {
   automotive,
   books,
+  Vendor_Plane,
   electronics,
   loginImg,
   groceries,

@@ -1,0 +1,10 @@
+
+const VendorProduct = () => {
+  return (
+    <div>
+      VendorProduct
+    </div>
+  )
+}
+
+export default VendorProduct

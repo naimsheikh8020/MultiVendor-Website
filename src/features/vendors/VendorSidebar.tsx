@@ -1,4 +1,3 @@
-import React from "react";
 import {
   LayoutDashboard,
   Box,
@@ -10,23 +9,22 @@ import {
   Store,
   LogOut,
 } from "lucide-react";
+import { assets } from "../../assets/assets";
 
 const VendorSidebar: React.FC = () => {
   return (
-    <aside className="w-[260px] bg-white border-r min-h-screen px-4 py-6 flex flex-col justify-between">
+    <aside className="w-65 bg-white border-r min-h-screen px-4 py-6 flex flex-col justify-between">
 
       {/* TOP */}
       <div>
         {/* TITLE */}
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-sm">
-            📦
-          </div>
-          <h2 className="text-[16px] font-semibold">Vendor Panel</h2>
+        <div className="flex items-center gap-4 mb-6">
+          <img src={assets.Vendor_Plane}  alt="Vendor Plane" className="w-10 h-10" /> 
+          <h2 className="text-xl font-bold text-gray-600">Vendor Panel</h2>
         </div>
 
         {/* MENU */}
-        <nav className="flex flex-col gap-1 text-[14px]">
+        <nav className="flex flex-col gap-1 text-base">
 
           {/* ACTIVE */}
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-600 text-white cursor-pointer">
