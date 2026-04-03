@@ -45,8 +45,16 @@ import watchBags from "./watches-bags.jpg"
 import WomenFashion from "./Women-Fashinon.jpg"
 import loginImg from "./loginImg.svg"
 import Vendor_Plane from "./Vendor_Plane.png"
-import Vendor from "../Pages/Vendor";
+import VendorNetEarning from "./VendorNetEarning.png"
+import VendorTotalOrder from "./VendorTotalOrder.png"
+import VendorTotalProduct from "./VendorTotalProduct.png"
+import VendorTotalSales from "./VendorTotalSales.png"
+
 export const assets = {
+  VendorNetEarning,
+  VendorTotalOrder,
+  VendorTotalProduct,
+  VendorTotalSales,
   automotive,
   books,
   Vendor_Plane,
