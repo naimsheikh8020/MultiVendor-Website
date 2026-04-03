@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { dummyProducts } from "../../../assets/assets";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 8;
 
 const getPagination = (current: number, total: number) => {
   if (total <= 1) return [1];
@@ -181,14 +181,14 @@ const VendorProductTable = () => {
                 />
               </th>
 
-              <th className="px-3 sm:px-4 py-3 min-w-[200px] sm:min-w-[220px] font-semibold">Product</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[150px] sm:min-w-[180px] font-semibold">Category</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[90px] sm:w-[100px] font-semibold">Price</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[120px] sm:w-[140px] font-semibold">Variants</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[70px] sm:w-[80px] font-semibold">Stock</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[70px] sm:w-[80px] font-semibold">Sell</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[100px] sm:w-[120px] font-semibold">Status</th>
-              <th className="px-3 sm:px-4 py-3 min-w-[110px] sm:w-[120px] text-center font-semibold">Actions</th>
+              <th className="px-3 sm:px-4 py-3 min-w-50 sm:min-w-55 font-semibold">Product</th>
+              <th className="px-3 sm:px-4 py-3 min-w-37.5 sm:min-w-45 font-semibold">Category</th>
+              <th className="px-3 sm:px-4 py-3 min-w-22.5 sm:w-25 font-semibold">Price</th>
+              <th className="px-3 sm:px-4 py-3 min-w-30 sm:w-35 font-semibold">Variants</th>
+              <th className="px-3 sm:px-4 py-3 min-w-17.5 sm:w-20 font-semibold">Stock</th>
+              <th className="px-3 sm:px-4 py-3 min-w-17.5 sm:w-20 font-semibold">Sell</th>
+              <th className="px-3 sm:px-4 py-3 min-w-25 sm:w-30 font-semibold">Status</th>
+              <th className="px-3 sm:px-4 py-3 min-w-27.5 sm:w-30 text-center font-semibold">Actions</th>
             </tr>
           </thead>
 
