@@ -49,9 +49,12 @@ import VendorNetEarning from "./VendorNetEarning.png"
 import VendorTotalOrder from "./VendorTotalOrder.png"
 import VendorTotalProduct from "./VendorTotalProduct.png"
 import VendorTotalSales from "./VendorTotalSales.png"
+import VendorCommsion from "./VendorCommsion.png"
+
 
 export const assets = {
   VendorNetEarning,
+  VendorCommsion,
   VendorTotalOrder,
   VendorTotalProduct,
   VendorTotalSales,
