@@ -17,35 +17,35 @@ interface Product {
   sell?: number;
 }
 
-const getPagination = (current: number, total: number) => {
-  if (total <= 1) return [1];
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
+// const getPagination = (current: number, total: number) => {
+//   if (total <= 1) return [1];
+//   if (total <= 7) {
+//     return Array.from({ length: total }, (_, i) => i + 1);
+//   }
 
-  const delta = 1;
-  const range: (number | string)[] = [];
+//   const delta = 1;
+//   const range: (number | string)[] = [];
 
-  for (
-    let i = Math.max(2, current - delta);
-    i <= Math.min(total - 1, current + delta);
-    i++
-  ) {
-    range.push(i);
-  }
+//   for (
+//     let i = Math.max(2, current - delta);
+//     i <= Math.min(total - 1, current + delta);
+//     i++
+//   ) {
+//     range.push(i);
+//   }
 
-  if (current - delta > 2) {
-    range.unshift("...");
-  }
+//   if (current - delta > 2) {
+//     range.unshift("...");
+//   }
 
-  if (current + delta < total - 1) {
-    range.push("...");
-  }
+//   if (current + delta < total - 1) {
+//     range.push("...");
+//   }
 
-  if (total === 1) return [1];
+//   if (total === 1) return [1];
 
-  return [1, ...range, total].filter((v, i, arr) => arr.indexOf(v) === i);
-};
+//   return [1, ...range, total].filter((v, i, arr) => arr.indexOf(v) === i);
+// };
 
 const VendorProductTable = () => {
   const [selected, setSelected] = useState<number[]>([]);
