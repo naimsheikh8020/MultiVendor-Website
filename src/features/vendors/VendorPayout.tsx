@@ -3,6 +3,8 @@ import { assets } from "../../assets/assets";
 import PrimaryButton from "../../Components/PrimaryButton";
 import DashboardCard from "../../Components/VendorDashBoard/Dashboard/DashboardCard"
 import WeeklyPayout from "../../Components/VendorDashBoard/Payout/WeeklyPayout";
+import PayoutCard from "../../Components/VendorDashBoard/Payout/PayoutCard";
+import PayoutHistorySection from "../../Components/VendorDashBoard/Payout/PayoutHistorySection";
 
 const VendorPayout = () => {
   const stats = [
@@ -58,6 +60,31 @@ const VendorPayout = () => {
 
       {/* Weekly Payout Notice */}
       <WeeklyPayout />
+
+      {/* Payout History
+      <div className="space-y-4 mt-6 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+       <h1 className="text-xl font-bold text-gray-800">Payout History</h1>
+      <PayoutCard
+        id="payout-001"
+        amount={10000}
+        requestedAt="10/02/2026, 16:00:00"
+        bankName="Chase Bank"
+        accountMasked="****1234"
+        note="Weekly payout request"
+        status="pending"
+      />
+
+      <PayoutCard
+        id="payout-002"
+        amount={10000}
+        requestedAt="10/02/2026, 16:00:00"
+        processedAt="11/02/2026, 16:00:00"
+        bankName="Chase Bank"
+        accountMasked="****1234"
+        status="completed"
+      />
+    </div> */}
+    <PayoutHistorySection />
     </div>
   )
 }
