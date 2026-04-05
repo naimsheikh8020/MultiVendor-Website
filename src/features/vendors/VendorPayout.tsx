@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import { assets } from "../../assets/assets";
 import PrimaryButton from "../../Components/PrimaryButton";
 import DashboardCard from "../../Components/VendorDashBoard/Dashboard/DashboardCard"
+import WeeklyPayout from "../../Components/VendorDashBoard/Payout/WeeklyPayout";
 
 const VendorPayout = () => {
   const stats = [
@@ -54,6 +55,9 @@ const VendorPayout = () => {
           />
         ))}
       </div>
+
+      {/* Weekly Payout Notice */}
+      <WeeklyPayout />
     </div>
   )
 }
