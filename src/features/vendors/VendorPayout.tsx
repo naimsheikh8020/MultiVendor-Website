@@ -8,17 +8,17 @@ const VendorPayout = () => {
     {
       icon: assets.VendorTotalSales,
       value: "৳ 45600.00",
-      label: "Total Sales",
+      label: "Available Balance (Can be withdrawn)",
     },
     {
-      icon: assets.VendorNetEarning,
+      icon: assets.VendorPayout,
       value: "৳ 45600.00",
-      label: "Net Earnings",
+      label: "Pending Balance (From recent orders)",
     },
     {
-      icon: assets.VendorTotalProduct,
-      value: "5",
-      label: "Total Products",
+      icon: assets.VendorLifeTimeEarning,
+      value: "৳ 4560000.00",
+      label: "Lifetime Earnings (Total earnings from all orders)",
     },
    
   ];
