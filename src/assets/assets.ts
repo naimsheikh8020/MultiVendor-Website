@@ -51,11 +51,14 @@ import VendorTotalProduct from "./VendorTotalProduct.png"
 import VendorTotalSales from "./VendorTotalSales.png"
 import VendorCommsion from "./VendorCommsion.png"
 import CommsionStructure from "./CommsionStructure.png"
-
+import VendorPayout from "./VendorPayoutPending.png"
+import VendorLifeTimeEarning from "./VendorNetEarning.png"
 
 export const assets = {
   VendorNetEarning,
+  VendorPayout,
   VendorCommsion,
+  VendorLifeTimeEarning,
   CommsionStructure,
   VendorTotalOrder,
   VendorTotalProduct,
