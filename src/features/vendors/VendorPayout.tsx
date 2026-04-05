@@ -3,10 +3,14 @@ import { assets } from "../../assets/assets";
 import PrimaryButton from "../../Components/PrimaryButton";
 import DashboardCard from "../../Components/VendorDashBoard/Dashboard/DashboardCard"
 import WeeklyPayout from "../../Components/VendorDashBoard/Payout/WeeklyPayout";
-import PayoutCard from "../../Components/VendorDashBoard/Payout/PayoutCard";
+// import PayoutCard from "../../Components/VendorDashBoard/Payout/PayoutCard";
 import PayoutHistorySection from "../../Components/VendorDashBoard/Payout/PayoutHistorySection";
+import { useState } from "react";
+import VendorRequestPayoutModal from "../../Components/VendorDashBoard/Payout/VendorRequestPayoutModal";
 
 const VendorPayout = () => {
+  const [open, setOpen] = useState(false);
+
   const stats = [
     {
       icon: assets.VendorTotalSales,
@@ -23,7 +27,10 @@ const VendorPayout = () => {
       value: "৳ 4560000.00",
       label: "Lifetime Earnings (Total earnings from all orders)",
     },
-   
+
+
+
+
   ];
   return (
     <div>
@@ -39,11 +46,15 @@ const VendorPayout = () => {
         </div>
 
         <PrimaryButton
-          label="Add Category"
+          label="Request Payout"
           icon={<Plus />}
-          onClick={() => console.log("Clicked")}
+          onClick={() => setOpen(true)}
           className="w-full sm:w-auto"
         />
+        <VendorRequestPayoutModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+      />
       </div>
 
       {/* Cards */}
@@ -61,30 +72,8 @@ const VendorPayout = () => {
       {/* Weekly Payout Notice */}
       <WeeklyPayout />
 
-      {/* Payout History
-      <div className="space-y-4 mt-6 bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-       <h1 className="text-xl font-bold text-gray-800">Payout History</h1>
-      <PayoutCard
-        id="payout-001"
-        amount={10000}
-        requestedAt="10/02/2026, 16:00:00"
-        bankName="Chase Bank"
-        accountMasked="****1234"
-        note="Weekly payout request"
-        status="pending"
-      />
-
-      <PayoutCard
-        id="payout-002"
-        amount={10000}
-        requestedAt="10/02/2026, 16:00:00"
-        processedAt="11/02/2026, 16:00:00"
-        bankName="Chase Bank"
-        accountMasked="****1234"
-        status="completed"
-      />
-    </div> */}
-    <PayoutHistorySection />
+      {/* Payout History */}
+      <PayoutHistorySection />
     </div>
   )
 }
