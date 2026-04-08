@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
+import VendorOrderCard from "../../Components/VendorDashBoard/Order/VendorOrderCard";
 
 const categories = ["All Category", "Pending", "Processing", "Shipped", "Delivered"];
 
@@ -19,7 +20,7 @@ const VendorOrder = () => {
           </p>
         </div>
 
-       
+
       </div>
 
       {/* SEARCH + FILTER */}
@@ -100,6 +101,9 @@ const VendorOrder = () => {
 
         </div>
       </div>
+
+      {/* Order List */}
+      <VendorOrderCard />
     </div>
   )
 }
