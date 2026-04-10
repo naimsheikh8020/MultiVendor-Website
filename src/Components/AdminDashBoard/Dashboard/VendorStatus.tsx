@@ -19,7 +19,7 @@ export const VendorStatus = ({ data }: { data: VendorStatusItem[] }) => {
         {data.map((item) => (
           <div
             key={item.id}
-            className="flex justify-between items-center border border-gray-200  rounded-lg p-3"
+            className="flex justify-between items-center border border-gray-200 rounded-lg p-4"
           >
             <div>
               <p className="text-sm font-medium text-gray-800">
