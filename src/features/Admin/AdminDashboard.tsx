@@ -1,4 +1,5 @@
 import { assets } from "../../assets/assets";
+import DashboardRecentOrder from "../../Components/AdminDashBoard/Dashboard/DashboardRecentOrder";
 import DashboardTopCard from "../../Components/AdminDashBoard/Dashboard/DashboardTopCard";
 import  RecommendedStore  from "../../Components/AdminDashBoard/Dashboard/RecommendedStore";
 import { VendorStatus } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
@@ -71,6 +72,11 @@ const recommendedStoreData = [
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <VendorStatus data={vendorStatusData} />
         <RecommendedStore data={recommendedStoreData} />
+      </div>
+
+      {/* Recent Orders */}
+      <div className="mt-6">
+        <DashboardRecentOrder/>
       </div>
     </div>
   )
