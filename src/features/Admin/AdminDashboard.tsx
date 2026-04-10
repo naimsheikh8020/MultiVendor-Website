@@ -1,5 +1,8 @@
 import { assets } from "../../assets/assets";
 import DashboardTopCard from "../../Components/AdminDashBoard/Dashboard/DashboardTopCard";
+import  RecommendedStore  from "../../Components/AdminDashBoard/Dashboard/RecommendedStore";
+import { VendorStatus } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
+import type { VendorStatusItem } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
 
 const AdminDashboard = () => {
   const cardData = [
@@ -32,6 +35,17 @@ const AdminDashboard = () => {
 
   },
 ];
+const vendorStatusData: VendorStatusItem[] = [
+  { id: "1", name: "TechGear Pro", owner: "John Smith", status: "approved" },
+  { id: "2", name: "Fashion Forward", owner: "Sarah Johnson", status: "approved" },
+  { id: "3", name: "Home Essentials", owner: "Mike Davis", status: "pending" },
+];
+
+const recommendedStoreData = [
+  { id: "1", name: "TechGear Pro", owner: "John Smith", enabled: true },
+  { id: "2", name: "Fashion Forward", owner: "Sarah Johnson", enabled: true },
+  { id: "3", name: "Home Essentials", owner: "Mike Davis", enabled: true },
+];
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -45,12 +59,19 @@ const AdminDashboard = () => {
           </p>
         </div>
       </div>
+
       {/* Top Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {cardData.map((card, index) => (
         <DashboardTopCard key={index} {...card} />
       ))}
-    </div>
+      </div>
+
+      {/* Vendor Status And Recommended Stores */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <VendorStatus data={vendorStatusData} />
+        <RecommendedStore data={recommendedStoreData} />
+      </div>
     </div>
   )
 }
