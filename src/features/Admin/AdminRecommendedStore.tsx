@@ -1,3 +1,4 @@
+import RecommendedStoreTable from "../../Components/AdminDashBoard/RecommendedStore/RecommendedStoreTable"
 import FilterBar from "../../Components/FilterBar"
 
 const AdminRecommendedStore = () => {
@@ -19,6 +20,7 @@ const AdminRecommendedStore = () => {
         <FilterBar showSearch/>
 
         {/* Recommended Stores List */}
+        <RecommendedStoreTable />
     </div>
   )
 }
