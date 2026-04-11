@@ -1,5 +1,6 @@
 import { assets } from "../../assets/assets";
 import CommissionSetting from "../../Components/AdminDashBoard/Commission/CommissionSetting";
+import RecentCommission from "../../Components/AdminDashBoard/Commission/RecentCommission";
 import DashboardCard from "../../Components/VendorDashBoard/Dashboard/DashboardCard";
 
 const AdminCommsion = () => {
@@ -54,6 +55,9 @@ const AdminCommsion = () => {
 
       {/* Commission Settings */}
       <CommissionSetting />
+
+      {/* Recent Commission Transactions */}
+      <RecentCommission />
 
     </div>
   );
