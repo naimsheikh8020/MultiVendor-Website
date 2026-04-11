@@ -54,9 +54,12 @@ import CommsionStructure from "./CommsionStructure.png"
 import VendorPayout from "./VendorPayoutPending.png"
 import VendorLifeTimeEarning from "./VendorNetEarning.png"
 import ActiveVendor from "./ActiveVendor.png"
-
+import eye from "./eye.svg"
+import deleteIcon from "./delete.png"
 export const assets = {
   VendorNetEarning,
+  eye,
+  deleteIcon,
   VendorPayout,
   VendorCommsion,
   VendorLifeTimeEarning,
