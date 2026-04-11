@@ -1,3 +1,4 @@
+import ProductCard from "../../Components/AdminDashBoard/Products/ProductCard";
 import FilterBar from "../../Components/FilterBar";
 
 const AdminProduct = () => {
@@ -18,10 +19,27 @@ const AdminProduct = () => {
       {/* SEARCH + FILTER */}
       <FilterBar
         filters={[
-          { key: "Status", options: ["All", "Electronic Accessories", "Watches and Bag", "Home & Kitchen" ] },
-          { key: "Role", options: ["All", "TechGear Pro", "Fashion Forward", "Fast Fashion"] },
+          {
+            key: "Status",
+            options: [
+              "All",
+              "Electronic Accessories",
+              "Watches and Bag",
+              "Home & Kitchen",
+            ],
+          },
+          {
+            key: "Role",
+            options: ["All", "TechGear Pro", "Fashion Forward", "Fast Fashion"],
+          },
         ]}
       />
+      {/* Product Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <ProductCard value={5} label="Total Products" />
+        <ProductCard value={5} label="In Stock" color="green" />
+        <ProductCard value={0} label="Out of Stock" color="red" />
+      </div>
     </div>
   );
 };
