@@ -1,7 +1,22 @@
+import AdminOrderTable from "../../Components/AdminDashBoard/Products/AdminOrderTable";
 import ProductCard from "../../Components/AdminDashBoard/Products/ProductCard";
 import FilterBar from "../../Components/FilterBar";
+import type { AdminOrder } from "../../types/AdminOrderType";
 
 const AdminOrder = () => {
+
+  const orders: AdminOrder[] = Array.from({ length: 500 }, (_, i) => ({
+  id: i + 1,
+  orderId: `ord-${String(i + 1).padStart(3, "0")}`,
+  customer: ["Jhon Doe", "Alice Smith", "Rahim Uddin"][i % 3],
+  store: ["TechGear Pro", "Fashion Forward", "Boom"][i % 3],
+  date: "15/01/2024",
+  price: Number((Math.random() * 1000 + 50).toFixed(2)),
+  commission: Number((Math.random() * 100).toFixed(2)),
+  status: ["Delivered", "Pending", "Processing", "Cancelled", "Shipped"][
+    i % 5
+  ] as AdminOrder["status"],
+}));
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -44,6 +59,11 @@ const AdminOrder = () => {
         <ProductCard value={1} label="Cancelled" color="red" />
         <ProductCard value={3} label="Delivered" color="green" />
       </div>
+
+      {/* Orders Table */}
+      <AdminOrderTable data={orders} />
+
+
     </div>
   );
 };
