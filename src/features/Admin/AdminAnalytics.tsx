@@ -1,4 +1,5 @@
 import { assets } from "../../assets/assets";
+import RevenueInsights from "../../Components/AdminDashBoard/Analytics/RevenueInsights";
 import TopPerformingVendorAndOrder from "../../Components/AdminDashBoard/Analytics/TopPerformingVendorAndOrder";
 import DashboardTopCard from "../../Components/AdminDashBoard/Dashboard/DashboardTopCard"
 
@@ -57,6 +58,9 @@ const AdminAnalytics = () => {
       {/* Top Performing Vendors and Orders */}
       <TopPerformingVendorAndOrder/>
 
+      
+      {/* Revenue Insights */}
+      <RevenueInsights/>
     </div>
   )
 }
