@@ -25,6 +25,8 @@ const AdminProduct = () => {
     stock: Math.floor(Math.random() * 100),
     status: Math.random() > 0.2 ? "In Stock" : "Out of Stock",
   }));
+
+
   return (
     <div className="space-y-4">
       {/* Header */}
