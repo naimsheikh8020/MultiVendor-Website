@@ -1,11 +1,11 @@
 import AdminOrderTable from "../../Components/AdminDashBoard/Products/AdminOrderTable";
 import ProductCard from "../../Components/AdminDashBoard/Products/ProductCard";
 import FilterBar from "../../Components/FilterBar";
-import type { AdminOrder } from "../../types/AdminOrderType";
+import type { AdminOrder as AdminOrderType } from "../../types/AdminOrderType";
 
 const AdminOrder = () => {
 
-  const orders: AdminOrder[] = Array.from({ length: 500 }, (_, i) => ({
+  const orders: AdminOrderType[] = Array.from({ length: 500 }, (_, i) => ({
   id: i + 1,
   orderId: `ord-${String(i + 1).padStart(3, "0")}`,
   customer: ["Jhon Doe", "Alice Smith", "Rahim Uddin"][i % 3],
@@ -15,7 +15,7 @@ const AdminOrder = () => {
   commission: Number((Math.random() * 100).toFixed(2)),
   status: ["Delivered", "Pending", "Processing", "Cancelled", "Shipped"][
     i % 5
-  ] as AdminOrder["status"],
+  ] as AdminOrderType["status"],
 }));
   return (
     <div className="space-y-4">
