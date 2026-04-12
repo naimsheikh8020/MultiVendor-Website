@@ -273,7 +273,194 @@ export const categories: TopCategory[] = [
   items: 420,
 }
 ];
+export const allProducts = [
+  // ================= MEN'S FASHION =================
+  {
+    id: 111,
+    image: "https://images.unsplash.com/photo-1520975916090-3105956dac38",
+    image2: "https://images.unsplash.com/photo-1516822003754-cca485356ecb",
+    title: "Men's Casual Shirt",
+    category: "mens-fashion",
+    rating: 4,
+    reviewCount: 12,
+    author: "Mr.Shop",
+    price: 25,
+    oldPrice: 35,
+    discount: 28,
 
+    description: "Stylish and comfortable shirt for daily wear.",
+
+    specifications: {
+      brand: "Zara",
+      type: "Shirt",
+      material: "Cotton",
+      color: "Blue",
+    },
+
+    includedItems: ["1 Shirt"],
+    features: ["Breathable", "Slim fit", "Comfortable"],
+  },
+  {
+    id: 222,
+    image: "https://images.unsplash.com/photo-1514997130083-1b9d0c2a8eae",
+    image2: "https://images.unsplash.com/photo-1583000635820-80df0b08a64b",
+    title: "Men's Denim Jacket",
+    category: "mens-fashion",
+    rating: 5,
+    reviewCount: 20,
+    author: "Mr.Shop",
+    price: 60,
+    oldPrice: 80,
+    discount: 25,
+
+    description: "Premium denim jacket for modern style.",
+
+    specifications: {
+      brand: "Levi's",
+      type: "Jacket",
+      material: "Denim",
+      color: "Blue",
+    },
+
+    includedItems: ["1 Jacket"],
+    features: ["Durable", "Trendy", "All-season"],
+  },
+
+  // ================= WOMEN'S FASHION =================
+  {
+    id: 333,
+    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d",
+    image2: "https://images.unsplash.com/photo-1520974735194-94f3c7f8c2a1",
+    title: "Women's Summer Dress",
+    category: "womens-fashion",
+    rating: 4,
+    reviewCount: 30,
+    author: "Mr.Shop",
+    price: 40,
+    oldPrice: 60,
+    discount: 33,
+
+    description: "Lightweight summer dress perfect for outings.",
+
+    specifications: {
+      brand: "H&M",
+      type: "Dress",
+      material: "Polyester",
+      color: "Red",
+    },
+
+    includedItems: ["1 Dress"],
+    features: ["Lightweight", "Elegant", "Comfortable"],
+  },
+
+  // ================= ELECTRONICS =================
+  {
+    id: 444,
+    image: "https://images.unsplash.com/photo-1518449030930-6d66b8c2bfc0",
+    image2: "https://images.unsplash.com/photo-1585386959984-a4155224a1ad",
+    title: "Wireless Headphones",
+    category: "electronics",
+    rating: 5,
+    reviewCount: 120,
+    author: "Mr.Shop",
+    price: 80,
+    oldPrice: 120,
+    discount: 33,
+
+    description: "Noise-cancelling wireless headphones.",
+
+    specifications: {
+      brand: "Sony",
+      type: "Headphone",
+      material: "Plastic",
+      color: "Black",
+    },
+
+    includedItems: ["Headphone", "Cable"],
+    features: ["Bluetooth", "Long battery", "Noise cancel"],
+  },
+
+  // ================= HOME & KITCHEN =================
+  {
+    id: 555,
+    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c",
+    image2: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519",
+    title: "Cookware Set",
+    category: "home-kitchen",
+    rating: 4,
+    reviewCount: 50,
+    author: "Mr.Shop",
+    price: 55,
+    oldPrice: 75,
+    discount: 26,
+
+    description: "Premium cookware set for modern kitchens.",
+
+    specifications: {
+      brand: "Generic",
+      type: "Cookware",
+      material: "Non-stick",
+      color: "Red",
+    },
+
+    includedItems: ["Pans", "Lids"],
+    features: ["Heat resistant", "Durable", "Easy clean"],
+  },
+
+  // ================= SPORTS =================
+  {
+    id: 666,
+    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b",
+    image2: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55",
+    title: "Football",
+    category: "sports-outdoors",
+    rating: 4,
+    reviewCount: 70,
+    author: "Mr.Shop",
+    price: 20,
+    oldPrice: 30,
+    discount: 33,
+
+    description: "Durable football for outdoor games.",
+
+    specifications: {
+      brand: "Nike",
+      type: "Ball",
+      material: "Rubber",
+      color: "White",
+    },
+
+    includedItems: ["1 Ball"],
+    features: ["Durable", "Outdoor use"],
+  },
+
+  // ================= GROCERIES =================
+  {
+    id: 777,
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e",
+    image2: "https://images.unsplash.com/photo-1516685018646-549198525c1b",
+    title: "Fresh Vegetables Pack",
+    category: "groceries",
+    rating: 4,
+    reviewCount: 45,
+    author: "Mr.Shop",
+    price: 15,
+    oldPrice: 20,
+    discount: 25,
+
+    description: "Organic fresh vegetables bundle.",
+
+    specifications: {
+      brand: "Local Farm",
+      type: "Vegetables",
+      material: "Organic",
+      color: "Mixed",
+    },
+
+    includedItems: ["Vegetable Pack"],
+    features: ["Fresh", "Healthy"],
+  },
+];
 export const popularProducts = [
   {
   id: 1,

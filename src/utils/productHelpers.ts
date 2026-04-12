@@ -92,18 +92,19 @@ export const normalizeProduct = (product: any): UnifiedProduct => {
 // TODO: Replace this with API call
 export const getProductById = async (id: number): Promise<UnifiedProduct | null> => {
   // Import product arrays
-  const { popularProducts, bestProducts } = await import('../assets/assets');
-  
+  const { popularProducts, bestProducts, allProducts } = await import('../assets/assets');
+
   // Combine all product sources
-  const allProducts = [
+  const combinedProducts = [
+    ...allProducts,
     ...popularProducts,
     ...bestProducts,
     // Add more product sources here as needed
   ];
 
   // Find product by ID
-  const product = allProducts.find(p => p.id === id);
-  
+  const product = combinedProducts.find(p => p.id === id);
+
   if (!product) return null;
 
   // Normalize to unified format
