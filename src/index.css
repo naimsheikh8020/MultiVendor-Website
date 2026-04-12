@@ -6,3 +6,13 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Hide scrollbar but keep scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE */
+  scrollbar-width: none;     /* Firefox */
+}
