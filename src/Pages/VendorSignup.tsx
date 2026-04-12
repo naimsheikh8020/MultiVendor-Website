@@ -70,19 +70,7 @@ const VendorSignup = () => {
                 />
               </div>
             </div>
-             {/* OTP */}
-            <div className="mb-4">
-              <label className="text-base text-gray-600 mb-1 block">
-                OTP
-              </label>
-              <div className="flex items-center bg-[#f1f5f9] border border-gray-200 rounded-lg px-3 h-11">
-                <input
-                  type="number"
-                  placeholder="Enter your OTP"
-                  className="w-full bg-transparent outline-none text-[14px] placeholder:text-gray-400"
-                />
-              </div>
-            </div>
+            
   
             {/* PASSWORD */}
             <div className="mb-4">
