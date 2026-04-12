@@ -10,7 +10,7 @@ const UserTabs = ({ active, onChange }: Props) => {
         <button
           key={tab}
           onClick={() => onChange(tab as any)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium capitalize ${
+          className={`px-4 py-2 rounded-lg text-sm font-medium capitalize cursor-pointer ${
             active === tab
               ? "bg-blue-600 text-white"
               : "bg-gray-100 text-gray-600"
