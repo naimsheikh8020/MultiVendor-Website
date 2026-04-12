@@ -2,8 +2,8 @@ import { assets } from "../../assets/assets";
 import DashboardRecentOrder from "../../Components/AdminDashBoard/Dashboard/DashboardRecentOrder";
 import DashboardTopCard from "../../Components/AdminDashBoard/Dashboard/DashboardTopCard";
 // import  RecommendedStore  from "../../Components/AdminDashBoard/Dashboard/RecommendedStore";
-// import { VendorStatus } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
-// import type { VendorStatusItem } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
+import { VendorStatus } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
+import type { VendorStatusItem } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
 
 const AdminDashboard = () => {
   const cardData = [
@@ -36,11 +36,11 @@ const AdminDashboard = () => {
 
   },
 ];
-// const vendorStatusData: VendorStatusItem[] = [
-//   { id: "1", name: "TechGear Pro", owner: "John Smith", status: "approved" },
-//   { id: "2", name: "Fashion Forward", owner: "Sarah Johnson", status: "approved" },
-//   { id: "3", name: "Home Essentials", owner: "Mike Davis", status: "pending" },
-// ];
+const vendorStatusData: VendorStatusItem[] = [
+  { id: "1", name: "TechGear Pro", owner: "John Smith", status: "approved" },
+  { id: "2", name: "Fashion Forward", owner: "Sarah Johnson", status: "approved" },
+  { id: "3", name: "Home Essentials", owner: "Mike Davis", status: "pending" },
+];
 
 // const recommendedStoreData = [
 //   { id: "1", name: "TechGear Pro", owner: "John Smith", enabled: true },
@@ -69,10 +69,10 @@ const AdminDashboard = () => {
       </div>
 
       {/* Vendor Status And Recommended Stores */}
-      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <VendorStatus data={vendorStatusData} />
-        <RecommendedStore data={recommendedStoreData} />
-      </div> */}
+        {/* <RecommendedStore data={recommendedStoreData} /> */}
+      </div>
 
       {/* Recent Orders */}
       <div className="mt-6">
