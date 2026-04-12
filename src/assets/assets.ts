@@ -56,9 +56,16 @@ import VendorLifeTimeEarning from "./VendorNetEarning.png"
 import ActiveVendor from "./ActiveVendor.png"
 import eye from "./eye.svg"
 import deleteIcon from "./delete.png"
+import adminpayoutblue from "./adminpayoutblue.png"
+import adminpayoutgreen from "./adminpayoutgreen.png"
+import adminpayoutclock from "./adminpayoutclock.png"
+
 export const assets = {
   VendorNetEarning,
   eye,
+  adminpayoutblue,
+  adminpayoutgreen,
+  adminpayoutclock,
   deleteIcon,
   VendorPayout,
   VendorCommsion,
