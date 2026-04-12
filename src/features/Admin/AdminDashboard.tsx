@@ -1,6 +1,7 @@
 import { assets } from "../../assets/assets";
 import DashboardRecentOrder from "../../Components/AdminDashBoard/Dashboard/DashboardRecentOrder";
 import DashboardTopCard from "../../Components/AdminDashBoard/Dashboard/DashboardTopCard";
+import RecommendedStore from "../../Components/AdminDashBoard/Dashboard/RecommendedStore";
 // import  RecommendedStore  from "../../Components/AdminDashBoard/Dashboard/RecommendedStore";
 import { VendorStatus } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
 import type { VendorStatusItem } from "../../Components/AdminDashBoard/Dashboard/VendorStatus";
@@ -42,11 +43,11 @@ const vendorStatusData: VendorStatusItem[] = [
   { id: "3", name: "Home Essentials", owner: "Mike Davis", status: "pending" },
 ];
 
-// const recommendedStoreData = [
-//   { id: "1", name: "TechGear Pro", owner: "John Smith", enabled: true },
-//   { id: "2", name: "Fashion Forward", owner: "Sarah Johnson", enabled: true },
-//   { id: "3", name: "Home Essentials", owner: "Mike Davis", enabled: true },
-// ];
+const recommendedStoreData = [
+  { id: "1", name: "TechGear Pro", owner: "John Smith", enabled: true },
+  { id: "2", name: "Fashion Forward", owner: "Sarah Johnson", enabled: true },
+  { id: "3", name: "Home Essentials", owner: "Mike Davis", enabled: true },
+];
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -71,7 +72,7 @@ const vendorStatusData: VendorStatusItem[] = [
       {/* Vendor Status And Recommended Stores */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <VendorStatus data={vendorStatusData} />
-        {/* <RecommendedStore data={recommendedStoreData} /> */}
+        <RecommendedStore data={recommendedStoreData} />
       </div>
 
       {/* Recent Orders */}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 
-type RecommendedItem = {
+export type Store = {
   id: string;
   name: string;
   owner: string;
@@ -9,64 +9,68 @@ type RecommendedItem = {
 };
 
 type Props = {
-  data: RecommendedItem[];
+  data: Store[];
 };
 
 const RecommendedStore = ({ data }: Props) => {
-  const [items, setItems] = useState(data);
+  const [stores, setStores] = useState(data);
 
-  const handleToggle = (id: string) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, enabled: !item.enabled }
-          : item
+  const toggleStore = (id: string) => {
+    setStores((prev) =>
+      prev.map((store) =>
+        store.id === id
+          ? { ...store, enabled: !store.enabled }
+          : store
       )
     );
   };
 
   return (
-    <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-5 mt-4">
+    <div className="bg-white rounded-2xl p-5 border border-gray-200 w-full mt-4">
+      
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-gray-800">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">
           Recommended Store
-        </h3>
-        <Link to={'/admin/recommended'}>
-          <span className="text-sm text-blue-600 cursor-pointer">
-            View All
-          </span>
+        </h2>
+        <Link
+          to="/admin/recommended"
+          className="text-sm text-blue-600 hover:underline"
+        >
+          View All
         </Link>
       </div>
 
-      {/* List */}
-      <div className="flex flex-col gap-3">
-        {items.map((item) => (
+      {/* Store List */}
+      <div className="space-y-4">
+        {stores.map((store) => (
           <div
-            key={item.id}
-            className="flex justify-between items-center border border-gray-200 rounded-lg p-3"
+            key={store.id}
+            className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3"
           >
-            {/* Left */}
+            {/* Text */}
             <div>
-              <p className="text-sm font-medium text-gray-800">
-                {item.name}
-              </p>
-              <p className="text-xs text-gray-500">
-                {item.owner}
+              <h3 className="text-sm font-semibold text-gray-800">
+                {store.name}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {store.owner}
               </p>
             </div>
 
             {/* Toggle */}
-            <label className="inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={item.enabled}
-                onChange={() => handleToggle(item.id)}
+            <button
+              onClick={() => toggleStore(store.id)}
+              className={`relative w-10 h-5 rounded-full cursor-pointer transition ${
+                store.enabled ? "bg-blue-600" : "bg-gray-300"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition transform ${
+                  store.enabled ? "translate-x-5" : ""
+                }`}
               />
-
-              <div className="relative cursor-pointer w-9 h-5 bg-gray-300 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4"></div>
-            </label>
+            </button>
           </div>
         ))}
       </div>
