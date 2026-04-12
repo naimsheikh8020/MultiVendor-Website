@@ -27,7 +27,7 @@ const SettingsTabs = ({ activeTab, setActiveTab }: Props) => {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg text-sm sm:text-base font-medium whitespace-nowrap transition-all
+                flex items-center cursor-pointer gap-2 px-4 py-2 rounded-lg text-sm sm:text-base font-medium whitespace-nowrap transition-all
                 ${
                   isActive
                     ? "bg-blue-50 text-blue-600"
