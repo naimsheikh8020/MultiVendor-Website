@@ -5,7 +5,7 @@ import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 const Footer = () => {
   const sellerLinks = [
   { name: "Vendor Login", path: "/vendor/dashboard" },
-  // { name: "Start Selling", path: "/vendor/start" },
+  { name: "Become a Vendor", path: "/vendor-signup" },
   { name: "Super Admin", path: "/admin" },
 ];
   return (

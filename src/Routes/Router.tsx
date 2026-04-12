@@ -23,6 +23,8 @@ import AdminAnalytics from "../features/Admin/AdminAnalytics";
 import AdminPayout from "../features/Admin/AdminPayout";
 import AdminSettings from "../features/Admin/AdminSettings";
 import ProtectedRoute from "./ProtectedRoute";
+// import VendorStoreForm from "../Pages/VendorStoreForm";
+// import VendorSignup from "../Pages/VendorSignup";
 
 // Lazy pages
 const Home = lazy(() => import("../Pages/Home"));
@@ -36,6 +38,8 @@ const ProductCategory = lazy(() => import("../Pages/ProductCategory"));
 const ProductDetails = lazy(() => import("../Pages/ProductDetails"));
 const Checkout = lazy(() => import("../Pages/Checkout"));
 const NotFound = lazy(() => import("../Pages/NotFound"));
+const VendorSignup = lazy(()=> import("../Pages/VendorSignup"));
+const VendorStoreForm = lazy(() => import("../Pages/VendorStoreForm"));
 
 export const routes: RouteObject[] = [
   // 🔹 USER LAYOUT (your existing system)
@@ -49,7 +53,8 @@ export const routes: RouteObject[] = [
       { path: "login", element: <Loadable><Login /></Loadable> },
       { path: "signup", element: <Loadable><SignUp /></Loadable> },
       { path: "forgot-password", element: <Loadable><ForgotPassword /></Loadable> },
-
+      { path: "vendor-signup", element: <Loadable><VendorSignup /></Loadable> },
+      { path: "/store-info", element: <Loadable><VendorStoreForm /></Loadable> },
       // Stores
       { path: "stores", element: <Loadable><Store /></Loadable> },
       { path: "stores/:storeId", element: <Loadable><StoreDetails /></Loadable> },
@@ -67,6 +72,7 @@ export const routes: RouteObject[] = [
 
       // 404
       { path: "*", element: <Loadable><NotFound /></Loadable> },
+
     ],
   },
 
