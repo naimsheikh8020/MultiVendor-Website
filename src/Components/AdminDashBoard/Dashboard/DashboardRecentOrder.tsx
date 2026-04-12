@@ -38,7 +38,8 @@ const orders: Order[] = [
 
 const DashboardRecentOrder = () => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 mt-4 shadow">
+    <div className="bg-white border border-gray-200 rounded-xl p-5 shadow w-full">
+
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-gray-800">
@@ -52,52 +53,54 @@ const DashboardRecentOrder = () => {
       </div>
 
       {/* Desktop Table */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-sm text-left">
-          <thead className="text-gray-500 border-b border-gray-200">
-            <tr>
-              <th className="py-2">Order ID</th>
-              <th>Customer</th>
-              <th>Vendor</th>
-              <th>Date</th>
-              <th>Total</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order.id} className="border-b border-gray-200">
-                <td className="py-3">{order.id}</td>
-                <td>{order.customer}</td>
-                <td>{order.vendor}</td>
-                <td>{order.date}</td>
-                <td>{order.total}</td>
-                <td>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      order.status === "delivered"
-                        ? "bg-blue-100 text-blue-600"
-                        : "bg-orange-100 text-orange-500"
-                    }`}
-                  >
-                    {order.status === "delivered"
-                      ? "Delivered"
-                      : "Processing"}
-                  </span>
-                </td>
+      <div className="hidden md:block w-full overflow-x-auto">
+        <div className="min-w-[600px]">
+          <table className="w-full text-sm text-left">
+            <thead className="text-gray-500 border-b border-gray-200">
+              <tr>
+                <th className="py-2">Order ID</th>
+                <th>Customer</th>
+                <th>Vendor</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order.id} className="border-b border-gray-200 last:border-none">
+                  <td className="py-3">{order.id}</td>
+                  <td>{order.customer}</td>
+                  <td>{order.vendor}</td>
+                  <td>{order.date}</td>
+                  <td>{order.total}</td>
+                  <td>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        order.status === "delivered"
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-orange-100 text-orange-500"
+                      }`}
+                    >
+                      {order.status === "delivered"
+                        ? "Delivered"
+                        : "Processing"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Mobile Cards */}
-      <div className="md:hidden flex flex-col gap-3">
+      <div className="md:hidden flex flex-col gap-3 w-full">
         {orders.map((order) => (
           <div
             key={order.id}
-            className="border border-gray-200 rounded-lg p-3"
+            className="border border-gray-200 rounded-lg p-3 w-full"
           >
             <div className="flex justify-between mb-2">
               <span className="font-medium">{order.id}</span>

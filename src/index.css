@@ -16,3 +16,7 @@ html {
   -ms-overflow-style: none;  /* IE */
   scrollbar-width: none;     /* Firefox */
 }
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}

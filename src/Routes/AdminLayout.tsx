@@ -7,9 +7,9 @@ const AdminLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen bg-[#f6f7fb] flex overflow-hidden">
+    <div className="h-screen bg-[#f6f7fb] flex">
 
-      {/* MOBILE SIDEBAR OVERLAY */}
+      {/* MOBILE OVERLAY */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -18,19 +18,24 @@ const AdminLayout: React.FC = () => {
       )}
 
       {/* SIDEBAR */}
-      <div className={`
-        fixed left-0 top-0 h-full w-64 z-50 transition-transform duration-300 lg:translate-x-0
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+      <div
+        className={`
+          fixed left-0 top-0 h-full w-64 z-50 
+          transform transition-transform duration-300
+          lg:translate-x-0
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
         <AdminSidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
 
-      {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col lg:ml-64 h-full w-full">
+      {/* MAIN CONTENT */}
+      <div className="flex-1 flex flex-col lg:ml-64 min-h-0 w-full">
 
-        {/* TOP BAR */}
-        <div className="h-[70px] bg-white border-b flex items-center justify-between px-4 md:px-6 border-gray-200 shadow-sm flex-shrink-0">
-          {/* Hamburger Menu for Mobile */}
+        {/* HEADER */}
+        <div className="h-[70px] bg-white border-b flex items-center justify-between px-4 md:px-6 border-gray-200 shadow-sm shrink-0">
+          
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -50,8 +55,8 @@ const AdminLayout: React.FC = () => {
           </div>
         </div>
 
-        {/* SCROLLABLE CONTENT */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+        {/* 🔥 ONLY SCROLLABLE AREA */}
+        <main className="flex-1 overflow-y-auto min-h-0 p-4 lg:p-6">
           <Outlet />
         </main>
 
