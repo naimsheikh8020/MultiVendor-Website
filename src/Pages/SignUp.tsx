@@ -55,12 +55,25 @@ const SignUp: React.FC = () => {
           {/* Email */}
           <div className="mb-4">
             <label className="text-base text-gray-600 mb-1 block">
-              Email/Phone
+              Email
             </label>
             <div className="flex items-center bg-[#f1f5f9] border border-gray-200 rounded-lg px-3 h-11">
               <input
                 type="email"
                 placeholder="Enter your Email/Phone"
+                className="w-full bg-transparent outline-none text-[14px] placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+           {/* Phone */}
+          <div className="mb-4">
+            <label className="text-base text-gray-600 mb-1 block">
+              Phone
+            </label>
+            <div className="flex items-center bg-[#f1f5f9] border border-gray-200 rounded-lg px-3 h-11">
+              <input
+                type="tel"
+                placeholder="Enter your Phone Number"
                 className="w-full bg-transparent outline-none text-[14px] placeholder:text-gray-400"
               />
             </div>
