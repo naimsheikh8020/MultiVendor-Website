@@ -6,8 +6,9 @@ import {  useNavigate } from "react-router";
 const VendorSignup = () => {
   const navigate = useNavigate();
   const handleNext = () => {
-  navigate("/store-info");
-};
+  localStorage.setItem("vendorStep", "1");
+  navigate("/vendor-signup/store-info");
+  };
   const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
