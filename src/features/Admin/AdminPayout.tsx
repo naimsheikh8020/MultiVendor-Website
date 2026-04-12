@@ -106,22 +106,24 @@ const AdminPayout = () => {
       </div>
 
       {/* 🔥 Filter Tabs */}
-      <div className="flex gap-2 bg-gray-100 p-1 rounded-xl w-fit overflow-x-auto no-scrollbar">
-        {tabs.map((item) => (
-          <button
-            key={item}
-            onClick={() => setFilter(item)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-all
-              ${
-                filter === item
-                  ? "bg-blue-600 text-white shadow"
-                  : "text-gray-600 hover:bg-gray-200"
-              }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
+      <div className="w-full overflow-x-auto no-scrollbar">
+  <div className="flex gap-2 bg-gray-100 p-1 rounded-xl w-max">
+    {tabs.map((item) => (
+      <button
+        key={item}
+        onClick={() => setFilter(item)}
+        className={`px-4 py-2 rounded-lg cursor-pointer text-sm font-medium capitalize whitespace-nowrap transition-all
+          ${
+            filter === item
+              ? "bg-blue-600 text-white shadow"
+              : "text-gray-600 hover:bg-gray-200"
+          }`}
+      >
+        {item}
+      </button>
+    ))}
+  </div>
+</div>
 
       {/* Payout Requests */}
       <div className="space-y-4">
