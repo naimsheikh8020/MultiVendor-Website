@@ -106,7 +106,7 @@ const AdminPayout = () => {
       </div>
 
       {/* 🔥 Filter Tabs */}
-      <div className="flex gap-2 bg-gray-100 p-1 rounded-xl w-fit">
+      <div className="flex gap-2 bg-gray-100 p-1 rounded-xl w-fit overflow-x-auto no-scrollbar">
         {tabs.map((item) => (
           <button
             key={item}
