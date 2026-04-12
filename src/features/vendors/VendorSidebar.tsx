@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../../assets/assets";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../utils/auth";
 
 const menu = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/vendor/dashboard" },
@@ -30,6 +32,12 @@ interface VendorSidebarProps {
 }
 
 const VendorSidebar: React.FC<VendorSidebarProps> = ({ onClose }) => {
+  const navigate = useNavigate();
+
+   const handleLogout = () => {
+  logout();
+  navigate("/login");
+};
   return (
     <aside className="w-64 border-r min-h-screen px-4 py-6 flex flex-col justify-between border-gray-200 shadow-sm bg-white">
 
@@ -78,7 +86,9 @@ const VendorSidebar: React.FC<VendorSidebarProps> = ({ onClose }) => {
       </div>
 
       {/* BOTTOM */}
-      <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition">
+      <button
+      onClick={handleLogout}
+       className="w-full flex cursor-pointer items-center gap-3 px-3 py-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition">
         <LogOut size={18} />
         Log Out
       </button>

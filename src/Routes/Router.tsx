@@ -22,6 +22,7 @@ import AdminRecommendedStore from "../features/Admin/AdminRecommendedStore";
 import AdminAnalytics from "../features/Admin/AdminAnalytics";
 import AdminPayout from "../features/Admin/AdminPayout";
 import AdminSettings from "../features/Admin/AdminSettings";
+import ProtectedRoute from "./ProtectedRoute";
 
 // Lazy pages
 const Home = lazy(() => import("../Pages/Home"));
@@ -71,97 +72,100 @@ export const routes: RouteObject[] = [
 
   // 🔥 VENDOR LAYOUT (new, separate)
   {
-    path: "/vendor",
-    element: <VendorLayout />,
-    children: [
-      {
-        index: true,
-        element: <Loadable><VendorDashboard /></Loadable>,
-      },
-      {
-        path: "dashboard",
-        element: <Loadable><VendorDashboard /></Loadable>,
-      },
-      {
-        path: "products",
-        element: <Loadable><VendorProduct /></Loadable>,
-      },
-      // {
-      //   path: "category",
-      //   element: <Loadable><VendorCategory /></Loadable>,
-      // },
-      {
-        path: "orders",
-        element: <Loadable><VendorOrder /></Loadable>
-      },
-      {
-        path: "earnings",
-        element: <Loadable><VendorEarnings /></Loadable>
-      },
-      {
-        path: "payouts",
-        element: <Loadable><VendorPayout /></Loadable>
-      },
-      {
-        path: "profiles",
-        element: <Loadable><VendorProfile /></Loadable>
-      },
-    ],
-  },
+  path: "/vendor",
+  element: <ProtectedRoute />,
+  children: [
+    {
+      element: <VendorLayout />,
+      children: [
+        {
+          index: true,
+          element: <Loadable><VendorDashboard /></Loadable>,
+        },
+        {
+          path: "dashboard",
+          element: <Loadable><VendorDashboard /></Loadable>,
+        },
+        {
+          path: "products",
+          element: <Loadable><VendorProduct /></Loadable>,
+        },
+        {
+          path: "orders",
+          element: <Loadable><VendorOrder /></Loadable>
+        },
+        {
+          path: "earnings",
+          element: <Loadable><VendorEarnings /></Loadable>
+        },
+        {
+          path: "payouts",
+          element: <Loadable><VendorPayout /></Loadable>
+        },
+        {
+          path: "profiles",
+          element: <Loadable><VendorProfile /></Loadable>
+        },
+      ]
+    }
+  ]
+},
 
   // 🔹 ADMIN LAYOUT 
   {
-    path: "/admin",
-    element: <AdminLayout />,
+  path: "/admin",
+  element: <ProtectedRoute />,
+  children: [
+    {
+      element: <AdminLayout />,
       children: [
         {
           index: true,
           element: <Loadable><AdminDashboard /></Loadable>,
         },
         {
-        path: "dashboard",
-        element: <Loadable><AdminDashboard /></Loadable>,
+          path: "dashboard",
+          element: <Loadable><AdminDashboard /></Loadable>,
         },
         {
-        path: "users",
-        element: <Loadable><AdminUser /></Loadable>,
+          path: "users",
+          element: <Loadable><AdminUser /></Loadable>,
         },
         {
-        path: "vendor-requests",
-        element: <Loadable><AdminVendorRequest /></Loadable>,
+          path: "vendor-requests",
+          element: <Loadable><AdminVendorRequest /></Loadable>,
         },
         {
-        path: "product",
-        element: <Loadable><AdminProduct /></Loadable>,
+          path: "product",
+          element: <Loadable><AdminProduct /></Loadable>,
         },
         {
-        path: "orders",
-        element: <Loadable><AdminOrder /></Loadable>,
+          path: "orders",
+          element: <Loadable><AdminOrder /></Loadable>,
         },
         {
-        path: "commission",
-        element: <Loadable><AdminCommsion /></Loadable>,
+          path: "commission",
+          element: <Loadable><AdminCommsion /></Loadable>,
         },
         {
-        path: "recommended",
-        element: <Loadable><AdminRecommendedStore /></Loadable>,
+          path: "recommended",
+          element: <Loadable><AdminRecommendedStore /></Loadable>,
         },
         {
-        path: "analytics",
-        element: <Loadable><AdminAnalytics /></Loadable>,
+          path: "analytics",
+          element: <Loadable><AdminAnalytics /></Loadable>,
         },
         {
-        path: "payouts",
-        element: <Loadable><AdminPayout /></Loadable>,
+          path: "payouts",
+          element: <Loadable><AdminPayout /></Loadable>,
         },
         {
-        path: "settings",
-        element: <Loadable><AdminSettings /></Loadable>,
+          path: "settings",
+          element: <Loadable><AdminSettings /></Loadable>,
         },
-
-        
       ]
-
-  }
+    }
+  ]
+}
 
 ];

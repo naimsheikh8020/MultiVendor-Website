@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../../assets/assets";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../utils/auth";
 
 const menu = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/admin/dashboard" },
@@ -34,6 +36,12 @@ interface AdminSidebarProps {
 }
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({ onClose }) => {
+   const navigate = useNavigate();
+
+   const handleLogout = () => {
+  logout();
+  navigate("/login");
+};
   return (
     <aside className="w-64 h-screen overflow-y-auto no-scrollbar border-r border-gray-200 shadow-sm bg-white flex flex-col">
       
@@ -87,7 +95,10 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ onClose }) => {
 
       {/* BOTTOM (Sticky Logout) */}
       <div className="mt-auto px-4 pb-6">
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition">
+        <button
+          onClick={handleLogout}
+          className="w-full flex cursor-pointer items-center gap-3 px-3 py-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition"
+        >
           <LogOut size={18} />
           Log Out
         </button>
