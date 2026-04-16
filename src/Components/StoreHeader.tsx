@@ -1,43 +1,29 @@
-import { useParams } from "react-router";
-import { topStores } from "../assets/assets";
 import { Star, MessageCircle } from "lucide-react";
+import type { Store } from "../types/store";
 
-const StoreHeader = () => {
-  const { storeId } = useParams();
-  const store = topStores.find((s) => s.id === Number(storeId));
+interface Props {
+  store: Store;
+}
 
-  if (!store) {
-    return <p className="text-center mt-10">Store not found</p>;
-  }
-
+const StoreHeader = ({ store }: Props) => {
   return (
-    <div className="max-w-5xl mx-auto mt-6 px-4">
+    <div className="max-w-7xl mx-auto mt-6 px-4">
       <div className="bg-blue-50 border border-gray-100 rounded-xl p-5 md:p-6 shadow-sm">
 
-        {/* 🔥 MAIN ROW */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
-          {/* LEFT: IMAGE + CONTENT */}
           <div className="flex items-center gap-4 flex-1">
-
-            {/* Image */}
             <div className="w-14 h-14 md:w-20 md:h-20 rounded-full overflow-hidden shadow shrink-0">
-              <img
-                src={store.image}
-                alt="store"
-                className="w-full h-full object-cover"
-              />
+              <img src={store.image} alt="store" className="w-full h-full object-cover" />
             </div>
 
-            {/* Content */}
             <div>
               <p className="text-xs md:text-sm text-gray-500">Since 2023</p>
 
               <h2 className="text-lg md:text-2xl font-bold text-gray-800">
-                {store.title || "Explore More"}
+                {store.title}
               </h2>
 
-              {/* META INLINE */}
               <div className="flex items-center gap-4 mt-1 flex-wrap">
                 <p className="text-gray-500 text-sm">(8 products)</p>
 
@@ -46,11 +32,7 @@ const StoreHeader = () => {
                     <Star
                       key={i}
                       size={16}
-                      className={`${
-                        i < 4
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300"
-                      }`}
+                      className={i < 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
                     />
                   ))}
                   <span className="text-gray-500 ml-1 text-sm">(150)</span>
@@ -59,7 +41,6 @@ const StoreHeader = () => {
             </div>
           </div>
 
-          {/* RIGHT: BUTTON */}
           <div className="w-full md:w-auto">
             <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 md:py-3 rounded-full flex items-center justify-center gap-2 text-sm md:text-base transition">
               <MessageCircle size={18} />
@@ -68,7 +49,6 @@ const StoreHeader = () => {
           </div>
 
         </div>
-
       </div>
     </div>
   );
