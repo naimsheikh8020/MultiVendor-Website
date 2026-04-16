@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getProductById, getProductReviews } from "../../utils/productHelpers";
 import type { UnifiedProduct } from "../../utils/productHelpers";
 import { useCartStore } from "../../store/cartStore";
+import { topStores } from "../../assets/assets";
 
 const ProductDetailsTopSection = () => {
   const { productId } = useParams();
@@ -56,6 +57,12 @@ const ProductDetailsTopSection = () => {
 
   // Get reviews
   const mockReviews = getProductReviews(Number(productId));
+
+  // Helper function to get store ID from author name
+  const getStoreIdFromAuthor = (author: string) => {
+    const store = topStores.find(s => s.title.toLowerCase() === author.toLowerCase());
+    return store ? store.id : 1;
+  };
 
   const tabs = [
     { id: "details", label: "Product Details" },
@@ -182,7 +189,7 @@ const ProductDetailsTopSection = () => {
               <p className="text-sm text-gray-600">
                 Sold by{" "}
                 <button
-                  onClick={() => navigate(`/stores/${product.author.toLowerCase().replace(/\s+/g, '-')}`)}
+                  onClick={() => navigate(`/stores/${getStoreIdFromAuthor(product.author)}`)}
                   className="text-blue-600 font-medium hover:underline cursor-pointer"
                 >
                   {product.author}
@@ -351,7 +358,7 @@ const ProductDetailsTopSection = () => {
               <div className="flex items-center gap-2 mb-4 text-sm">
                 <Store className="w-4 h-4" />
                 <span>Visit <button
-                  onClick={() => navigate(`/stores/${product.author.toLowerCase().replace(/\s+/g, '-')}`)}
+                  onClick={() => navigate(`/stores/${getStoreIdFromAuthor(product.author)}`)}
                   className="text-blue-600 hover:underline cursor-pointer"
                 >{product.author}</button></span>
               </div>
