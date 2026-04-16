@@ -1,29 +1,18 @@
-import { useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
-type Tab = "products" | "categories" | "profile";
+type Tab = "products" | "profile";
 
 interface Props {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
-  setSelectedCategory: (category: string | null) => void; // 🔥 added
+  setSelectedCategory: (category: string | null) => void;
 }
-
-const categories = [
-  "All",
-  "Men's Fashion",
-  "Women's Fashion",
-  "Electronics",
-  "Home & Living",
-];
 
 const StoreNav = ({
   activeTab,
   setActiveTab,
   setSelectedCategory,
 }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const tabClass = (tab: Tab) =>
     `px-4 md:px-5 py-2 rounded-lg cursor-pointer text-sm md:text-base font-medium transition ${
       activeTab === tab
@@ -41,55 +30,16 @@ const StoreNav = ({
         <button
           onClick={() => {
             setActiveTab("products");
-            setSelectedCategory(null); // 🔥 reset filter
-            setIsOpen(false);
+            setSelectedCategory(null);
           }}
           className={tabClass("products")}
         >
           All Product
         </button>
 
-        {/* Categories */}
-        <div className="relative">
-          <button
-            onClick={() => {
-              setActiveTab("categories");
-              setIsOpen((prev) => !prev);
-            }}
-            className={`${tabClass("categories")} flex items-center gap-1`}
-          >
-            Categories
-            <ChevronDown
-              size={16}
-              className={`transition ${isOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {isOpen && (
-            <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-              {categories.map((cat, i) => (
-                <div
-                  key={i}
-                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => {
-                    setSelectedCategory(cat === "All" ? null : cat); // 🔥 main logic
-                    setActiveTab("products"); // 🔥 go back to products
-                    setIsOpen(false);
-                  }}
-                >
-                  {cat}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* Profile */}
         <button
-          onClick={() => {
-            setActiveTab("profile");
-            setIsOpen(false);
-          }}
+          onClick={() => setActiveTab("profile")}
           className={tabClass("profile")}
         >
           Profile

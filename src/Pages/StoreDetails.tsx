@@ -5,7 +5,7 @@ import StoreHeader from "../Components/StoreHeader";
 import StoreNav from "../features/HomeStore/StoreNav";
 import type { Store } from "../types/store";
 import StoreAllProduct from "../features/HomeStore/StoreAllProduct";
-import StoreCategoryProduct from "../features/HomeStore/StoreCategoryProduct";
+
 import StoreProfile from "../features/HomeStore/StoreProfile";
 
 const StoreDetails = () => {
@@ -16,7 +16,7 @@ const StoreDetails = () => {
   );
 
   const [activeTab, setActiveTab] = useState<
-    "products" | "categories" | "profile"
+    "products"  | "profile"
   >("products");
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -44,9 +44,7 @@ const StoreDetails = () => {
           />
         )}
 
-        {activeTab === "categories" && (
-          <StoreCategoryProduct />
-        )}
+      
 
         {activeTab === "profile" && (
           <StoreProfile />

@@ -195,7 +195,7 @@ export const products: Product[] = [
     description: "Wireless noise-cancelling headphones with 30h battery.",
   },
   {
-    id: 2,
+    id: 101,
     storeId: 1,
     title: "Gaming Laptop Pro",
     image: assets.Laptop,
