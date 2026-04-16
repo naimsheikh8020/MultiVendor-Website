@@ -19,7 +19,7 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const tabClass = (tab: Tab) =>
-    `px-4 md:px-5 py-2 rounded-lg text-sm md:text-base font-medium transition ${
+    `px-4 md:px-5 py-2 rounded-lg cursor-pointer text-sm md:text-base font-medium transition ${
       activeTab === tab
         ? "bg-white shadow-sm text-gray-800"
         : "text-gray-500 hover:text-gray-700"
@@ -97,7 +97,7 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
           className="flex-1 px-4 py-2.5 text-sm outline-none"
         />
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 flex items-center justify-center">
-          <Search size={18} />
+          <Search className="cursor-pointer" size={18} />
         </button>
       </div>
     </div>

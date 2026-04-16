@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useState } from "react";
 import { topStores } from "../assets/assets";
 import StoreHeader from "../Components/StoreHeader";
-import StoreNav from "../Components/StoreNav";
+import StoreNav from "../features/HomeStore/StoreNav";
 import type { Store } from "../types/store";
 
 
