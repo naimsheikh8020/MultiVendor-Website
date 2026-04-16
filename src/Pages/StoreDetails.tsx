@@ -4,11 +4,14 @@ import { topStores } from "../assets/assets";
 import StoreHeader from "../Components/StoreHeader";
 import StoreNav from "../features/HomeStore/StoreNav";
 import type { Store } from "../types/store";
+import StoreAllProduct from "../features/HomeStore/StoreAllProduct";
+import StoreCategoryProduct from "../features/HomeStore/StoreCategoryProduct";
+import StoreProfile from "../features/HomeStore/StoreProfile";
 
 
-const Products = () => <div className="p-4">All Products</div>;
-const Categories = () => <div className="p-4">Categories</div>;
-const Profile = () => <div className="p-4">Profile</div>;
+const Products = () => <StoreAllProduct/>;
+const Categories = () => <StoreCategoryProduct/>;
+const Profile = () => <StoreProfile/>;
 
 const StoreDetails = () => {
   const { storeId } = useParams<{ storeId: string }>();
