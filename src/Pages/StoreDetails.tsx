@@ -37,7 +37,7 @@ const StoreDetails = () => {
         setActiveTab={setActiveTab}
       />
 
-      <div className="max-w-7xl mx-auto px-4 mt-6">
+      <div className="max-w-7xl mx-auto px-4 my-6">
         {activeTab === "products" && <Products />}
         {activeTab === "categories" && <Categories />}
         {activeTab === "profile" && <Profile />}
