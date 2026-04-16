@@ -24,7 +24,7 @@ const VendorProduct = () => {
         </div>
 
         <PrimaryButton
-          label="Add Category"
+          label="Add Product"
           icon={<Plus />}
           onClick={() => console.log("Clicked")}
           className="w-full sm:w-auto"
