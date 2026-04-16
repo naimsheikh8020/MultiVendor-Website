@@ -6,16 +6,22 @@ type Tab = "products" | "categories" | "profile";
 interface Props {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
+  setSelectedCategory: (category: string | null) => void; // 🔥 added
 }
 
 const categories = [
+  "All",
   "Men's Fashion",
   "Women's Fashion",
   "Electronics",
   "Home & Living",
 ];
 
-const StoreNav = ({ activeTab, setActiveTab }: Props) => {
+const StoreNav = ({
+  activeTab,
+  setActiveTab,
+  setSelectedCategory,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const tabClass = (tab: Tab) =>
@@ -35,6 +41,7 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
         <button
           onClick={() => {
             setActiveTab("products");
+            setSelectedCategory(null); // 🔥 reset filter
             setIsOpen(false);
           }}
           className={tabClass("products")}
@@ -42,7 +49,7 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
           All Product
         </button>
 
-        {/* Categories (Dropdown) */}
+        {/* Categories */}
         <div className="relative">
           <button
             onClick={() => {
@@ -58,7 +65,6 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
             />
           </button>
 
-          {/* 🔥 Dropdown */}
           {isOpen && (
             <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               {categories.map((cat, i) => (
@@ -66,7 +72,8 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
                   key={i}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                   onClick={() => {
-                    console.log(cat);
+                    setSelectedCategory(cat === "All" ? null : cat); // 🔥 main logic
+                    setActiveTab("products"); // 🔥 go back to products
                     setIsOpen(false);
                   }}
                 >
@@ -97,7 +104,7 @@ const StoreNav = ({ activeTab, setActiveTab }: Props) => {
           className="flex-1 px-4 py-2.5 text-sm outline-none"
         />
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 flex items-center justify-center">
-          <Search className="cursor-pointer" size={18} />
+          <Search size={18} />
         </button>
       </div>
     </div>

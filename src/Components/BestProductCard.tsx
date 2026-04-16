@@ -1,5 +1,6 @@
 import { Star, ShoppingCart } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
+import { Link } from "react-router-dom";
 
 interface BestProductCardProps {
   id: number;
@@ -11,7 +12,7 @@ interface BestProductCardProps {
   seller: string;
   price: number;
   oldPrice?: number;
-  discount?: string;
+  discount?: number;
 }
 
 const BestProductCard = ({
@@ -28,12 +29,13 @@ const BestProductCard = ({
 }: BestProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
   return (
+    <Link to={`/product/${id}`} className="block">
     <div className="relative w-full rounded-xl border border-blue-200 bg-white p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-md transition">
 
       {/* Discount Badge */}
       {discount && (
         <span className="absolute left-2 top-2 sm:left-3 sm:top-3 lg:left-4 lg:top-4 bg-blue-500 text-white text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md">
-          {discount}
+          {discount}%
         </span>
       )}
 
@@ -102,6 +104,7 @@ const BestProductCard = ({
         </button>
       </div>
     </div>
+    </Link>
   );
 };
 
