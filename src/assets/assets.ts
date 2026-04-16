@@ -738,7 +738,7 @@ export const bestProducts = [
     seller: "Mr.Shop",
     price: 2,
     oldPrice: 3.99,
-    discount: "20%",
+    discount: 20,
   },
   {
     id: 102,
@@ -750,7 +750,7 @@ export const bestProducts = [
     seller: "Mr.food",
     price: 2,
     oldPrice: 3.99,
-    discount: "20%",
+    discount: 20,
   },
   {
     id: 103,
@@ -762,7 +762,7 @@ export const bestProducts = [
     seller: "Mr.food",
     price: 2,
     oldPrice: 3.99,
-    discount: "20%",
+    discount: 20,
   },
   {
     id: 104,
@@ -774,7 +774,7 @@ export const bestProducts = [
     seller: "Mr.food",
     price: 2,
     oldPrice: 3.99,
-    discount: "20%",
+    discount: 20,
   },
    {
     id: 1043,
@@ -786,6 +786,7 @@ export const bestProducts = [
     seller: "Mr.food",
     price: 2,
     oldPrice: 3.99,
+    discount: 20,
    }
 ];
 
