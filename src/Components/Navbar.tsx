@@ -15,6 +15,7 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryName | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,16 @@ const Navbar = () => {
     }
   };
 
+  const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) {
+      e.preventDefault();
+    }
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
+
   const handleViewProfile = () => {
     setIsProfileOpen(false);
     navigate("/my-profile");
@@ -78,7 +89,7 @@ const Navbar = () => {
 
           {/* Middle Section - Search Bar */}
           <div className="flex-1 max-w-3xl mx-2 sm:mx-3 md:mx-4">
-            <div className="relative flex items-center w-full h-9 sm:h-10 md:h-11 lg:h-12 bg-white rounded-md shadow-sm">
+            <form onSubmit={handleSearch} className="relative flex items-center w-full h-9 sm:h-10 md:h-11 lg:h-12 bg-white rounded-md shadow-sm">
 
               {/* Category Dropdown */}
               <div ref={dropdownRef} className="relative h-full">
@@ -122,15 +133,20 @@ const Navbar = () => {
               {/* Search Input */}
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 h-full px-2 sm:px-3 lg:px-4 text-xs sm:text-sm outline-none"
               />
 
               {/* Search Button */}
-              <button className="h-full px-2 sm:px-3 md:px-4 lg:px-5 bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center rounded-r-md">
+              <button
+                type="submit"
+                className="h-full px-2 sm:px-3 md:px-4 lg:px-5 bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center rounded-r-md"
+              >
                 <Search size={16} className="text-white sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5" />
               </button>
-            </div>
+            </form>
           </div>
 
           {/* Right Section - Cart & Profile */}

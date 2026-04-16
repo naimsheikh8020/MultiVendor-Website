@@ -37,9 +37,10 @@ const StoreDetails = lazy(() => import("../Pages/StoreDetails"));
 const MyProfile = lazy(() => import("../Pages/MyProfile"));
 const ProductCategory = lazy(() => import("../Pages/ProductCategory"));
 const ProductDetails = lazy(() => import("../Pages/ProductDetails"));
+const SearchResults = lazy(() => import("../Pages/SearchResults"));
 const Checkout = lazy(() => import("../Pages/Checkout"));
 const NotFound = lazy(() => import("../Pages/NotFound"));
-const VendorSignup = lazy(()=> import("../Pages/VendorSignup"));
+const VendorSignup = lazy(() => import("../Pages/VendorSignup"));
 const VendorStoreForm = lazy(() => import("../Pages/VendorStoreForm"));
 
 export const routes: RouteObject[] = [
@@ -59,7 +60,7 @@ export const routes: RouteObject[] = [
       // { path: "vendor-signup", element: <Loadable><VendorSignup /></Loadable> },
       // { path: "/store-info", element: <Loadable><VendorStoreForm /></Loadable> },
 
-      
+
       // Stores
       { path: "stores", element: <Loadable><Store /></Loadable> },
       { path: "stores/:storeId", element: <Loadable><StoreDetails /></Loadable> },
@@ -67,6 +68,7 @@ export const routes: RouteObject[] = [
       // Products
       { path: "category/:categoryName", element: <Loadable><ProductCategory /></Loadable> },
       { path: "product/:productId", element: <Loadable><ProductDetails /></Loadable> },
+      { path: "search", element: <Loadable><SearchResults /></Loadable> },
 
       // Cart
       { path: "cart", element: <Loadable><CartPage /></Loadable> },
@@ -79,123 +81,123 @@ export const routes: RouteObject[] = [
       { path: "*", element: <Loadable><NotFound /></Loadable> },
 
       {
-  path: "vendor-signup",
-  children: [
-    {
-      index: true,
-      element: <Loadable><VendorSignup /></Loadable>,
-    },
-    {
-      element: <VendorStepGuard />,
-      children: [
-        {
-          path: "store-info",
-          element: <Loadable><VendorStoreForm /></Loadable>,
-        },
-      ],
-    },
-  ],
-}
+        path: "vendor-signup",
+        children: [
+          {
+            index: true,
+            element: <Loadable><VendorSignup /></Loadable>,
+          },
+          {
+            element: <VendorStepGuard />,
+            children: [
+              {
+                path: "store-info",
+                element: <Loadable><VendorStoreForm /></Loadable>,
+              },
+            ],
+          },
+        ],
+      }
 
     ],
   },
 
   // 🔥 VENDOR LAYOUT (new, separate)
   {
-  path: "/vendor",
-  element: <ProtectedRoute />,
-  children: [
-    {
-      element: <VendorLayout />,
-      children: [
-        {
-          index: true,
-          element: <Loadable><VendorDashboard /></Loadable>,
-        },
-        {
-          path: "dashboard",
-          element: <Loadable><VendorDashboard /></Loadable>,
-        },
-        {
-          path: "products",
-          element: <Loadable><VendorProduct /></Loadable>,
-        },
-        {
-          path: "orders",
-          element: <Loadable><VendorOrder /></Loadable>
-        },
-        {
-          path: "earnings",
-          element: <Loadable><VendorEarnings /></Loadable>
-        },
-        {
-          path: "payouts",
-          element: <Loadable><VendorPayout /></Loadable>
-        },
-        {
-          path: "profiles",
-          element: <Loadable><VendorProfile /></Loadable>
-        },
-      ]
-    }
-  ]
-},
+    path: "/vendor",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <VendorLayout />,
+        children: [
+          {
+            index: true,
+            element: <Loadable><VendorDashboard /></Loadable>,
+          },
+          {
+            path: "dashboard",
+            element: <Loadable><VendorDashboard /></Loadable>,
+          },
+          {
+            path: "products",
+            element: <Loadable><VendorProduct /></Loadable>,
+          },
+          {
+            path: "orders",
+            element: <Loadable><VendorOrder /></Loadable>
+          },
+          {
+            path: "earnings",
+            element: <Loadable><VendorEarnings /></Loadable>
+          },
+          {
+            path: "payouts",
+            element: <Loadable><VendorPayout /></Loadable>
+          },
+          {
+            path: "profiles",
+            element: <Loadable><VendorProfile /></Loadable>
+          },
+        ]
+      }
+    ]
+  },
 
   // 🔹 ADMIN LAYOUT 
   {
-  path: "/admin",
-  element: <ProtectedRoute />,
-  children: [
-    {
-      element: <AdminLayout />,
-      children: [
-        {
-          index: true,
-          element: <Loadable><AdminDashboard /></Loadable>,
-        },
-        {
-          path: "dashboard",
-          element: <Loadable><AdminDashboard /></Loadable>,
-        },
-        {
-          path: "users",
-          element: <Loadable><AdminUser /></Loadable>,
-        },
-        {
-          path: "vendor-requests",
-          element: <Loadable><AdminVendorRequest /></Loadable>,
-        },
-        {
-          path: "product",
-          element: <Loadable><AdminProduct /></Loadable>,
-        },
-        {
-          path: "orders",
-          element: <Loadable><AdminOrder /></Loadable>,
-        },
-        {
-          path: "commission",
-          element: <Loadable><AdminCommsion /></Loadable>,
-        },
-        {
-          path: "recommended",
-          element: <Loadable><AdminRecommendedStore /></Loadable>,
-        },
-        {
-          path: "analytics",
-          element: <Loadable><AdminAnalytics /></Loadable>,
-        },
-        {
-          path: "payouts",
-          element: <Loadable><AdminPayout /></Loadable>,
-        },
-        {
-          path: "settings",
-          element: <Loadable><AdminSettings /></Loadable>,
-        },
-      ]
-    }
-  ]
-}
+    path: "/admin",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <Loadable><AdminDashboard /></Loadable>,
+          },
+          {
+            path: "dashboard",
+            element: <Loadable><AdminDashboard /></Loadable>,
+          },
+          {
+            path: "users",
+            element: <Loadable><AdminUser /></Loadable>,
+          },
+          {
+            path: "vendor-requests",
+            element: <Loadable><AdminVendorRequest /></Loadable>,
+          },
+          {
+            path: "product",
+            element: <Loadable><AdminProduct /></Loadable>,
+          },
+          {
+            path: "orders",
+            element: <Loadable><AdminOrder /></Loadable>,
+          },
+          {
+            path: "commission",
+            element: <Loadable><AdminCommsion /></Loadable>,
+          },
+          {
+            path: "recommended",
+            element: <Loadable><AdminRecommendedStore /></Loadable>,
+          },
+          {
+            path: "analytics",
+            element: <Loadable><AdminAnalytics /></Loadable>,
+          },
+          {
+            path: "payouts",
+            element: <Loadable><AdminPayout /></Loadable>,
+          },
+          {
+            path: "settings",
+            element: <Loadable><AdminSettings /></Loadable>,
+          },
+        ]
+      }
+    ]
+  }
 
 ];
