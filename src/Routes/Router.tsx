@@ -42,6 +42,7 @@ const Checkout = lazy(() => import("../Pages/Checkout"));
 const NotFound = lazy(() => import("../Pages/NotFound"));
 const VendorSignup = lazy(() => import("../Pages/VendorSignup"));
 const VendorStoreForm = lazy(() => import("../Pages/VendorStoreForm"));
+const OrderDetails = lazy(() => import("../features/MyProfile/OrderDetails"));
 
 export const routes: RouteObject[] = [
   // 🔹 USER LAYOUT (your existing system)
@@ -76,6 +77,7 @@ export const routes: RouteObject[] = [
 
       // Profile
       { path: "my-profile", element: <Loadable><MyProfile /></Loadable> },
+      { path: "order/:orderId", element: <Loadable><OrderDetails /></Loadable> },
 
       // 404
       { path: "*", element: <Loadable><NotFound /></Loadable> },

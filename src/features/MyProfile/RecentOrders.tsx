@@ -1,4 +1,5 @@
 import React from "react"
+import { useNavigate } from "react-router"
 import { assets } from "../../assets/assets"
 
 type OrderItem = {
@@ -76,6 +77,8 @@ const getStatusStyle = (status: Order["status"]) => {
 }
 
 const RecentOrders: React.FC = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="space-y-6">
       {orders.map((order) => (
@@ -153,7 +156,14 @@ const RecentOrders: React.FC = () => {
 
           {/* ACTIONS */}
           <div className="mt-4 flex gap-3 flex-wrap">
-            
+
+            <button
+              onClick={() => navigate(`/order/${order.id}`)}
+              className="px-4 py-2 border cursor-pointer border-blue-500 text-blue-500 rounded-full hover:bg-blue-50 transition"
+            >
+              View Product
+            </button>
+
             <button className="px-4 py-2 border cursor-pointer border-red-500 text-red-500 rounded-full hover:bg-red-50 transition">
               Cancel Order
             </button>
