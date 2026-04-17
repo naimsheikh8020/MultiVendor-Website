@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 import { ArrowLeft, MapPin, CreditCard, Trash2, X } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { assets } from "../assets/assets";
+import OrderConfirmationModal from "../Components/OrderConfirmationModal";
+import OrderSuccessModal from "../Components/OrderSuccessModal";
 
 interface Address {
   id: number;
@@ -29,6 +31,9 @@ const Checkout = () => {
   const [selectedAddress, setSelectedAddress] = useState(1);
   const [selectedPayment, setSelectedPayment] = useState("cod");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [newAddress, setNewAddress] = useState({
     name: "",
     street: "",
@@ -79,22 +84,24 @@ const Checkout = () => {
       return;
     }
 
-    // Here you would typically:
-    // 1. Validate address and payment
-    // 2. Send order to backend
-    // 3. Process payment
-    // 4. Clear cart
-    // 5. Redirect to order confirmation
+    setIsConfirmationModalOpen(true);
+  };
 
-    const confirmed = window.confirm(
-      `Place order for $${getTotal().toFixed(2)}?`
-    );
+  const handleConfirmOrder = async () => {
+    setIsProcessing(true);
 
-    if (confirmed) {
-      clearCart();
-      alert("Order placed successfully!");
-      navigate("/");
-    }
+    // Simulate API call delay
+    setTimeout(() => {
+      setIsProcessing(false);
+      setIsConfirmationModalOpen(false);
+      setIsSuccessModalOpen(true);
+    }, 1500);
+  };
+
+  const handleSuccessModalClose = () => {
+    clearCart();
+    setIsSuccessModalOpen(false);
+    navigate("/");
   };
 
   if (items.length === 0) {
@@ -489,6 +496,22 @@ const Checkout = () => {
           </div>
         </div>
       )}
+
+      {/* Order Confirmation Modal */}
+      <OrderConfirmationModal
+        isOpen={isConfirmationModalOpen}
+        total={getTotal()}
+        itemCount={items.length}
+        onConfirm={handleConfirmOrder}
+        onCancel={() => setIsConfirmationModalOpen(false)}
+        isLoading={isProcessing}
+      />
+
+      {/* Order Success Modal */}
+      <OrderSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={handleSuccessModalClose}
+      />
     </div>
   );
 };
