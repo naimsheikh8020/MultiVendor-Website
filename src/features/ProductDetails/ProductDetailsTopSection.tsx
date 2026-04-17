@@ -232,30 +232,56 @@ const ProductDetailsTopSection = () => {
               </div>
             </div>
 
-            {/* Add to cart */}
+            {/* Add to cart and Buy Now */}
 
-            <button
-              onClick={() => {
-                if (product) {
-                  for (let i = 0; i < quantity; i++) {
-                    addItem({
-                      id: product.id,
-                      image: product.image,
-                      title: product.title,
-                      category: product.category,
-                      author: product.author,
-                      price: product.price,
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  if (product) {
+                    for (let i = 0; i < quantity; i++) {
+                      addItem({
+                        id: product.id,
+                        image: product.image,
+                        title: product.title,
+                        category: product.category,
+                        author: product.author,
+                        price: product.price,
+                      });
+                    }
+                    // Reset quantity after adding
+                    setQuantity(1);
+                  }
+                }}
+                className="flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition flex-1"
+              >
+                <ShoppingCart size={18} />
+                Add to Cart
+              </button>
+
+              <button
+                onClick={() => {
+                  if (product) {
+                    // Navigate to checkout with buy now product data
+                    navigate("/checkout", {
+                      state: {
+                        buyNowProduct: {
+                          id: product.id,
+                          image: product.image,
+                          title: product.title,
+                          category: product.category,
+                          author: product.author,
+                          price: product.price,
+                          quantity: quantity,
+                        },
+                      },
                     });
                   }
-                  // Reset quantity after adding
-                  setQuantity(1);
-                }
-              }}
-              className="flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition w-full"
-            >
-              <ShoppingCart size={18} />
-              Add to Cart
-            </button>
+                }}
+                className="flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-full hover:bg-green-700 transition whitespace-nowrap"
+              >
+                Buy Now
+              </button>
+            </div>
 
             {/* Divider */}
 

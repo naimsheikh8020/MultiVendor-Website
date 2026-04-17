@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { ArrowLeft, MapPin, CreditCard, Trash2, X } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { assets } from "../assets/assets";
@@ -17,6 +17,10 @@ interface Address {
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isBuyNow = !!location.state?.buyNowProduct;
+  const buyNowProduct = location.state?.buyNowProduct;
+
   const {
     items,
     removeItem,
@@ -27,6 +31,9 @@ const Checkout = () => {
     getTotal,
     clearCart,
   } = useCartStore();
+
+  // Use buy now product if available, otherwise use cart items
+  const displayItems = isBuyNow && buyNowProduct ? [buyNowProduct] : items;
 
   const [selectedAddress, setSelectedAddress] = useState(1);
   const [selectedPayment, setSelectedPayment] = useState("cod");
@@ -79,7 +86,7 @@ const Checkout = () => {
   };
 
   const handlePlaceOrder = () => {
-    if (items.length === 0) {
+    if (displayItems.length === 0) {
       alert("Your cart is empty!");
       return;
     }
@@ -104,7 +111,37 @@ const Checkout = () => {
     navigate("/");
   };
 
-  if (items.length === 0) {
+  // Calculate totals for buy now product
+  const getBuyNowSubtotal = () => {
+    if (!isBuyNow || !buyNowProduct) return 0;
+    return buyNowProduct.price * buyNowProduct.quantity;
+  };
+
+  const getBuyNowDiscount = () => {
+    const subtotal = getBuyNowSubtotal();
+    return subtotal > 100 ? 12 : 0;
+  };
+
+  const getBuyNowTax = () => {
+    return getBuyNowSubtotal() * 0.01;
+  };
+
+  const getBuyNowShippingFee = () => {
+    return getBuyNowSubtotal() > 50 ? 0 : 5;
+  };
+
+  const getBuyNowTotal = () => {
+    return getBuyNowSubtotal() - getBuyNowDiscount() + getBuyNowTax() + getBuyNowShippingFee();
+  };
+
+  // Use appropriate totals based on buy now or cart
+  const displaySubtotal = isBuyNow ? getBuyNowSubtotal() : getSubtotal();
+  const displayDiscount = isBuyNow ? getBuyNowDiscount() : getDiscount();
+  const displayTax = isBuyNow ? getBuyNowTax() : getTax();
+  const displayShippingFee = isBuyNow ? getBuyNowShippingFee() : getShippingFee();
+  const displayTotal = isBuyNow ? getBuyNowTotal() : getTotal();
+
+  if (displayItems.length === 0) {
     return (
       <div className="py-10 text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Checkout</h1>
@@ -267,8 +304,8 @@ const Checkout = () => {
             </h2>
 
             <div className="divide-y divide-gray-100">
-              {items.map((item, index) => (
-                <div key={item.id} className={`flex items-center gap-4 ${index !== 0 ? 'pt-3' : ''} ${index !== items.length - 1 ? 'pb-3' : ''}`}>
+              {displayItems.map((item, index) => (
+                <div key={item.id} className={`flex items-center gap-4 ${index !== 0 ? 'pt-3' : ''} ${index !== displayItems.length - 1 ? 'pb-3' : ''}`}>
                   <div className="w-20 h-20 bg-yellow-100 rounded-lg overflow-hidden shrink-0">
                     <img
                       src={item.image}
@@ -285,13 +322,15 @@ const Checkout = () => {
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition shrink-0"
-                    title="Remove item"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                  {!isBuyNow && (
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition shrink-0"
+                      title="Remove item"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -301,29 +340,29 @@ const Checkout = () => {
         {/* Right Column - Order Summary */}
         <div className="bg-white border border-gray-200 rounded-xl p-6 h-fit sticky top-4">
           <h3 className="text-xl font-bold text-gray-900 mb-6">
-            Order Summary
+            Order Summary {isBuyNow && "(Buy Now)"}
           </h3>
 
           <div className="space-y-3 text-sm mb-6">
             <div className="flex justify-between">
               <span className="text-gray-600">Shipping fee</span>
               <span className="font-medium">
-                ${getShippingFee().toFixed(2)}
+                ${displayShippingFee.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Sub total</span>
-              <span className="font-medium">${getSubtotal().toFixed(2)}</span>
+              <span className="font-medium">${displaySubtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Discount</span>
               <span className="font-medium text-red-500">
-                ${getDiscount().toFixed(2)}
+                ${displayDiscount.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Tax</span>
-              <span className="font-medium">${getTax().toFixed(2)}</span>
+              <span className="font-medium">${displayTax.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Payment Method</span>
@@ -337,7 +376,7 @@ const Checkout = () => {
           <div className="flex justify-between items-center mb-6 pt-4 border-t border-gray-200">
             <span className="text-lg font-bold text-gray-900">Total</span>
             <span className="text-2xl font-bold text-blue-600">
-              ${getTotal().toFixed(2)}
+              ${displayTotal.toFixed(2)}
             </span>
           </div>
 
@@ -500,8 +539,8 @@ const Checkout = () => {
       {/* Order Confirmation Modal */}
       <OrderConfirmationModal
         isOpen={isConfirmationModalOpen}
-        total={getTotal()}
-        itemCount={items.length}
+        total={displayTotal}
+        itemCount={displayItems.length}
         onConfirm={handleConfirmOrder}
         onCancel={() => setIsConfirmationModalOpen(false)}
         isLoading={isProcessing}
