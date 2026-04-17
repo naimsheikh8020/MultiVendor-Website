@@ -7,13 +7,15 @@ import RecentOrders from "../features/MyProfile/RecentOrders"
 import Payment from "../features/MyProfile/Payment"
 import Sidebar from "../features/MyProfile/Sidebar"
 import PlatformHighlights from "../features/Home/PlatformHighlights"
+import MyReturn from "../features/MyProfile/MyReturn"
+import CancelOrder from "../features/MyProfile/CancelOrder"
 
 
 
 const MyProfile = () => {
   const navigate = useNavigate()
 
-  const [activeTab, setActiveTab] = useState<"profile" | "address" | "payment" | "orders" | "reviews">("profile")
+  const [activeTab, setActiveTab] = useState<"profile" | "address" | "payment" | "orders" | "reviews" | "returns" | "cancel">("profile")
 
   const renderContent = () => {
     switch (activeTab) {
@@ -25,6 +27,10 @@ const MyProfile = () => {
         return <Payment />
       case "orders":
         return <RecentOrders />
+      case "returns":
+        return <MyReturn />
+      case "cancel":
+        return <CancelOrder />
       default:
         return <ProfileInfo />
     }
@@ -35,7 +41,7 @@ const MyProfile = () => {
 
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-900 mb-6 hover:text-blue-600 transition"
+        className="flex items-center gap-2 text-gray-900 mb-6 hover:text-blue-600 transition cursor-pointer"
       >
         <ArrowLeft size={20} />
         <h1 className="text-2xl font-bold">My Profile</h1>
