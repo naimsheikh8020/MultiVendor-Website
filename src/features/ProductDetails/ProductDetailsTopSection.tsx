@@ -252,7 +252,7 @@ const ProductDetailsTopSection = () => {
                     setQuantity(1);
                   }
                 }}
-                className="flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition flex-1"
+                className="flex items-center justify-center gap-2 bg-blue-600 cursor-pointer text-white py-3 rounded-full hover:bg-blue-700 transition flex-1"
               >
                 <ShoppingCart size={18} />
                 Add to Cart
@@ -277,7 +277,7 @@ const ProductDetailsTopSection = () => {
                     });
                   }
                 }}
-                className="flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-full hover:bg-green-700 transition whitespace-nowrap"
+                className="flex items-center justify-center gap-2 bg-blue-600 cursor-pointer text-white py-3 rounded-full hover:bg-blue-700 transition flex-1"
               >
                 Buy Now
               </button>
