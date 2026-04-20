@@ -1,7 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { X, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
+// CSS for editor styling
+const editorStyles = `
+  .ck-editor__main .ck-editor__editable {
+    min-height: 150px;
+    max-height: 300px;
+    font-size: 14px;
+    padding: 12px;
+  }
+  .ck-editor__main .ck-editor__editable h1 {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 1.4;
+    margin: 12px 0;
+  }
+  .ck-editor__main .ck-editor__editable h2 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 1.4;
+    margin: 10px 0;
+  }
+  .ck-editor__main .ck-editor__editable h3 {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.4;
+    margin: 8px 0;
+  }
+  .ck-editor__main .ck-editor__editable p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 6px 0;
+  }
+  .ck-editor__main .ck-editor__editable ol {
+    list-style-type: decimal !important;
+    padding-left: 24px;
+    margin: 8px 0;
+  }
+  .ck-editor__main .ck-editor__editable ol li {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+  .ck-editor__main .ck-editor__editable ul {
+    list-style-type: disc !important;
+    padding-left: 24px;
+    margin: 8px 0;
+  }
+  .ck-editor__main .ck-editor__editable ul li {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+`;
 interface Props {
   onClose: () => void;
 }
@@ -19,6 +71,7 @@ const VendorAddProductModal: React.FC<Props> = ({ onClose }) => {
   const [productName, setProductName] = useState("");
   const [productImage, setProductImage] = useState<string | null>(null);
   const [variantImages, setVariantImages] = useState<{ [key: number]: string | null }>({});
+  const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     if (variantEnabled && variants.length === 0) {
@@ -133,10 +186,40 @@ const VendorAddProductModal: React.FC<Props> = ({ onClose }) => {
 
             <div className="space-y-1">
               <label className="text-sm text-gray-600">Description</label>
-              <textarea
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
-                placeholder="Write here"
-              />
+
+              <div className="border border-gray-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
+                <style>{editorStyles}</style>
+                <CKEditor
+                  editor={ClassicEditor as any}
+                  data={description}
+                  onChange={(_, editor: any) => {
+                    const data = editor.getData();
+                    setDescription(data);
+                  }}
+                  config={{
+                    heading: {
+                      options: [
+                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                      ]
+                    },
+                    toolbar: [
+                      "heading",
+                      "|",
+                      "bold",
+                      "italic",
+                      "link",
+                      "bulletedList",
+                      "numberedList",
+                      "|",
+                      "undo",
+                      "redo",
+                    ],
+                  }}
+                />
+              </div>
             </div>
 
             {/* CATEGORY */}
