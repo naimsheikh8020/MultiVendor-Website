@@ -3,11 +3,13 @@ import { assets } from "../assets/assets";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../utils/auth";
+import { useCartStore } from "../store/cartStore";
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const { clearCart, isGuestCart, markAsUserCart } = useCartStore();
 
   const handleLogin = () => {
     let role: "admin" | "vendor" | "user" = "user";
@@ -16,6 +18,16 @@ const SignIn: React.FC = () => {
       role = "admin";
     } else if (email === "vendor@gmail.com") {
       role = "vendor";
+    }
+
+    // If cart has guest items (user added before login), mark it as user cart so it persists
+    // Otherwise, clear cart as it's from a previous logged-in session
+    if (isGuestCart) {
+      // This is a guest cart, so mark it as user cart to persist the items
+      markAsUserCart();
+    } else {
+      // Cart is from a previous session, clear it
+      clearCart();
     }
 
     login(role);

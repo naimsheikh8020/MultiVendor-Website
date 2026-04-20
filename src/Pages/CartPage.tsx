@@ -2,6 +2,8 @@ import { useCartStore } from "../store/cartStore";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import { isAuthenticated } from "../utils/auth";
 import { assets } from "../assets/assets";
 
 const CartPage = () => {
@@ -23,6 +25,15 @@ const CartPage = () => {
   const handleApplyCoupon = () => {
     console.log("Applying coupon:", couponCode);
     // Add coupon logic here
+  };
+
+  const handleCheckout = () => {
+    if (!isAuthenticated()) {
+      toast.error("Please login to proceed with checkout");
+      navigate("/login", { state: { from: "/cart" } });
+      return;
+    }
+    navigate("/checkout");
   };
 
   if (items.length === 0) {
@@ -174,7 +185,7 @@ const CartPage = () => {
 
           {/* Checkout Button */}
           <button
-            onClick={() => navigate("/checkout")}
+            onClick={handleCheckout}
             className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition mb-3"
           >
             Proceed to Checkout

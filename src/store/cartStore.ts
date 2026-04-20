@@ -14,12 +14,15 @@ export interface CartItem {
 
 interface CartStore {
   items: CartItem[];
+  isGuestCart: boolean;
   addItem: (item: Omit<CartItem, 'quantity'>) => void;
   removeItem: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   incrementQuantity: (id: number) => void;
   decrementQuantity: (id: number) => void;
   clearCart: () => void;
+  clearUserCart: () => void;
+  markAsUserCart: () => void;
   getSubtotal: () => number;
   getTotal: () => number;
   getDiscount: () => number;
@@ -32,6 +35,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      isGuestCart: true,
 
       addItem: (item) => {
         set((state) => {
@@ -101,7 +105,15 @@ export const useCartStore = create<CartStore>()(
       },
 
       clearCart: () => {
-        set({ items: [] });
+        set({ items: [], isGuestCart: true });
+      },
+
+      clearUserCart: () => {
+        set({ items: [], isGuestCart: true });
+      },
+
+      markAsUserCart: () => {
+        set({ isGuestCart: false });
       },
 
       getSubtotal: () => {

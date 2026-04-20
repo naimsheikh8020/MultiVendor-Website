@@ -1,15 +1,19 @@
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation } from "react-router";
 import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { getProductById, getProductReviews } from "../../utils/productHelpers";
 import type { UnifiedProduct } from "../../utils/productHelpers";
 import { useCartStore } from "../../store/cartStore";
+import { isAuthenticated } from "../../utils/auth";
 import { topStores } from "../../assets/assets";
 
 const ProductDetailsTopSection = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const addItem = useCartStore((state) => state.addItem);
+  const markAsUserCart = useCartStore((state) => state.markAsUserCart);
 
   // State for product data
   const [product, setProduct] = useState<UnifiedProduct | null>(null);
@@ -248,6 +252,10 @@ const ProductDetailsTopSection = () => {
                         price: product.price,
                       });
                     }
+                    // If user is authenticated, mark cart as user cart
+                    if (isAuthenticated()) {
+                      markAsUserCart();
+                    }
                     // Reset quantity after adding
                     setQuantity(1);
                   }
@@ -261,6 +269,12 @@ const ProductDetailsTopSection = () => {
               <button
                 onClick={() => {
                   if (product) {
+                    // Check if user is authenticated
+                    if (!isAuthenticated()) {
+                      toast.error("Please login to buy products");
+                      navigate("/login", { state: { from: location.pathname } });
+                      return;
+                    }
                     // Navigate to checkout with buy now product data
                     navigate("/checkout", {
                       state: {

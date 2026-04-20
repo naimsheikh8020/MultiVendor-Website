@@ -5,10 +5,12 @@ import {
   Heart,
   Search,
   ChevronDown,
+  User,
 } from "lucide-react";
 import { assets, categoryNames } from "../assets/assets";
 import type { CategoryName } from "../assets/assets";
 import { useCartStore } from "../store/cartStore";
+import { isAuthenticated } from "../utils/auth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,8 +68,13 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setIsProfileOpen(false);
-    // Add your logout logic here
-    console.log("Logging out...");
+    // Clear cart when user logs out
+    const { clearUserCart } = useCartStore.getState();
+    clearUserCart();
+    // Clear auth from localStorage
+    localStorage.removeItem("isAuth");
+    localStorage.removeItem("role");
+    navigate("/login");
   };
 
   return (
@@ -189,22 +196,41 @@ const Navbar = () => {
             <div
               ref={profileRef}
               className="relative flex items-center gap-1 sm:gap-2 cursor-pointer"
-              onClick={() => setIsProfileOpen((prev) => !prev)}
+              onClick={() => {
+                if (isAuthenticated()) {
+                  setIsProfileOpen((prev) => !prev);
+                } else {
+                  navigate("/login");
+                }
+              }}
             >
-              <img
-                src="https://i.pravatar.cc/40"
-                alt="user"
-                className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full ring-2 ring-gray-200"
-              />
-              <span className="hidden lg:inline text-sm font-medium text-gray-600">
-                Akash
-              </span>
-              <ChevronDown
-                size={16}
-                className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
-              />
+              {isAuthenticated() ? (
+                <>
+                  <img
+                    src="https://i.pravatar.cc/40"
+                    alt="user"
+                    className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full ring-2 ring-gray-200"
+                  />
+                  <span className="hidden lg:inline text-sm font-medium text-gray-600">
+                    Akash
+                  </span>
+                  <ChevronDown
+                    size={16}
+                    className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full ring-2 ring-gray-200 bg-gray-200 flex items-center justify-center">
+                    <User size={16} className="text-gray-600" />
+                  </div>
+                  <span className="hidden lg:inline text-sm font-medium text-gray-600">
+                    Guest
+                  </span>
+                </>
+              )}
 
-              {isProfileOpen && (
+              {isAuthenticated() && isProfileOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                   <div
                     onClick={(e) => {

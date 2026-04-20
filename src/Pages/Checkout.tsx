@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { ArrowLeft, MapPin, CreditCard, Trash2, X } from "lucide-react";
+import toast from "react-hot-toast";
 import { useCartStore } from "../store/cartStore";
+import { isAuthenticated } from "../utils/auth";
 import { assets } from "../assets/assets";
 import OrderConfirmationModal from "../Components/OrderConfirmationModal";
 import OrderSuccessModal from "../Components/OrderSuccessModal";
@@ -20,6 +22,14 @@ const Checkout = () => {
   const location = useLocation();
   const isBuyNow = !!location.state?.buyNowProduct;
   const buyNowProduct = location.state?.buyNowProduct;
+
+  // Auth check - redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      toast.error("Please login to proceed with checkout");
+      navigate("/login", { state: { from: "/checkout" } });
+    }
+  }, [navigate]);
 
   const {
     items,
