@@ -198,13 +198,13 @@ const VendorProductTable = () => {
         </div>
 
         {/* DESKTOP TABLE VIEW - Hidden on mobile, shown on md and above */}
-        <div className="hidden md:block overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          <table className="w-full text-sm border-collapse">
+        <div className="hidden md:block overflow-x-auto">
+          <table className="min-w-[900px] w-full text-sm">
 
             {/* HEADER */}
-            <thead className="bg-gray-50 text-gray-500 sticky top-0">
+            <thead className="bg-gray-50 text-gray-500">
               <tr className="text-left border-b border-gray-200">
-                <th className="px-3 sm:px-4 py-3 w-10 sm:w-12.5">
+                <th className="p-3 w-10">
                   <input
                     type="checkbox"
                     onChange={handleSelectAll}
@@ -216,14 +216,14 @@ const VendorProductTable = () => {
                   />
                 </th>
 
-                <th className="px-4 py-3 min-w-[200px]">Product</th>
-                <th className="px-4 py-3 min-w-[150px]">Category</th>
-                <th className="px-4 py-3 min-w-[90px]">Price</th>
-                <th className="px-4 py-3 min-w-[120px]">Variants</th>
-                <th className="px-4 py-3 min-w-[80px]">Stock</th>
-                <th className="px-4 py-3 min-w-[80px]">Sell</th>
-                <th className="px-4 py-3 min-w-[120px]">Status</th>
-                <th className="px-4 py-3 min-w-[110px] text-center">Actions</th>
+                <th className="p-3">Product</th>
+                <th className="p-3">Category</th>
+                <th className="p-3">Price</th>
+                <th className="p-3">Variants</th>
+                <th className="p-3">Stock</th>
+                <th className="p-3">Sell</th>
+                <th className="p-3">Status</th>
+                <th className="p-3 text-center">Actions</th>
               </tr>
             </thead>
 
@@ -232,11 +232,11 @@ const VendorProductTable = () => {
               {currentData.map((item) => (
                 <tr
                   key={item.id}
-                  className="border-t border-gray-200 hover:bg-gray-50 transition-colors duration-150"
+                  className="border-t border-gray-200 hover:bg-gray-50 transition-colors"
                 >
 
                   {/* CHECKBOX */}
-                  <td className="px-3 sm:px-4 py-3">
+                  <td className="p-3 w-10">
                     <input
                       type="checkbox"
                       checked={selected.includes(item.id)}
@@ -246,28 +246,28 @@ const VendorProductTable = () => {
                   </td>
 
                   {/* PRODUCT */}
-                  <td className="px-3 sm:px-4 py-3">
-                    <div className="flex items-center gap-2 sm:gap-3">
+                  <td className="p-3">
+                    <div className="flex items-center gap-3">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-10 h-10 rounded-lg object-cover shrink-0"
+                        className="w-10 h-10 rounded-lg object-cover"
                       />
-                      <span className="font-medium text-gray-700 text-xs sm:text-sm whitespace-nowrap">
+                      <span className="font-medium text-gray-700 text-sm">
                         {item.name}
                       </span>
                     </div>
                   </td>
 
-                  <td className="px-3 sm:px-4 py-3 text-gray-600 text-xs sm:text-sm">
+                  <td className="p-3 text-gray-600 text-sm">
                     {item.category}
                   </td>
 
-                  <td className="px-3 sm:px-4 py-3 font-semibold text-gray-900 text-xs sm:text-sm">
+                  <td className="p-3 font-semibold text-gray-900 text-sm">
                     ${item.price}
                   </td>
 
-                  <td className="px-3 sm:px-4 py-3">
+                  <td className="p-3">
                     {item.variants ? (
                       <span className="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-600 font-medium whitespace-nowrap">
                         {item.variants} variants
@@ -279,28 +279,28 @@ const VendorProductTable = () => {
                     )}
                   </td>
 
-                  <td className="px-3 sm:px-4 py-3 text-gray-700 text-xs sm:text-sm font-medium">{item.stock}</td>
+                  <td className="p-3 text-gray-700 text-sm font-medium">{item.stock}</td>
 
-                  <td className="px-3 sm:px-4 py-3 text-gray-700 text-xs sm:text-sm font-medium">{item.sell || 0}</td>
+                  <td className="p-3 text-gray-700 text-sm font-medium">{item.sell || 0}</td>
 
-                  <td className="px-3 sm:px-4 py-3">
-                    <span className="px-2 sm:px-3 py-1 text-xs rounded-full bg-green-100 text-green-600 font-medium whitespace-nowrap inline-block">
+                  <td className="p-3">
+                    <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-600 font-medium whitespace-nowrap inline-block">
                       {item.status}
                     </span>
                   </td>
 
                   {/* ACTIONS */}
-                  <td className="px-3 sm:px-4 py-3">
-                    <div className="flex justify-center gap-1 sm:gap-2">
+                  <td className="p-3">
+                    <div className="flex justify-center gap-2">
                       <button
                         onClick={() => handleEditClick(item)}
-                        className="p-1.5 sm:p-2 border border-gray-200 rounded-md hover:bg-blue-50 hover:border-blue-300 transition-colors duration-150 cursor-pointer"
+                        className="p-2 border border-gray-200 rounded-md hover:bg-blue-50 hover:border-blue-300 transition cursor-pointer"
                         aria-label="Edit product"
                       >
                         <Pencil size={16} className="text-blue-600" />
                       </button>
                       <button
-                        className="p-1.5 sm:p-2 border border-gray-200 rounded-md hover:bg-red-50 hover:border-red-300 transition-colors duration-150 cursor-pointer"
+                        className="p-2 border border-gray-200 rounded-md hover:bg-red-50 hover:border-red-300 transition cursor-pointer"
                         aria-label="Delete product"
                       >
                         <Trash2 size={16} className="text-red-500" />
@@ -315,52 +315,29 @@ const VendorProductTable = () => {
         </div>
 
         {/* PAGINATION */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-3 sm:px-4 py-3 sm:py-4 border-t border-gray-200 bg-gray-50">
+        <div className="flex justify-between items-center p-4 border-t border-gray-200 bg-gray-50">
 
           {/* PREV BUTTON */}
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
-            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium border border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-all duration-150 min-w-25 justify-center cursor-pointer"
+            className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
           >
-            <span>←</span>
-            <span>Previous</span>
+            ← Previous
           </button>
 
-          {/* PAGE NUMBERS
-        <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-2">
-          {getPagination(page, totalPages).map((item, index) => {
-            if (item === "...") {
-              return (
-                <span key={`ellipsis-${index}`} className="px-1 sm:px-2 text-gray-400 font-medium">
-                  ...
-                </span>
-              );
-            }
-
-            return (
-              <button
-                key={`page-${item}`}
-                onClick={() => setPage(item as number)}
-                className={`min-w-8 sm:min-w-9 h-8 sm:h-9 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 ${page === item
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 hover:border-gray-400"
-                  }`}
-              >
-                {String(item).padStart(2, '0')}
-              </button>
-            );
-          })}
-        </div> */}
+          {/* PAGE INFO */}
+          <span className="text-sm text-gray-600">
+            Page {page} of {totalPages}
+          </span>
 
           {/* NEXT BUTTON */}
           <button
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium border border-gray-300 rounded-lg hover:bg-white hover:border-gray-400 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent transition-all duration-150 min-w-25 justify-center cursor-pointer"
+            className="px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
           >
-            <span>Next</span>
-            <span>→</span>
+            Next →
           </button>
         </div>
       </div>
