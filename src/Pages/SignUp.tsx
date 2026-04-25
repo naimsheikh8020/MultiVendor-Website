@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useRegister } from "../features/auth/hooks/useRegister";
+import { useVerifyOtp } from "../features/auth/hooks/useVerifyOtp";
 
 const SignUp: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,39 +18,87 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { mutate, isPending } = useRegister();
+  const { mutate: verifyMutate, isPending: isVerifyPending } = useVerifyOtp();
+
 
   const handleSignUp = () => {
     setError("");
+
     if (!name || !email || !phone || !password || !confirmPassword) {
       setError("Please fill in all fields");
       return;
     }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+
     if (!isChecked) {
       setError("Please agree to the Terms and Conditions");
       return;
     }
-    setCurrentStep("otp");
+
+    mutate(
+      {
+        full_name: name,
+        email: email,
+        password: password,
+        phone_number: phone,
+      },
+      {
+        onSuccess: (res: any) => {
+          console.log("SUCCESS:", res);
+          setCurrentStep("otp"); // move only after success
+        },
+        onError: (err: any) => {
+          console.log("ERROR:", err);
+
+          setError(
+            err?.response?.data?.message ||
+            err?.response?.data?.detail ||
+            "Registration failed"
+          );
+        },
+      }
+    );
   };
 
   const handleOTPVerify = () => {
     setError("");
+
     if (otp.length !== 4) {
       setError("Please enter a valid 4-digit OTP");
       return;
     }
+
     if (!/^\d{4}$/.test(otp)) {
       setError("OTP must contain only numbers");
       return;
     }
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setCurrentStep("success");
-    }, 1500);
+
+    verifyMutate(
+      {
+        email: email, // important: same email from signup
+        otp: otp,
+      },
+      {
+        onSuccess: (res: any) => {
+          console.log("OTP VERIFIED:", res);
+          setCurrentStep("success");
+        },
+        onError: (err: any) => {
+          console.log("OTP ERROR:", err);
+
+          setError(
+            err?.response?.data?.message ||
+            err?.response?.data?.detail ||
+            "Invalid OTP"
+          );
+        },
+      }
+    );
   };
 
   const handleBackToForm = () => {
@@ -228,9 +278,10 @@ const SignUp: React.FC = () => {
               {/* BUTTON */}
               <button
                 onClick={handleSignUp}
-                className="w-full h-12 rounded-full bg-blue-600 hover:bg-blue-700 transition-all text-white text-[15px] font-medium flex items-center justify-center gap-2 cursor-pointer">
-                Sign Up
-                <span className="text-lg">→</span>
+                disabled={isPending}
+                className="w-full h-12 rounded-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 transition-all text-white text-[15px] font-medium flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {isPending ? "Creating..." : "Sign Up →"}
               </button>
 
               {/* SIGN IN */}
@@ -294,19 +345,10 @@ const SignUp: React.FC = () => {
               {/* Verify Button */}
               <button
                 onClick={handleOTPVerify}
-                disabled={loading}
+                disabled={isPending}
                 className="w-full h-12 rounded-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 transition-all text-white text-[15px] font-medium flex items-center justify-center gap-2 cursor-pointer"
               >
-                {loading ? (
-                  <>
-                    <span className="inline-block animate-spin">⏳</span>
-                    Verifying...
-                  </>
-                ) : (
-                  <>
-                    Verify OTP
-                  </>
-                )}
+                {isPending ? "Verifying..." : "Verify OTP"}
               </button>
 
               {/* Resend OTP */}
