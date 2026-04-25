@@ -159,22 +159,22 @@ const Navbar = () => {
           {/* Right Section - Cart & Profile */}
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 shrink-0">
 
-            {/* Wishlist - Hidden on mobile */}
+            {/* Wishlist - Hidden on mobile
             <Link
               to="/wishlist"
               className="hidden lg:flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700 transition-colors"
             >
               <Heart size={22} />
               <span className="text-sm">Wishlist</span>
-            </Link>
+            </Link> */}
 
             {/* Wishlist Icon Only - Shown on tablet */}
-            <Link
+            {/* <Link
               to="/wishlist"
               className="hidden md:flex lg:hidden text-gray-600 hover:text-blue-700 transition-colors"
             >
               <Heart size={20} />
-            </Link>
+            </Link> */}
 
             {/* Cart */}
             <div
