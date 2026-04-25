@@ -40,6 +40,7 @@ const ProductDetails = lazy(() => import("../Pages/ProductDetails"));
 const SearchResults = lazy(() => import("../Pages/SearchResults"));
 const Checkout = lazy(() => import("../Pages/Checkout"));
 const NotFound = lazy(() => import("../Pages/NotFound"));
+const VendorLogin = lazy(() => import("../Pages/VendorLogin"));
 const VendorSignup = lazy(() => import("../Pages/VendorSignup"));
 const VendorStoreForm = lazy(() => import("../Pages/VendorStoreForm"));
 const OrderDetails = lazy(() => import("../features/MyProfile/OrderDetails"));
@@ -56,6 +57,7 @@ export const routes: RouteObject[] = [
       { path: "login", element: <Loadable><Login /></Loadable> },
       { path: "signup", element: <Loadable><SignUp /></Loadable> },
       { path: "forgot-password", element: <Loadable><ForgotPassword /></Loadable> },
+      { path: "vendor-login", element: <Loadable><VendorLogin /></Loadable> },
 
 
       // { path: "vendor-signup", element: <Loadable><VendorSignup /></Loadable> },
@@ -89,6 +91,7 @@ export const routes: RouteObject[] = [
             index: true,
             element: <Loadable><VendorSignup /></Loadable>,
           },
+
           {
             element: <VendorStepGuard />,
             children: [
