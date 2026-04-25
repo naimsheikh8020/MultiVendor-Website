@@ -17,9 +17,9 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { mutate, isPending } = useRegister();
-  const { mutate: verifyMutate, isPending: isVerifyPending } = useVerifyOtp();
+  const { mutate: verifyMutate } = useVerifyOtp();
 
 
   const handleSignUp = () => {
