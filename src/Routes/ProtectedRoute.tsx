@@ -16,29 +16,16 @@
 // routes/ProtectedRoute.tsx
 
 import { Navigate, Outlet } from "react-router";
-import { useEffect, useState } from "react";
-import { API } from "../services/api";
+import { useAuthStore } from "../features/auth/store/auth.store";
 
 const ProtectedRoute = () => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { accessToken, isHydrated } = useAuthStore();
 
-  useEffect(() => {
-    API.get("/api/v1/accounts/customer/profile/")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  // ⛔ wait for Zustand to load from localStorage
+  if (!isHydrated) return <div>Loading...</div>;
 
-  if (loading) return <div>Loading...</div>;
-
-  if (!user) return <Navigate to="/login" replace />;
+  // ⛔ no token → not logged in
+  if (!accessToken) return <Navigate to="/login" replace />;
 
   return <Outlet />;
 };

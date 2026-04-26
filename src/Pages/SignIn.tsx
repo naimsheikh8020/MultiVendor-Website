@@ -51,9 +51,9 @@ const SignIn: React.FC = () => {
           console.log("LOGIN SUCCESS:", res);
 
           setAuth({
-            access: res.access,
-            refresh: res.refresh,
-            role: res.role,
+            access: res.data.access,
+            refresh: res.data.refresh,
+            role: res.data.role,
           });
 
           // cart logic (unchanged)
@@ -71,7 +71,7 @@ const SignIn: React.FC = () => {
         onError: (err: any) => {
           alert(
             err?.response?.data?.detail ||
-              "Login failed"
+            "Login failed"
           );
         },
       }

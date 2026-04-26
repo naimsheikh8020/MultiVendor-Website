@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
- 
   Search,
   ChevronDown,
   User,
@@ -10,7 +9,10 @@ import {
 import { assets, categoryNames } from "../assets/assets";
 import type { CategoryName } from "../assets/assets";
 import { useCartStore } from "../store/cartStore";
-import { isAuthenticated } from "../utils/auth";
+
+// ✅ NEW
+import { useProfile } from "../features/auth/hooks/useProfile";
+import { useAuthStore } from "../features/auth/store/auth.store";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +24,16 @@ const Navbar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
   const itemCount = useCartStore((state) => state.getItemCount());
+
+  // ✅ REAL AUTH
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const logout = useAuthStore((s) => s.logout);
+  const isLoggedIn = !!accessToken;
+
+  // ✅ FETCH PROFILE
+  const { data: profile } = useProfile();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -52,9 +63,8 @@ const Navbar = () => {
   };
 
   const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
-    if (e) {
-      e.preventDefault();
-    }
+    if (e) e.preventDefault();
+
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
@@ -68,22 +78,21 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setIsProfileOpen(false);
-    // Clear cart when user logs out
+
     const { clearUserCart } = useCartStore.getState();
     clearUserCart();
-    // Clear auth from localStorage
-    localStorage.removeItem("isAuth");
-    localStorage.removeItem("role");
+
+    logout(); // 🔥 real logout
+
     navigate("/login");
   };
 
   return (
     <nav className="w-full bg-blue-50 border-b border-gray-100 relative z-50">
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4">
-        {/* Main Navbar Container - Three Column Layout */}
         <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
 
-          {/* Left Section - Logo */}
+          {/* LEFT */}
           <div className="shrink-0">
             <Link to="/">
               <img
@@ -94,11 +103,13 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Middle Section - Search Bar */}
+          {/* MIDDLE */}
           <div className="flex-1 max-w-3xl mx-2 sm:mx-3 md:mx-4">
-            <form onSubmit={handleSearch} className="relative flex items-center w-full h-9 sm:h-10 md:h-11 lg:h-12 bg-white rounded-md shadow-sm">
-
-              {/* Category Dropdown */}
+            <form
+              onSubmit={handleSearch}
+              className="relative flex items-center w-full h-9 sm:h-10 md:h-11 lg:h-12 bg-white rounded-md shadow-sm"
+            >
+              {/* CATEGORY */}
               <div ref={dropdownRef} className="relative h-full">
                 <div
                   onClick={() => setIsOpen((prev) => !prev)}
@@ -108,11 +119,13 @@ const Navbar = () => {
                     {selectedCategory ?? "All Categories"}
                   </span>
                   <span className="lg:hidden text-[10px] sm:text-xs">
-                    {selectedCategory ? selectedCategory.slice(0, 6) + ".." : "All"}
+                    {selectedCategory
+                      ? selectedCategory.slice(0, 6) + ".."
+                      : "All"}
                   </span>
                   <ChevronDown
                     size={14}
-                    className={`transition-transform sm:w-4 sm:h-4 ${isOpen ? "rotate-180" : ""}`}
+                    className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
                   />
                 </div>
 
@@ -137,7 +150,7 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Search Input */}
+              {/* INPUT */}
               <input
                 type="text"
                 placeholder="Search products..."
@@ -146,45 +159,28 @@ const Navbar = () => {
                 className="flex-1 h-full px-2 sm:px-3 lg:px-4 text-xs sm:text-sm outline-none"
               />
 
-              {/* Search Button */}
+              {/* BUTTON */}
               <button
                 type="submit"
                 className="h-full px-2 sm:px-3 md:px-4 lg:px-5 bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center rounded-r-md"
               >
-                <Search size={16} className="text-white sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5" />
+                <Search size={16} className="text-white" />
               </button>
             </form>
           </div>
 
-          {/* Right Section - Cart & Profile */}
+          {/* RIGHT */}
           <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 shrink-0">
 
-            {/* Wishlist - Hidden on mobile
-            <Link
-              to="/wishlist"
-              className="hidden lg:flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700 transition-colors"
-            >
-              <Heart size={22} />
-              <span className="text-sm">Wishlist</span>
-            </Link> */}
-
-            {/* Wishlist Icon Only - Shown on tablet */}
-            {/* <Link
-              to="/wishlist"
-              className="hidden md:flex lg:hidden text-gray-600 hover:text-blue-700 transition-colors"
-            >
-              <Heart size={20} />
-            </Link> */}
-
-            {/* Cart */}
+            {/* CART */}
             <div
               onClick={() => navigate("/cart")}
               className="relative flex items-center gap-2 text-gray-600 cursor-pointer hover:text-blue-700 transition-colors"
             >
               <div className="relative">
-                <ShoppingCart size={20} className="sm:w-5.5 sm:h-5.5 md:w-6 md:h-6" />
+                <ShoppingCart size={20} />
                 {itemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] sm:text-xs font-medium w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
                     {itemCount}
                   </span>
                 )}
@@ -192,31 +188,33 @@ const Navbar = () => {
               <span className="hidden lg:inline text-sm">My Cart</span>
             </div>
 
-            {/* Profile */}
+            {/* PROFILE */}
             <div
               ref={profileRef}
               className="relative flex items-center gap-1 sm:gap-2 cursor-pointer"
               onClick={() => {
-                if (isAuthenticated()) {
+                if (isLoggedIn) {
                   setIsProfileOpen((prev) => !prev);
                 } else {
                   navigate("/login");
                 }
               }}
             >
-              {isAuthenticated() ? (
+              {isLoggedIn ? (
                 <>
                   <img
-                    src="https://i.pravatar.cc/40"
+                    src={profile?.user?.avatar || "https://i.pravatar.cc/40"}
                     alt="user"
                     className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full ring-2 ring-gray-200"
                   />
                   <span className="hidden lg:inline text-sm font-medium text-gray-600">
-                    Akash
+                    {profile?.user?.full_name || "User"}
                   </span>
                   <ChevronDown
                     size={16}
-                    className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
+                    className={`hidden md:inline transition-transform ${
+                      isProfileOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </>
               ) : (
@@ -230,7 +228,7 @@ const Navbar = () => {
                 </>
               )}
 
-              {isAuthenticated() && isProfileOpen && (
+              {isLoggedIn && isProfileOpen && (
                 <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                   <div
                     onClick={(e) => {
@@ -253,6 +251,7 @@ const Navbar = () => {
                 </div>
               )}
             </div>
+
           </div>
         </div>
       </div>
