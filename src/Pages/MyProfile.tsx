@@ -9,13 +9,14 @@ import Sidebar from "../features/MyProfile/Sidebar"
 import PlatformHighlights from "../features/Home/PlatformHighlights"
 import MyReturn from "../features/MyProfile/MyReturn"
 import CancelOrder from "../features/MyProfile/CancelOrder"
+import ReceiveProduct from "../features/MyProfile/ReceiveProduct"
 
 
 
 const MyProfile = () => {
   const navigate = useNavigate()
 
-  const [activeTab, setActiveTab] = useState<"profile" | "address" | "payment" | "orders" | "reviews" | "returns" | "cancel">("profile")
+  const [activeTab, setActiveTab] = useState<"profile" | "address" | "payment" | "orders" | "reviews" | "returns" | "cancel" | "receive">("profile")
 
   const renderContent = () => {
     switch (activeTab) {
@@ -31,6 +32,8 @@ const MyProfile = () => {
         return <MyReturn />
       case "cancel":
         return <CancelOrder />
+      case "receive":
+        return <ReceiveProduct />
       default:
         return <ProfileInfo />
     }

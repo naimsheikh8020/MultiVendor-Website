@@ -5,12 +5,13 @@ import {
   Package,
   LogOut,
   Undo2,
-  BanknoteX
+  BanknoteX,
+  PackageCheck 
 } from "lucide-react"
 
 import type { LucideIcon } from "lucide-react"
 
-type TabType = "profile" | "address" | "payment" | "orders" | "reviews" | "returns" | "cancel"
+type TabType = "profile" | "address" | "payment" | "orders" | "reviews" | "returns" | "cancel" | "receive"
 
 interface SidebarProps {
   activeTab: TabType
@@ -31,7 +32,7 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     { id: "orders", label: "My Orders", icon: Package },
     { id: "returns", label: "My Return", icon: Undo2 },
     { id: "cancel", label: "My Cancel", icon: BanknoteX },
-
+    { id: "receive", label: "Receive Product", icon: PackageCheck },
   ]
 
   return (
