@@ -1,163 +1,149 @@
-import { useEffect, useRef, useState } from "react"
-import { X, User, Phone, Mail } from "lucide-react"
+import { useEffect, useRef } from "react";
+import { X, User, Phone } from "lucide-react";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useProfile } from "../features/auth/hooks/useProfile";
+import { useUpdateProfile } from "../features/auth/hooks/useUpdateProfile";
+import { profileSchema, type ProfileFormData } from "../utils/validation/profile.schema";
+
+
 
 type Props = {
-  isOpen: boolean
-  onClose: () => void
-}
+  isOpen: boolean;
+  onClose: () => void;
+};
 
 const ProfileEditModal = ({ isOpen, onClose }: Props) => {
-  const modalRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    mobile: "",
-    email: "",
-    gender: ""
-  })
+  const { data: profile, refetch } = useProfile();
+  const { mutate, isPending } = useUpdateProfile();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
+  });
 
-  // lock body scroll
+  // ✅ Prefill form
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "auto"
+    if (profile?.user) {
+      reset({
+        full_name: profile.user.full_name || "",
+        phone_number: profile.user.phone_number || "",
+        gender: profile.user.gender || "",
+      });
     }
+  }, [profile, reset]);
 
-    return () => {
-      document.body.style.overflow = "auto"
-    }
-  }, [isOpen])
+  const onSubmit = (data: ProfileFormData) => {
+    mutate(data, {
+      onSuccess: async () => {
+        await refetch();
+        onClose();
+      },
+      onError: (err: any) => {
+        alert(err?.response?.data?.detail || "Update failed");
+      },
+    });
+  };
 
-  // close when clicking outside
+  // outside click
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      onClose()
+      onClose();
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div
       onClick={handleOutsideClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
     >
       <div
         ref={modalRef}
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl transform transition-all duration-300 scale-100"
+        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-800">
-            Edit Profile
-          </h2>
-
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full cursor-pointer hover:bg-gray-100 transition"
-          >
-            <X size={20} />
+          <h2 className="text-lg font-semibold">Edit Profile</h2>
+          <button onClick={onClose} className="cursor-pointer">
+            <X  size={20} />
           </button>
         </div>
 
-        {/* Form */}
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-          {/* Full Name */}
-          <div className="relative">
-            <User
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              value={formData.fullName}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Name */}
+          <div>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                {...register("full_name")}
+                placeholder="Full Name"
+                className="w-full pl-10 py-2.5 border border-gray-200 rounded-lg"
+              />
+            </div>
+            {errors.full_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.full_name.message}
+              </p>
+            )}
           </div>
 
-          {/* Mobile */}
-          <div className="relative">
-            <Phone
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-
-            <input
-              type="text"
-              name="mobile"
-              placeholder="Mobile Number"
-              value={formData.mobile}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Gmail */}
-          <div className="relative">
-            <Mail
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-            />
-
-            <input
-              type="email"
-              name="email"
-              placeholder="Gmail Address"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {/* Phone */}
+          <div>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                {...register("phone_number")}
+                placeholder="Mobile Number"
+                className="w-full pl-10 py-2.5 border border-gray-200 rounded-lg"
+              />
+            </div>
+            {errors.phone_number && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.phone_number.message}
+              </p>
+            )}
           </div>
 
           {/* Gender */}
-          <div>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-200 py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="others">Others</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-6 flex justify-end gap-3">
-
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition cursor-pointer"
+          <select
+            {...register("gender")}
+            className="w-full border border-gray-200 rounded-lg py-2.5 px-3"
           >
-            Cancel
-          </button>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="others">Others</option>
+          </select>
 
-          <button className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer transition">
-            Save Changes
-          </button>
+          {/* Footer */}
+          <div className="flex justify-end gap-3 mt-4">
+            <button type="button" onClick={onClose} className="border border-gray-200 text-gray-700 cursor-pointer px-4 py-2 rounded-lg">
+              Cancel
+            </button>
 
-        </div>
+            <button
+              type="submit"
+              disabled={isPending}
+              className="bg-blue-600 cursor-pointer text-white px-4 py-2 rounded-lg"
+            >
+              {isPending ? "Saving..." : "Save Changes"}
+            </button>
+          </div>
+
+        </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileEditModal
+export default ProfileEditModal;
