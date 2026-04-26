@@ -72,59 +72,63 @@ const SignUp: React.FC = () => {
   };
 
   const handleOTPVerify = () => {
-    setError("");
+  setError("");
 
-    if (otp.length !== 4) {
-      setError("Invalid OTP");
-      return;
-    }
+  if (otp.length !== 4) {
+    setError("Invalid OTP");
+    return;
+  }
 
-    verifyMutate(
-      {
-        email,
-        otp,
-      },
-      {
-        onSuccess: () => {
-          console.log("OTP VERIFIED");
+  verifyMutate(
+    {
+      email,
+      otp,
+    },
+    {
+      onSuccess: () => {
+        console.log("OTP VERIFIED");
 
-          // 🔥 AUTO LOGIN
-          loginMutate(
-            {
-              email,
-              password,
+        // 🔥 AUTO LOGIN AFTER OTP
+        loginMutate(
+          {
+            email,
+            password,
+          },
+          {
+            onSuccess: (res: any) => {
+              const data = res.data; // ✅ FIXED
+
+              console.log("LOGIN SUCCESS", data);
+
+              // ✅ STORE TOKEN PROPERLY
+              setAuth({
+                access: data.access,
+                refresh: data.refresh,
+                role: data.role,
+              });
+
+              // ✅ redirect AFTER token is set
+              navigate("/");
             },
-            {
-              onSuccess: (res: any) => {
-                console.log("LOGIN SUCCESS", res);
 
-                setAuth({
-                  access: res.access,
-                  refresh: res.refresh,
-                  role: res.role,
-                });
+            onError: (err: any) => {
+              setError(
+                err?.response?.data?.detail ||
+                "Login failed after verification"
+              );
+            },
+          }
+        );
+      },
 
-                navigate("/"); // dashboard/home
-              },
-
-              onError: (err: any) => {
-                setError(
-                  err?.response?.data?.detail ||
-                  "Login failed after verification"
-                );
-              },
-            }
-          );
-        },
-
-        onError: (err: any) => {
-          setError(
-            err?.response?.data?.detail || "Invalid OTP"
-          );
-        },
-      }
-    );
-  };
+      onError: (err: any) => {
+        setError(
+          err?.response?.data?.detail || "Invalid OTP"
+        );
+      },
+    }
+  );
+};
 
   const handleBackToForm = () => {
     setCurrentStep("form");
