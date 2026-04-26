@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { useRegister } from "../features/auth/hooks/useRegister";
 import { useVerifyOtp } from "../features/auth/hooks/useVerifyOtp";
+import { useLogin } from "../features/auth/hooks/useLogin";
+import { useAuthStore } from "../features/auth/store/auth.store";
+
 
 const SignUp: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,8 +22,11 @@ const SignUp: React.FC = () => {
   const [error, setError] = useState("");
   // const [loading, setLoading] = useState(false);
   const { mutate, isPending } = useRegister();
-  const { mutate: verifyMutate } = useVerifyOtp();
-
+  const { mutate: verifyMutate, isPending: verifyPending } = useVerifyOtp();
+  const { mutate: loginMutate } = useLogin();
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const navigate = useNavigate();
+  
 
   const handleSignUp = () => {
     setError("");
@@ -69,32 +75,51 @@ const SignUp: React.FC = () => {
     setError("");
 
     if (otp.length !== 4) {
-      setError("Please enter a valid 4-digit OTP");
-      return;
-    }
-
-    if (!/^\d{4}$/.test(otp)) {
-      setError("OTP must contain only numbers");
+      setError("Invalid OTP");
       return;
     }
 
     verifyMutate(
       {
-        email: email, // important: same email from signup
-        otp: otp,
+        email,
+        otp,
       },
       {
-        onSuccess: (res: any) => {
-          console.log("OTP VERIFIED:", res);
-          setCurrentStep("success");
-        },
-        onError: (err: any) => {
-          console.log("OTP ERROR:", err);
+        onSuccess: () => {
+          console.log("OTP VERIFIED");
 
+          // 🔥 AUTO LOGIN
+          loginMutate(
+            {
+              email,
+              password,
+            },
+            {
+              onSuccess: (res: any) => {
+                console.log("LOGIN SUCCESS", res);
+
+                setAuth({
+                  access: res.access,
+                  refresh: res.refresh,
+                  role: res.role,
+                });
+
+                navigate("/"); // dashboard/home
+              },
+
+              onError: (err: any) => {
+                setError(
+                  err?.response?.data?.detail ||
+                  "Login failed after verification"
+                );
+              },
+            }
+          );
+        },
+
+        onError: (err: any) => {
           setError(
-            err?.response?.data?.message ||
-            err?.response?.data?.detail ||
-            "Invalid OTP"
+            err?.response?.data?.detail || "Invalid OTP"
           );
         },
       }
@@ -345,10 +370,10 @@ const SignUp: React.FC = () => {
               {/* Verify Button */}
               <button
                 onClick={handleOTPVerify}
-                disabled={isPending}
+                disabled={verifyPending}
                 className="w-full h-12 rounded-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 transition-all text-white text-[15px] font-medium flex items-center justify-center gap-2 cursor-pointer"
               >
-                {isPending ? "Verifying..." : "Verify OTP"}
+                {verifyPending ? "Verifying..." : "Verify OTP"}
               </button>
 
               {/* Resend OTP */}
