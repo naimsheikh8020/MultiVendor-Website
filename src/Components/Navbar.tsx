@@ -87,6 +87,7 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   return (
     <nav className="w-full bg-blue-50 border-b border-gray-100 relative z-50">
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4">
@@ -203,7 +204,11 @@ const Navbar = () => {
               {isLoggedIn ? (
                 <>
                   <img
-                    src={profile?.user?.avatar || "https://i.pravatar.cc/40"}
+                    src={
+                      profile?.user?.avatar
+                        ? `${BASE_URL}${profile.user.avatar}`
+                        : "https://i.pravatar.cc/40"
+                    }
                     alt="user"
                     className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-full ring-2 ring-gray-200"
                   />
@@ -212,9 +217,8 @@ const Navbar = () => {
                   </span>
                   <ChevronDown
                     size={16}
-                    className={`hidden md:inline transition-transform ${
-                      isProfileOpen ? "rotate-180" : ""
-                    }`}
+                    className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </>
               ) : (
