@@ -14,4 +14,20 @@ export const loginUser = (data: any) =>
 export const logoutUser = (refreshToken: string) =>
   API.post("/api/v1/accounts/logout/", {
     refresh_token: refreshToken,
-  });
+});
+
+export const requestPasswordReset = (data: { email: string }) =>
+  API.post("/api/v1/accounts/password-reset/", data);
+
+export const confirmPasswordReset = (data: {
+  email: string;
+  otp: string;
+  new_password: string;
+}) =>
+  API.post("/api/v1/accounts/password-reset-confirm/", data);
+
+export const resendOtp = (data: { email: string }) =>
+  API.post("/api/v1/accounts/send-otp/", data);
+
+export const checkOtp = (data: { email: string; otp: string }) =>
+  API.post("/api/v1/accounts/check-otp/", data);
