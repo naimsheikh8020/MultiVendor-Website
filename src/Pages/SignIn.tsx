@@ -23,6 +23,7 @@ type FormData = z.infer<typeof schema>;
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState<string>("");
 
   const navigate = useNavigate();
   const { clearCart, isGuestCart, markAsUserCart } = useCartStore();
@@ -41,6 +42,7 @@ const SignIn: React.FC = () => {
 
   // 🔥 submit handler
   const onSubmit = (data: FormData) => {
+    setLoginError("");
     mutate(
       {
         email: data.email,
@@ -69,9 +71,9 @@ const SignIn: React.FC = () => {
         },
 
         onError: (err: any) => {
-          alert(
+          setLoginError(
             err?.response?.data?.detail ||
-            "Login failed"
+            "Invalid credentials"
           );
         },
       }
@@ -161,6 +163,13 @@ const SignIn: React.FC = () => {
                 <Link to="/forgot-password">Forgot Password?</Link>
               </span>
             </div>
+
+            {/* LOGIN ERROR */}
+            {loginError && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-300 rounded-lg">
+                <p className="text-red-600 text-sm font-medium">{loginError}</p>
+              </div>
+            )}
 
             {/* BUTTON */}
             <button
