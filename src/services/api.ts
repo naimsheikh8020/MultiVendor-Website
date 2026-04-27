@@ -6,6 +6,9 @@ import { useAuthStore } from "../features/auth/store/auth.store";
 
 export const API = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
+  headers:{
+    "ngrok-skip-browser-warning": "1",
+  }
   
 });
 
@@ -23,6 +26,8 @@ API.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+
 
 // 🔁 Auto refresh token
 API.interceptors.response.use(
