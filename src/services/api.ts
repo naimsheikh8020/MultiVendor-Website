@@ -6,7 +6,7 @@ import { useAuthStore } from "../features/auth/store/auth.store";
 
 export const API = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
-  withCredentials: true, // 🔥 MUST
+  
 });
 
 // ✅ Attach token safely
@@ -30,7 +30,6 @@ API.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest: any = error.config;
 
-    // ❗ safe check
     if (!error.response) {
       return Promise.reject(error);
     }
