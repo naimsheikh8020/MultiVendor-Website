@@ -10,9 +10,9 @@ import { assets, categoryNames } from "../assets/assets";
 import type { CategoryName } from "../assets/assets";
 import { useCartStore } from "../store/cartStore";
 
-// ✅ NEW
 import { useProfile } from "../features/auth/hooks/useProfile";
 import { useAuthStore } from "../features/auth/store/auth.store";
+import { API } from "../services/api"; // ✅ added
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,12 +27,11 @@ const Navbar = () => {
 
   const itemCount = useCartStore((state) => state.getItemCount());
 
-  // ✅ REAL AUTH
   const accessToken = useAuthStore((s) => s.accessToken);
+  const refreshToken = useAuthStore((s) => s.refreshToken); // ✅ added
   const logout = useAuthStore((s) => s.logout);
   const isLoggedIn = !!accessToken;
 
-  // ✅ FETCH PROFILE
   const { data: profile } = useProfile();
 
   useEffect(() => {
@@ -76,18 +75,29 @@ const Navbar = () => {
     navigate("/my-profile");
   };
 
-  const handleLogout = () => {
+  // 🔥 UPDATED LOGOUT (API + LOCAL)
+  const handleLogout = async () => {
     setIsProfileOpen(false);
 
     const { clearUserCart } = useCartStore.getState();
     clearUserCart();
 
-    logout(); // 🔥 real logout
-
-    navigate("/login");
+    try {
+      if (refreshToken) {
+        await API.post("/api/v1/accounts/logout/", {
+          refresh_token: refreshToken,
+        });
+      }
+    } catch (error) {
+      console.error("Logout API failed", error);
+    } finally {
+      logout(); // clear zustand
+      navigate("/login");
+    }
   };
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   return (
     <nav className="w-full bg-blue-50 border-b border-gray-100 relative z-50">
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4">
@@ -217,8 +227,9 @@ const Navbar = () => {
                   </span>
                   <ChevronDown
                     size={16}
-                    className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""
-                      }`}
+                    className={`hidden md:inline transition-transform ${
+                      isProfileOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </>
               ) : (
