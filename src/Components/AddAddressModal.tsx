@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { X } from "lucide-react"
+import { useAreas, useCities, useZones } from "../features/Hooks/usePathao"
 
 type Props = {
   isOpen: boolean
@@ -8,18 +9,25 @@ type Props = {
 }
 
 const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
-  const [form, setForm] = useState({
+
+  const initialForm = {
     name: "",
     phone: "",
     address: "",
     landmark: "",
     label: "Home",
-    region: "Dhaka",
-    city: "Dhaka - South",
-    area: ""
-  })
+    city: null as number | null,
+    zone: null as number | null,
+    area: null as number | null,
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const [form, setForm] = useState(initialForm)
+
+  const { data: cityData } = useCities()
+  const { data: zoneData } = useZones(form.city || undefined)
+  const { data: areaData } = useAreas(form.zone || undefined)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
 
     setForm((prev) => ({
@@ -40,17 +48,7 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
     })
 
     onClose()
-
-    setForm({
-      name: "",
-      phone: "",
-      address: "",
-      landmark: "",
-      label: "Home",
-      region: "Dhaka",
-      city: "Dhaka - South",
-      area: ""
-    })
+    setForm(initialForm)
   }
 
   if (!isOpen) return null
@@ -126,10 +124,11 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
               <button
                 type="button"
                 onClick={() => setForm({ ...form, label: "Home" })}
-                className={`px-4 py-2 rounded-lg transition ${form.label === "Home"
-                  ? "bg-blue-600 text-white"
-                  : "border border-gray-200 text-gray-700 hover:bg-gray-50"
-                  }`}
+                className={`px-4 py-2 rounded-lg transition ${
+                  form.label === "Home"
+                    ? "bg-blue-600 text-white"
+                    : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                }`}
               >
                 Home
               </button>
@@ -137,10 +136,11 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
               <button
                 type="button"
                 onClick={() => setForm({ ...form, label: "Office" })}
-                className={`px-4 py-2 rounded-lg transition ${form.label === "Office"
-                  ? "bg-blue-600 text-white"
-                  : "border border-gray-200 text-gray-700 hover:bg-gray-50"
-                  }`}
+                className={`px-4 py-2 rounded-lg transition ${
+                  form.label === "Office"
+                    ? "bg-blue-600 text-white"
+                    : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                }`}
               >
                 Office
               </button>
@@ -151,45 +151,77 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
 
         </div>
 
-        {/* ✅ UPDATED SECTION */}
+        {/* CITY → ZONE → AREA */}
         <div className="grid grid-cols-3 gap-4 mt-4">
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Region</label>
-            <select
-              name="region"
-              value={form.region}
-              onChange={handleChange}
-              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500 cursor-pointer transition"
-            >
-              <option>Dhaka</option>
-            </select>
-          </div>
-
+          {/* CITY */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">City</label>
             <select
-              name="city"
-              value={form.city}
-              onChange={handleChange}
-              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500 cursor-pointer transition"
+              value={form.city ?? ""}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  city: e.target.value ? Number(e.target.value) : null,
+                  zone: null,
+                  area: null,
+                }))
+              }
+              className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
             >
-              <option>Dhaka - South</option>
+              <option value="">Select City</option>
+              {cityData?.data?.results?.map((c: any) => (
+                <option key={c.city_id} value={c.city_id}>
+                  {c.city_name}
+                </option>
+              ))}
             </select>
           </div>
 
+          {/* ZONE */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-600">Zone</label>
+            <select
+              value={form.zone ?? ""}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  zone: e.target.value ? Number(e.target.value) : null,
+                  area: null,
+                }))
+              }
+              disabled={!form.city}
+              className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
+            >
+              <option value="">Select Zone</option>
+              {zoneData?.data?.results?.map((z: any) => (
+                <option key={z.zone_id} value={z.zone_id}>
+                  {z.zone_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* AREA */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Area</label>
             <select
-              name="area"
-              value={form.area}
-              onChange={handleChange}
-              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500 cursor-pointer transition"
+              value={form.area ?? ""}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  area: e.target.value ? Number(e.target.value) : null,
+                }))
+              }
+              disabled={!form.zone}
+              className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
             >
               <option value="">Select Area</option>
-              <option>Dhanmondi</option>
-              <option>Mirpur</option>
-              <option>Uttara</option>
+              {areaData?.data?.results?.map((a: any) => (
+                <option key={a.area_id} value={a.area_id}>
+                  {a.area_name}
+                </option>
+              ))}
             </select>
           </div>
 
