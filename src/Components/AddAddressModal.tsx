@@ -151,7 +151,8 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
 
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        {/* ✅ UPDATED SECTION */}
+        <div className="grid grid-cols-3 gap-4 mt-4">
 
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Region</label>
@@ -177,17 +178,21 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
             </select>
           </div>
 
-        </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-600">Area</label>
+            <select
+              name="area"
+              value={form.area}
+              onChange={handleChange}
+              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500 cursor-pointer transition"
+            >
+              <option value="">Select Area</option>
+              <option>Dhanmondi</option>
+              <option>Mirpur</option>
+              <option>Uttara</option>
+            </select>
+          </div>
 
-        <div className="flex flex-col gap-1 mt-4">
-          <label className="text-sm text-gray-600">Area</label>
-          <input
-            name="area"
-            value={form.area}
-            onChange={handleChange}
-            placeholder="Enter area"
-            className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500 transition"
-          />
         </div>
 
         <div className="flex items-center gap-4 mt-6">
