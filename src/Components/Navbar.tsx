@@ -96,7 +96,7 @@ const Navbar = () => {
     }
   };
 
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
+  // const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   return (
     <nav className="w-full bg-blue-50 border-b border-gray-100 relative z-50">
