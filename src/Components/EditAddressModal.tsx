@@ -21,13 +21,13 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
     zone: null as number | null,
     area: null as number | null,
   })
-
+  const [errors, setErrors] = useState<string[]>([])
 
   const { data: cityData } = useCities()
   const { data: zoneData } = useZones(formData.city || undefined)
   const { data: areaData } = useAreas(formData.zone || undefined)
 
-  const { mutate: updateMutate } = useUpdateAddress();
+  const { mutate: updateMutate, isPending } = useUpdateAddress();
 
   // Update form data when address changes or modal opens
   useEffect(() => {
@@ -53,8 +53,27 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
     }))
   }
 
+  // 🔥 VALIDATE REQUIRED FIELDS
+  const validateForm = () => {
+    const newErrors: string[] = []
+
+    if (!formData.name?.trim()) newErrors.push("name")
+    if (!formData.phone?.trim()) newErrors.push("phone")
+    if (!formData.address?.trim()) newErrors.push("address")
+    if (!formData.city) newErrors.push("city")
+    if (!formData.zone) newErrors.push("zone")
+    if (!formData.area) newErrors.push("area")
+
+    setErrors(newErrors)
+    return newErrors.length === 0
+  }
+
+  const isFormValid = () => {
+    return formData.name?.trim() && formData.phone?.trim() && formData.address?.trim() && formData.city && formData.zone && formData.area
+  }
+
   const handleSave = () => {
-    if (!address?.id) return;
+    if (!address?.id || !validateForm()) return;
 
     updateMutate(
       {
@@ -72,6 +91,7 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
       },
       {
         onSuccess: () => {
+          setErrors([])
           onClose();
         },
         onError: (err: any) => {
@@ -101,37 +121,40 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
         <div className="grid grid-cols-2 gap-4">
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Full Name</label>
+            <label className="text-sm text-gray-600">Full Name <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500"
+              className={`border rounded-lg px-3 py-2 outline-none focus:border-blue-500 transition ${errors.includes("name") ? "border-red-500 bg-red-50" : "border-gray-200"
+                }`}
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Phone Number</label>
+            <label className="text-sm text-gray-600">Phone Number <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500"
+              className={`border rounded-lg px-3 py-2 outline-none focus:border-blue-500 transition ${errors.includes("phone") ? "border-red-500 bg-red-50" : "border-gray-200"
+                }`}
             />
           </div>
 
         </div>
 
         <div className="flex flex-col gap-1 mt-4">
-          <label className="text-sm text-gray-600">Address</label>
+          <label className="text-sm text-gray-600">Address <span className="text-red-500">*</span></label>
           <input
             type="text"
             name="address"
             value={formData.address}
             onChange={handleInputChange}
-            className="border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500"
+            className={`border rounded-lg px-3 py-2 outline-none focus:border-blue-500 transition ${errors.includes("address") ? "border-red-500 bg-red-50" : "border-gray-200"
+              }`}
           />
         </div>
 
@@ -186,7 +209,7 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
         <div className="grid grid-cols-3 gap-4 mt-4">
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">City</label>
+            <label className="text-sm text-gray-600">City <span className="text-red-500">*</span></label>
             <select
               name="city"
               value={formData.city ?? ""}
@@ -198,7 +221,8 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
                   area: null,
                 }))
               }
-              className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
+              className={`border rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition ${errors.includes("city") ? "border-red-500 bg-red-50" : "border-gray-200"
+                }`}
             >
               <option value="">Select City</option>
               {cityData?.data?.results?.map((c: any) => (
@@ -210,7 +234,7 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Zone</label>
+            <label className="text-sm text-gray-600">Zone <span className="text-red-500">*</span></label>
             <select
               name="zone"
               value={formData.zone ?? ""}
@@ -222,7 +246,8 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
                 }))
               }
               disabled={!formData.city}
-              className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
+              className={`border rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition ${errors.includes("zone") ? "border-red-500 bg-red-50" : "border-gray-200"
+                } ${!formData.city ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
               <option value="">Select Zone</option>
               {zoneData?.data?.results?.map((z: any) => (
@@ -234,7 +259,7 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Area</label>
+            <label className="text-sm text-gray-600">Area <span className="text-red-500">*</span></label>
             <select
               name="area"
               value={formData.area ?? ""}
@@ -245,7 +270,8 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
                 }))
               }
               disabled={!formData.zone}
-              className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
+              className={`border rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition ${errors.includes("area") ? "border-red-500 bg-red-50" : "border-gray-200"
+                } ${!formData.zone ? "bg-gray-100 cursor-not-allowed" : ""}`}
             >
               <option value="">Select Area</option>
               {areaData?.data?.results?.map((a: any) => (
@@ -269,9 +295,13 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
 
           <button
             onClick={handleSave}
-            className="px-6 py-2 rounded-lg bg-blue-600 cursor-pointer text-white hover:bg-blue-700 transition"
+            disabled={!isFormValid() || isPending}
+            className={`px-6 py-2 rounded-lg text-white cursor-pointer transition ${isFormValid() && !isPending
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+              }`}
           >
-            Save Changes
+            {isPending ? "Saving..." : "Save Changes"}
           </button>
 
         </div>

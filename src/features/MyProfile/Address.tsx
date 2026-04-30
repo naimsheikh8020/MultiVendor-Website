@@ -3,11 +3,14 @@ import { useState } from "react"
 import EditAddressModal from "../../Components/EditAddressModal"
 import AddAddressModal from "../../Components/AddAddressModal"
 import { useAddresses } from "../Hooks/useAddress"
+import { useDeleteAddress } from "../Hooks/useDeleteAddress";
+
 
 const Address = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [activeAddress, setActiveAddress] = useState<any>(null)
+  const { mutate: deleteMutate, isPending } = useDeleteAddress();
 
   // 🔥 GET API
   const { data, isLoading } = useAddresses()
@@ -22,7 +25,9 @@ const Address = () => {
   if (isLoading) {
     return <div>Loading...</div>
   }
-
+  const handleDelete = (id: number) => {
+    deleteMutate(id);
+  };
   return (
     <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6">
 
@@ -70,7 +75,9 @@ const Address = () => {
                 </button>
 
                 <button
-                  className="text-base px-6 py-2 bg-red-600 text-white cursor-pointer rounded-lg border border-red-600 hover:bg-transparent hover:text-red-600 transition-colors duration-200"
+                  disabled={isPending}
+                  onClick={() => handleDelete(item.id)}
+                  className="text-base px-6 py-2 bg-red-600 text-white cursor-pointer rounded-lg border border-red-600 hover:bg-transparent hover:text-red-600 transition-colors duration-200 disabled:opacity-50"
                 >
                   Delete
                 </button>
@@ -93,7 +100,7 @@ const Address = () => {
       <AddAddressModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={() => {}} // 🔥 no-op now
+        onAdd={() => { }} // 🔥 no-op now
       />
 
     </div>
