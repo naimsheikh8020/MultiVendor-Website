@@ -10,7 +10,7 @@ type Props = {
   onSave?: (updatedAddress: any) => void
 }
 
-const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
+const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
   const [selectedLabel, setSelectedLabel] = useState(address?.type || "Home")
   const [formData, setFormData] = useState({
     name: "",
