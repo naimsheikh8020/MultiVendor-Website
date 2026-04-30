@@ -1,7 +1,7 @@
 import {
   LayoutDashboard,
   Box,
-  // Layers,
+  MessageCircle ,
   ShoppingCart,
   DollarSign,
   Wallet,
@@ -19,7 +19,7 @@ const menu = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/vendor/dashboard" },
 
   { name: "Products", icon: Box, path: "/vendor/products" },
-  // { name: "Category", icon: Layers, path: "/vendor/category" },
+  { name: "Messages", icon: MessageCircle, path: "/vendor/messages" },
   { name: "Orders", icon: ShoppingCart, path: "/vendor/orders" },
   { name: "Earnings", icon: DollarSign, path: "/vendor/earnings" },
   { name: "Payouts", icon: Wallet, path: "/vendor/payouts" },

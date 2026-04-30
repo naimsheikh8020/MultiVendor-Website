@@ -24,6 +24,7 @@ import AdminPayout from "../features/Admin/AdminPayout";
 import AdminSettings from "../features/Admin/AdminSettings";
 import ProtectedRoute from "./ProtectedRoute";
 import VendorStepGuard from "./VendorStepGuard";
+import VendorMessage from "../features/vendors/VendorMessage";
 // import VendorStoreForm from "../Pages/VendorStoreForm";
 // import VendorSignup from "../Pages/VendorSignup";
 
@@ -118,7 +119,7 @@ export const routes: RouteObject[] = [
           {
             index: true,
             element: <Loadable><VendorDashboard /></Loadable>,
-          },
+          }, 
           {
             path: "dashboard",
             element: <Loadable><VendorDashboard /></Loadable>,
@@ -126,6 +127,10 @@ export const routes: RouteObject[] = [
           {
             path: "products",
             element: <Loadable><VendorProduct /></Loadable>,
+          },
+          {
+            path: "messages",
+            element: <Loadable><VendorMessage /></Loadable>,
           },
           {
             path: "orders",
