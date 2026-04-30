@@ -2,63 +2,25 @@ import { MapPin, Plus } from "lucide-react"
 import { useState } from "react"
 import EditAddressModal from "../../Components/EditAddressModal"
 import AddAddressModal from "../../Components/AddAddressModal"
-
-type AddressType = {
-  id: number
-  name: string
-  phone: string
-  address: string
-  type: string
-}
+import { useAddresses } from "../Hooks/useAddress"
 
 const Address = () => {
-  const addresses: AddressType[] = [
-    {
-      id: 1,
-      name: "Akash",
-      phone: "+1 234 567 8900",
-      address:
-        "123 Main Street, Apartment 4B, New York, NY 10001, United States",
-      type: "Home"
-    },
-    {
-      id: 2,
-      name: "Akash",
-      phone: "+1 234 567 8900",
-      address:
-        "456 Market Street, Floor 2, San Francisco, CA 94103, United States",
-      type: "Office"
-    },
-    {
-      id: 3,
-      name: "Akash",
-      phone: "+1 234 567 8900",
-      address:
-        "456 Market Street, Floor 2, San Francisco, CA 94103, United States",
-      type: "Office"
-    },
-    {
-      id: 4,
-      name: "Akash",
-      phone: "+1 234 567 8900",
-      address:
-        "456 Market Street, Floor 2, San Francisco, CA 94103, United States",
-      type: "Office"
-    }
-  ]
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [activeAddress, setActiveAddress] = useState<AddressType | null>(null)
-  const [addressList, setAddressList] = useState<AddressType[]>(addresses)
+  const [activeAddress, setActiveAddress] = useState<any>(null)
 
-  const handleEditClick = (address: AddressType) => {
+  // 🔥 GET API
+  const { data, isLoading } = useAddresses()
+
+  const addressList = data?.data || []
+
+  const handleEditClick = (address: any) => {
     setActiveAddress(address)
     setIsEditModalOpen(true)
   }
 
-  const handleAddAddress = (newAddress: AddressType) => {
-    setAddressList((prev) => [...prev, newAddress])
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -80,22 +42,22 @@ const Address = () => {
 
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
 
-        {addressList.map((item) => (
+        {addressList.map((item: any) => (
           <div
             key={item.id}
             className="border border-gray-200 rounded-lg p-4 flex flex-col gap-5"
           >
             <div className="flex items-center gap-2">
               <MapPin size={16} className="text-gray-500" />
-              <span className="text-lg font-medium">
-                {item.type}
+              <span className="text-lg font-medium capitalize">
+                {item.label}
               </span>
             </div>
 
             <div className="text-sm text-gray-700 space-y-1">
 
-              <p className="font-medium text-base">{item.name}</p>
-              <p className="text-gray-500 text-base">{item.phone}</p>
+              <p className="font-medium text-base">{item.full_name}</p>
+              <p className="text-gray-500 text-base">{item.phone_number}</p>
               <p className="text-gray-600 text-base">{item.address}</p>
 
               <div className="flex gap-4 mt-4">
@@ -107,7 +69,9 @@ const Address = () => {
                   Edit
                 </button>
 
-                <button className="text-base px-6 py-2 bg-red-600 text-white cursor-pointer rounded-lg border border-red-600 hover:bg-transparent hover:text-red-600 transition-colors duration-200">
+                <button
+                  className="text-base px-6 py-2 bg-red-600 text-white cursor-pointer rounded-lg border border-red-600 hover:bg-transparent hover:text-red-600 transition-colors duration-200"
+                >
                   Delete
                 </button>
 
@@ -129,7 +93,7 @@ const Address = () => {
       <AddAddressModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddAddress}
+        onAdd={() => {}} // 🔥 no-op now
       />
 
     </div>

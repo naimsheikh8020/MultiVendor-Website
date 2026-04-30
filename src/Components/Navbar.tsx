@@ -216,7 +216,7 @@ const Navbar = () => {
                   <img
                     src={
                       profile?.user?.avatar
-                        ? `${BASE_URL}${profile.user.avatar}`
+                        ? `${profile.user.avatar}`
                         : "https://i.pravatar.cc/40"
                     }
                     alt="user"

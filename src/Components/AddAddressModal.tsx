@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 import { useAreas, useCities, useZones } from "../features/Hooks/usePathao"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { API } from "../services/api"
 
 type Props = {
   isOpen: boolean
@@ -9,6 +11,8 @@ type Props = {
 }
 
 const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
+
+  const queryClient = useQueryClient()
 
   const initialForm = {
     name: "",
@@ -27,6 +31,12 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
   const { data: zoneData } = useZones(form.city || undefined)
   const { data: areaData } = useAreas(form.zone || undefined)
 
+  // 🔥 TANSTACK MUTATION
+  const { mutate: createAddress, isPending } = useMutation({
+    mutationFn: (data: any) =>
+      API.post("/api/v1/accounts/customer/profile/address/", data),
+  })
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
 
@@ -36,19 +46,42 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
     }))
   }
 
+  // 🔥 REAL SUBMIT
   const handleSubmit = () => {
-    if (!form.name || !form.phone || !form.address) return
+    if (
+      !form.name ||
+      !form.phone ||
+      !form.address ||
+      !form.city ||
+      !form.zone ||
+      !form.area
+    ) return
 
-    onAdd({
-      id: Date.now(),
-      name: form.name,
-      phone: form.phone,
-      address: form.address,
-      type: form.label
-    })
-
-    onClose()
-    setForm(initialForm)
+    createAddress(
+      {
+        full_name: form.name,
+        phone_number: form.phone,
+        address: form.address,
+        label: form.label.toLowerCase(),
+        landmark: form.landmark,
+        city: form.city,
+        zone: form.zone,
+        area: form.area,
+        is_default_delivery: true,
+        is_default_billing: true,
+      },
+      {
+        onSuccess: (res) => {
+          onAdd(res.data)
+          queryClient.invalidateQueries({ queryKey: ["addresses"] })
+          onClose()
+          setForm(initialForm)
+        },
+        onError: (err: any) => {
+          console.log("ERROR:", err?.response?.data)
+        }
+      }
+    )
   }
 
   if (!isOpen) return null
@@ -124,11 +157,10 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
               <button
                 type="button"
                 onClick={() => setForm({ ...form, label: "Home" })}
-                className={`px-4 py-2 rounded-lg transition ${
-                  form.label === "Home"
-                    ? "bg-blue-600 text-white"
-                    : "border border-gray-200 text-gray-700 hover:bg-gray-50"
-                }`}
+                className={`px-4 py-2 rounded-lg transition ${form.label === "Home"
+                  ? "bg-blue-600 text-white"
+                  : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  }`}
               >
                 Home
               </button>
@@ -136,11 +168,10 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
               <button
                 type="button"
                 onClick={() => setForm({ ...form, label: "Office" })}
-                className={`px-4 py-2 rounded-lg transition ${
-                  form.label === "Office"
-                    ? "bg-blue-600 text-white"
-                    : "border border-gray-200 text-gray-700 hover:bg-gray-50"
-                }`}
+                className={`px-4 py-2 rounded-lg transition ${form.label === "Office"
+                  ? "bg-blue-600 text-white"
+                  : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  }`}
               >
                 Office
               </button>
@@ -154,7 +185,6 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
         {/* CITY → ZONE → AREA */}
         <div className="grid grid-cols-3 gap-4 mt-4">
 
-          {/* CITY */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">City</label>
             <select
@@ -178,7 +208,6 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
             </select>
           </div>
 
-          {/* ZONE */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Zone</label>
             <select
@@ -202,7 +231,6 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
             </select>
           </div>
 
-          {/* AREA */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-gray-600">Area</label>
             <select
@@ -240,7 +268,7 @@ const AddAddressModal = ({ isOpen, onClose, onAdd }: Props) => {
             onClick={handleSubmit}
             className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer transition"
           >
-            Save Address
+            {isPending ? "Saving..." : "Save Address"}
           </button>
 
         </div>
