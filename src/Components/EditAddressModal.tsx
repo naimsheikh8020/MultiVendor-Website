@@ -74,8 +74,8 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
                 type="button"
                 onClick={() => setSelectedLabel("Home")}
                 className={`px-4 py-2 rounded-lg transition ${selectedLabel === "Home"
-                    ? "bg-blue-600 text-white"
-                    : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "bg-blue-600 text-white"
+                  : "border border-gray-200 text-gray-700 hover:bg-gray-50"
                   }`}
               >
                 Home
@@ -85,8 +85,8 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
                 type="button"
                 onClick={() => setSelectedLabel("Office")}
                 className={`px-4 py-2 rounded-lg transition ${selectedLabel === "Office"
-                    ? "bg-blue-600 text-white"
-                    : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                  ? "bg-blue-600 text-white"
+                  : "border border-gray-200 text-gray-700 hover:bg-gray-50"
                   }`}
               >
                 Office
@@ -97,27 +97,32 @@ const EditAddressModal = ({ isOpen, onClose, address }: Props) => {
 
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-3 gap-4 mt-4">
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">Region</label>
-            <select className="border border-gray-200 rounded-lg px-3 py-2">
+            <label className="text-sm text-gray-600">City</label>
+            <select className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition">
+              <option>Select City</option>
               <option>Dhaka</option>
             </select>
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-600">City</label>
-            <select className="border border-gray-200 rounded-lg px-3 py-2">
+            <label className="text-sm text-gray-600">Zone</label>
+            <select className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition">
+              <option>Select Zone</option>
               <option>Dhaka - South</option>
             </select>
           </div>
 
-        </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-600">Area</label>
+            <select className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition">
+              <option>Select Area</option>
+              <option>Mohakhali</option>
+            </select>
+          </div>
 
-        <div className="flex flex-col gap-1 mt-4">
-          <label className="text-sm text-gray-600">Area</label>
-          <input className="border border-gray-200 rounded-lg px-3 py-2" />
         </div>
 
         <div className="flex items-center gap-4 mt-6">
