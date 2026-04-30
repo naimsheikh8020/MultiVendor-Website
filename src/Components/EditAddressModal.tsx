@@ -1,5 +1,7 @@
 import { X } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useUpdateAddress } from "../features/Hooks/useUpdateAddress"
+import { useAreas, useCities, useZones } from "../features/Hooks/usePathao"
 
 type Props = {
   isOpen: boolean
@@ -15,10 +17,17 @@ const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
     phone: "",
     address: "",
     landmark: "",
-    city: "Dhaka",
-    zone: "Dhaka - South",
-    area: "Mohakhali"
+    city: null as number | null,
+    zone: null as number | null,
+    area: null as number | null,
   })
+
+
+  const { data: cityData } = useCities()
+  const { data: zoneData } = useZones(formData.city || undefined)
+  const { data: areaData } = useAreas(formData.zone || undefined)
+
+  const { mutate: updateMutate } = useUpdateAddress();
 
   // Update form data when address changes or modal opens
   useEffect(() => {
@@ -28,9 +37,9 @@ const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
         phone: address?.phone_number || address?.phone || "",
         address: address?.address || "",
         landmark: address?.landmark || "",
-        city: address?.city || "Dhaka",
-        zone: address?.zone || "Dhaka - South",
-        area: address?.area || "Mohakhali"
+        city: address?.city || null,
+        zone: address?.zone || null,
+        area: address?.area || null
       })
       setSelectedLabel(address?.label || address?.type || "Home")
     }
@@ -45,16 +54,32 @@ const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
   }
 
   const handleSave = () => {
-    const updatedAddress = {
-      ...address,
-      ...formData,
-      type: selectedLabel
-    }
-    if (onSave) {
-      onSave(updatedAddress)
-    }
-    onClose()
-  }
+    if (!address?.id) return;
+
+    updateMutate(
+      {
+        id: address.id,
+        data: {
+          full_name: formData.name,
+          phone_number: formData.phone,
+          address: formData.address,
+          landmark: formData.landmark,
+          label: selectedLabel.toLowerCase(),
+          city: formData.city,
+          zone: formData.zone,
+          area: formData.area,
+        },
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+        onError: (err: any) => {
+          console.log("UPDATE ERROR:", err?.response?.data);
+        },
+      }
+    );
+  };
 
   if (!isOpen) return null
 
@@ -164,12 +189,23 @@ const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
             <label className="text-sm text-gray-600">City</label>
             <select
               name="city"
-              value={formData.city}
-              onChange={handleInputChange}
+              value={formData.city ?? ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  city: e.target.value ? Number(e.target.value) : null,
+                  zone: null,
+                  area: null,
+                }))
+              }
               className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
             >
-              <option>Select City</option>
-              <option>Dhaka</option>
+              <option value="">Select City</option>
+              {cityData?.data?.results?.map((c: any) => (
+                <option key={c.city_id} value={c.city_id}>
+                  {c.city_name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -177,12 +213,23 @@ const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
             <label className="text-sm text-gray-600">Zone</label>
             <select
               name="zone"
-              value={formData.zone}
-              onChange={handleInputChange}
+              value={formData.zone ?? ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  zone: e.target.value ? Number(e.target.value) : null,
+                  area: null,
+                }))
+              }
+              disabled={!formData.city}
               className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
             >
-              <option>Select Zone</option>
-              <option>Dhaka - South</option>
+              <option value="">Select Zone</option>
+              {zoneData?.data?.results?.map((z: any) => (
+                <option key={z.zone_id} value={z.zone_id}>
+                  {z.zone_name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -190,12 +237,22 @@ const EditAddressModal = ({ isOpen, onClose, address, onSave }: Props) => {
             <label className="text-sm text-gray-600">Area</label>
             <select
               name="area"
-              value={formData.area}
-              onChange={handleInputChange}
+              value={formData.area ?? ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  area: e.target.value ? Number(e.target.value) : null,
+                }))
+              }
+              disabled={!formData.zone}
               className="border border-gray-200 rounded-lg px-3 py-2 cursor-pointer focus:border-blue-600 outline-none transition"
             >
-              <option>Select Area</option>
-              <option>Mohakhali</option>
+              <option value="">Select Area</option>
+              {areaData?.data?.results?.map((a: any) => (
+                <option key={a.area_id} value={a.area_id}>
+                  {a.area_name}
+                </option>
+              ))}
             </select>
           </div>
 
