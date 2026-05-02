@@ -6,3 +6,6 @@ export const getCategories = () =>
 
 export const getProductsByCategory = (slug: string) =>
   API.get(`/api/v1/products/categories/${slug}/`);
+
+export const getProductDetails = (id: string) =>
+  API.get(`/api/v1/products/${id}`);

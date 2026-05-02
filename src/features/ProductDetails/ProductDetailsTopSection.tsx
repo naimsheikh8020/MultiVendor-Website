@@ -1,66 +1,42 @@
-import { useNavigate, useParams, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { getProductById, getProductReviews } from "../../utils/productHelpers";
-import type { UnifiedProduct } from "../../utils/productHelpers";
+import { getProductReviews } from "../../utils/productHelpers";
 import { useCartStore } from "../../store/cartStore";
 import { isAuthenticated } from "../../utils/auth";
 import { topStores } from "../../assets/assets";
 
-const ProductDetailsTopSection = () => {
-  const { productId } = useParams();
+interface ProductDetailsTopSectionProps {
+  product: any;
+}
+
+const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const addItem = useCartStore((state) => state.addItem);
   const markAsUserCart = useCartStore((state) => state.markAsUserCart);
 
-  // State for product data
-  const [product, setProduct] = useState<UnifiedProduct | null>(null);
-  const [loading, setLoading] = useState(true);
+  // UI State
+  const [loading] = useState(false);
 
   // UI State
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState<string>("");
+  const [activeImage, setActiveImage] = useState<string>(product?.image || product?.thumbnail || "");
   const [activeTab, setActiveTab] = useState("details");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
 
-  // Fetch product data
+  // Initialize image when product is available
   useEffect(() => {
-    const fetchProduct = async () => {
-      setLoading(true);
-      try {
-        const productData = await getProductById(Number(productId));
-        setProduct(productData);
-        if (productData) {
-          setActiveImage(productData.image);
-        }
-      } catch (error) {
-        console.error("Error loading product:", error);
-        setProduct(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [productId]);
-
-  // Reset state when product changes
-  useEffect(() => {
-    if (product) {
-      setActiveImage(product.image);
-      setQuantity(1);
-      setActiveTab("details");
-      setReviewRating(0);
-      setReviewText("");
+    if (product?.image || product?.thumbnail) {
+      setActiveImage(product.image || product.thumbnail);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [product]);
 
   // Get reviews
-  const mockReviews = getProductReviews(Number(productId));
+  const mockReviews = getProductReviews(product?.id || 0);
 
   // Helper function to get store ID from author name
   const getStoreIdFromAuthor = (author: string) => {
@@ -113,7 +89,7 @@ const ProductDetailsTopSection = () => {
         key={i}
         size={18}
         className={
-          i < product.rating
+          i < (product?.avg_rating || product?.rating || 0)
             ? "fill-yellow-400 text-yellow-400"
             : "text-gray-300"
         }
@@ -139,14 +115,14 @@ const ProductDetailsTopSection = () => {
 
             <div className="w-full h-125 rounded-xl overflow-hidden bg-gray-100">
               <img
-                src={activeImage}
-                alt={product.title}
+                src={activeImage || product?.thumbnail}
+                alt={product?.name || product?.title}
                 className="w-full h-full object-cover"
               />
             </div>
 
             <div className="flex gap-3">
-              {[product.image, product.image2]
+              {[product?.image || product?.thumbnail, product?.image2]
                 .filter(Boolean)
                 .filter((img, index, self) => self.indexOf(img) === index) // Remove duplicates
                 .map((img, i) => (
@@ -173,19 +149,19 @@ const ProductDetailsTopSection = () => {
           <div className="flex flex-col gap-6 pt-2">
 
             <h1 className="text-3xl font-semibold">
-              {product.title}
+              {product.name || product.title}
             </h1>
 
             <div className="flex items-center gap-2">
               <div className="flex">{renderStars()}</div>
 
               <span className="text-gray-500 text-sm">
-                {product.rating} ({product.reviewCount} reviews)
+                {product.avg_rating || product.rating || 0} ({product.reviews_count || product.reviewCount || 0} reviews)
               </span>
             </div>
 
             <p className="text-3xl font-bold text-blue-600">
-              ${product.price}
+              ${product.discounted_price || product.price}
             </p>
 
             <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -193,10 +169,10 @@ const ProductDetailsTopSection = () => {
               <p className="text-sm text-gray-600">
                 Sold by{" "}
                 <button
-                  onClick={() => navigate(`/stores/${getStoreIdFromAuthor(product.author)}`)}
+                  onClick={() => navigate(`/stores/${getStoreIdFromAuthor(product.vendor_name || product.author)}`)}
                   className="text-blue-600 font-medium hover:underline cursor-pointer"
                 >
-                  {product.author}
+                  {product.vendor_name || product.author}
                 </button>
               </p>
             </div>
@@ -245,11 +221,11 @@ const ProductDetailsTopSection = () => {
                     for (let i = 0; i < quantity; i++) {
                       addItem({
                         id: product.id,
-                        image: product.image,
-                        title: product.title,
-                        category: product.category,
-                        author: product.author,
-                        price: product.price,
+                        image: product.image || product.thumbnail,
+                        title: product.name || product.title,
+                        category: product.category_name || product.category,
+                        author: product.vendor_name || product.author,
+                        price: product.discounted_price || product.price,
                       });
                     }
                     // If user is authenticated, mark cart as user cart
@@ -275,16 +251,15 @@ const ProductDetailsTopSection = () => {
                       navigate("/login", { state: { from: location.pathname } });
                       return;
                     }
-                    // Navigate to checkout with buy now product data
-                    navigate("/checkout", {
+                      navigate("/checkout", {
                       state: {
                         buyNowProduct: {
                           id: product.id,
-                          image: product.image,
-                          title: product.title,
-                          category: product.category,
-                          author: product.author,
-                          price: product.price,
+                          image: product.image || product.thumbnail,
+                          title: product.name || product.title,
+                          category: product.category_name || product.category,
+                          author: product.vendor_name || product.author,
+                          price: product.discounted_price || product.price,
                           quantity: quantity,
                         },
                       },
@@ -299,17 +274,17 @@ const ProductDetailsTopSection = () => {
 
             {/* Divider */}
 
-            <div className="border-t pt-6 border-gray-200" >
+            {/* <div className="border-t pt-6 border-gray-200" >
 
               <h3 className="font-semibold mb-3">
                 Product Description
               </h3>
 
               <p className="max-w-6xl text-gray-600 leading-relaxed">
-                {product.description}
+                {product.description || product.name || "No description available"}
               </p>
 
-            </div>
+            </div> */}
 
           </div>
         </div>
@@ -342,13 +317,11 @@ const ProductDetailsTopSection = () => {
 
             <h3 className="text-base font-semibold mb-3">Product Details</h3>
 
-            {product.specifications && (
+            {product.specifications && Object.keys(product.specifications).length > 0 && (
               <div className="space-y-0.5 text-sm">
-                <p>Brand: {product.specifications.brand}</p>
-                <p>Type: {product.specifications.type}</p>
-                <p>Material: {product.specifications.material}</p>
-                <p>Color: {product.specifications.color}</p>
-                <p>Number of Pieces: {product.specifications.pieces}</p>
+                {Object.entries(product.specifications).map(([key, value]) => (
+                  <p key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}: {String(value)}</p>
+                ))}
               </div>
             )}
 
@@ -356,7 +329,7 @@ const ProductDetailsTopSection = () => {
               <div className="mt-6">
                 <h4 className="font-semibold mb-2 text-base">Included Items:</h4>
                 <ol className="list-decimal ml-5 space-y-0.5 text-sm">
-                  {product.includedItems.map((item, i) => (
+                  {product.includedItems.map((item: any, i: number) => (
                     <li key={i}>{item}</li>
                   ))}
                 </ol>
@@ -367,7 +340,7 @@ const ProductDetailsTopSection = () => {
               <div className="mt-6">
                 <h4 className="font-semibold mb-2 text-base">Features:</h4>
                 <div className="space-y-0 text-sm leading-relaxed">
-                  {product.features.map((feature, i) => (
+                  {product.features.map((feature: any, i: number) => (
                     <p key={i}>{feature}</p>
                   ))}
                 </div>
@@ -398,9 +371,9 @@ const ProductDetailsTopSection = () => {
               <div className="flex items-center gap-2 mb-4 text-sm">
                 <Store className="w-4 h-4" />
                 <span>Visit <button
-                  onClick={() => navigate(`/stores/${getStoreIdFromAuthor(product.author)}`)}
+                  onClick={() => navigate(`/stores/${getStoreIdFromAuthor(product.vendor_name || product.author)}`)}
                   className="text-blue-600 hover:underline cursor-pointer"
-                >{product.author}</button></span>
+                >{product.vendor_name || product.author}</button></span>
               </div>
 
               {/* Login Prompt */}
