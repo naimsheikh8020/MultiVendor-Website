@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { assets } from "../assets/assets";
 import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,7 +29,12 @@ const SignIn: React.FC = () => {
   const { clearCart, isGuestCart, markAsUserCart } = useCartStore();
 
   const { mutate, isPending } = useLogin();
+
+  // Use selectors for better subscription management
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const role = useAuthStore((state) => state.role);
   const setAuth = useAuthStore((state) => state.setAuth);
+  const setHydrated = useAuthStore((state) => state.setHydrated);
 
   // 🔥 React Hook Form
   const {
@@ -39,6 +44,20 @@ const SignIn: React.FC = () => {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
+
+  // Navigate after auth is properly set
+  useEffect(() => {
+    if (accessToken && role) {
+      console.log("Auth confirmed - navigating with role:", role);
+      if (role === "admin") {
+        navigate("/admin");
+      } else if (role === "vendor") {
+        navigate("/vendor");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [accessToken, role, navigate]);
 
   // 🔥 submit handler
   const onSubmit = (data: FormData) => {
@@ -58,16 +77,14 @@ const SignIn: React.FC = () => {
             role: res.data.role,
           });
 
+          setHydrated();
+
           // cart logic (unchanged)
           if (isGuestCart) {
             markAsUserCart();
           } else {
             clearCart();
           }
-
-          if (res.role === "admin") navigate("/admin");
-          else if (res.role === "vendor") navigate("/vendor");
-          else navigate("/");
         },
 
         onError: (err: any) => {

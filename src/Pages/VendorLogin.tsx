@@ -9,20 +9,28 @@ const VendorLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [redirectRole, setRedirectRole] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const { setAuth, setHydrated, accessToken } = useAuthStore();
 
-  // 🔥 Navigate after auth is set and confirmed
+  // Use selectors for better subscription management
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const role = useAuthStore((state) => state.role);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const setHydrated = useAuthStore((state) => state.setHydrated);
+
+  // Navigate after auth is properly set
   useEffect(() => {
-    if (accessToken && redirectRole) {
-      if (redirectRole === "admin") navigate("/admin");
-      else if (redirectRole === "vendor") navigate("/vendor");
-      else navigate("/");
-      setRedirectRole(null);
+    if (accessToken && role) {
+      console.log("Auth confirmed - navigating with role:", role);
+      if (role === "admin") {
+        navigate("/admin");
+      } else if (role === "vendor") {
+        navigate("/vendor");
+      } else {
+        navigate("/");
+      }
     }
-  }, [accessToken, redirectRole, navigate]);
+  }, [accessToken, role, navigate]);
 
   const handleLogin = () => {
     setError("");
@@ -32,29 +40,28 @@ const VendorLogin = () => {
       return;
     }
 
-    let role: "admin" | "vendor" | "user" = "user";
+    let userRole: "admin" | "vendor" | "user" = "user";
 
     if (email === "admin@gmail.com" && password === "123") {
-      role = "admin";
+      userRole = "admin";
     } else if (email === "vendor@gmail.com" && password === "123") {
-      role = "vendor";
+      userRole = "vendor";
     } else {
       setError("Invalid email or password");
       return;
     }
 
+    console.log("Setting auth with role:", userRole);
+
     // 🔥 Set auth in Zustand store
     setAuth({
-      access: `mock_token_${role}_${Date.now()}`,
-      refresh: `mock_refresh_${role}_${Date.now()}`,
-      role: role,
+      access: `mock_token_${userRole}_${Date.now()}`,
+      refresh: `mock_refresh_${userRole}_${Date.now()}`,
+      role: userRole,
     });
 
     // 🔥 Mark store as hydrated
     setHydrated();
-
-    // 🔥 Trigger redirect
-    setRedirectRole(role);
   };
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">

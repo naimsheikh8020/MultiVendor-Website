@@ -22,7 +22,9 @@ import AdminRecommendedStore from "../features/Admin/AdminRecommendedStore";
 import AdminAnalytics from "../features/Admin/AdminAnalytics";
 import AdminPayout from "../features/Admin/AdminPayout";
 import AdminSettings from "../features/Admin/AdminSettings";
-import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
+import VendorProtectedRoute from "./VendorProtectedRoute";
+import AdminProtectedRoute from "./AdminProtectedRoute";
 import VendorStepGuard from "./VendorStepGuard";
 import VendorMessage from "../features/vendors/VendorMessage";
 // import VendorStoreForm from "../Pages/VendorStoreForm";
@@ -54,11 +56,24 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, element: <Loadable><Home /></Loadable> },
 
-      // Auth
-      { path: "login", element: <Loadable><Login /></Loadable> },
-      { path: "signup", element: <Loadable><SignUp /></Loadable> },
+      // 🔐 Public Auth Routes (redirects if already logged in)
+      {
+        element: <PublicRoute />,
+        children: [
+          { path: "login", element: <Loadable><Login /></Loadable> },
+          { path: "signup", element: <Loadable><SignUp /></Loadable> },
+        ],
+      },
+
       { path: "forgot-password", element: <Loadable><ForgotPassword /></Loadable> },
-      { path: "vendor-login", element: <Loadable><VendorLogin /></Loadable> },
+
+      // 🔐 Vendor Auth Routes (redirects if already logged in)
+      {
+        element: <PublicRoute />,
+        children: [
+          { path: "vendor-login", element: <Loadable><VendorLogin /></Loadable> },
+        ],
+      },
 
 
       // { path: "vendor-signup", element: <Loadable><VendorSignup /></Loadable> },
@@ -111,7 +126,7 @@ export const routes: RouteObject[] = [
   // 🔥 VENDOR LAYOUT (new, separate)
   {
     path: "/vendor",
-    element: <ProtectedRoute />,
+    element: <VendorProtectedRoute />,
     children: [
       {
         element: <VendorLayout />,
@@ -119,7 +134,7 @@ export const routes: RouteObject[] = [
           {
             index: true,
             element: <Loadable><VendorDashboard /></Loadable>,
-          }, 
+          },
           {
             path: "dashboard",
             element: <Loadable><VendorDashboard /></Loadable>,
@@ -156,7 +171,7 @@ export const routes: RouteObject[] = [
   // 🔹 ADMIN LAYOUT 
   {
     path: "/admin",
-    element: <ProtectedRoute />,
+    element: <AdminProtectedRoute />,
     children: [
       {
         element: <AdminLayout />,
