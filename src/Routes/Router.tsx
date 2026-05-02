@@ -36,7 +36,7 @@ const SignUp = lazy(() => import("../Pages/SignUp"));
 const Store = lazy(() => import("../Pages/Store"));
 const StoreDetails = lazy(() => import("../Pages/StoreDetails"));
 const MyProfile = lazy(() => import("../Pages/MyProfile"));
-const ProductCategory = lazy(() => import("../Pages/ProductCategory"));
+const ProductCategory = lazy(() => import("../Pages/ProductCategoryDetails"));
 const ProductDetails = lazy(() => import("../Pages/ProductDetails"));
 const SearchResults = lazy(() => import("../Pages/SearchResults"));
 const Checkout = lazy(() => import("../Pages/Checkout"));
