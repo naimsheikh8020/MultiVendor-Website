@@ -11,7 +11,7 @@ const ProductDetails = () => {
   const product = data?.data;
 
   if (isLoading) {
-    return <div className="p-10 text-center">Loading...</div>;
+    return <div className="p-10 text-center">Loading.......</div>;
   }
 
   if (!product) {
