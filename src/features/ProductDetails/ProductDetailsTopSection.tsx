@@ -2,10 +2,11 @@ import { useNavigate, useLocation } from "react-router";
 import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { getProductReviews } from "../../utils/productHelpers";
 import { useCartStore } from "../../store/cartStore";
 import { isAuthenticated } from "../../utils/auth";
 import { topStores } from "../../assets/assets";
+import { useRef } from "react";
+import { useInfiniteReviews } from "../Hooks/useInfiniteReviews";
 
 interface ProductDetailsTopSectionProps {
   product: any;
@@ -27,6 +28,35 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
 
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteReviews(product?.id);
+  const reviews =
+    data?.pages.flatMap((page: any) => page.results) || [];
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!hasNextPage || !loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 } // Trigger when 10% of element is visible
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+
   // Initialize image when product is available
   useEffect(() => {
     if (product?.image || product?.thumbnail) {
@@ -36,7 +66,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   }, [product]);
 
   // Get reviews
-  const mockReviews = getProductReviews(product?.id || 0);
+  // const mockReviews = getProductReviews(product?.id || 0);
 
   // Helper function to get store ID from author name
   const getStoreIdFromAuthor = (author: string) => {
@@ -109,9 +139,9 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-6 items-start">
 
-          {/* LEFT IMAGE */}
+          {/* LEFT IMAGE - STICKY */}
 
-          <div className="flex flex-col gap-4">
+          <div className="sticky top-6 h-fit flex flex-col gap-4">
 
             <div className="w-full h-125 rounded-xl overflow-hidden bg-gray-100">
               <img
@@ -146,7 +176,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
           {/* RIGHT INFO */}
 
-          <div className="flex flex-col gap-6 pt-2">
+          <div className="flex flex-col gap-6 pt-2 max-h-screen overflow-y-auto pr-2">
 
             <h1 className="text-3xl font-semibold">
               {product.name || product.title}
@@ -251,7 +281,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                       navigate("/login", { state: { from: location.pathname } });
                       return;
                     }
-                      navigate("/checkout", {
+                    navigate("/checkout", {
                       state: {
                         buyNowProduct: {
                           id: product.id,
@@ -478,56 +508,66 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
             {/* Right Side - Reviews List */}
             <div>
-              <h3 className="text-base font-semibold mb-4">8 review(s) for "Cocker"</h3>
+              <h3 className="text-base font-semibold mb-4"></h3>
 
               <div className="space-y-6">
-                {mockReviews.map((review) => (
-                  <div key={review.id} className="border-b border-gray-200 pb-4">
-                    <div className="flex items-start gap-3">
-                      {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-gray-300 shrink-0" />
+                {reviews.map((review: any) => {
+                  const timeAgo = new Date(review.created_at).toLocaleDateString();
 
-                      {/* Review Content */}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium text-sm">{review.name}</span>
-                          <span className="text-xs text-gray-500">{review.timeAgo}</span>
-                        </div>
+                  return (
+                    <div key={review.id} className="border-b border-gray-200 pb-4">
+                      <div className="flex items-start gap-3">
 
-                        {/* Stars */}
-                        <div className="flex gap-0.5 mb-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              size={14}
-                              className={
-                                star <= review.rating
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300"
-                              }
-                            />
-                          ))}
-                        </div>
+                        <div className="w-10 h-10 rounded-full bg-gray-300 shrink-0" />
 
-                        {/* Comment */}
-                        <p className="text-sm text-gray-700 mb-3">
-                          {review.comment}
-                        </p>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-medium text-sm">
+                              {review.user_name}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {timeAgo}
+                            </span>
+                          </div>
 
-                        {/* Images */}
-                        <div className="flex gap-2">
-                          {[...Array(review.images)].map((_, i) => (
-                            <div key={i} className="w-16 h-16 border border-gray-300 rounded flex items-center justify-center bg-gray-50">
-                              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            </div>
-                          ))}
+                          <div className="flex gap-0.5 mb-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                size={14}
+                                className={
+                                  star <= review.rating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-gray-300"
+                                }
+                              />
+                            ))}
+                          </div>
+
+                          <p className="text-sm text-gray-700 mb-3">
+                            {review.comment}
+                          </p>
+
+                          <div className="flex gap-2">
+                            {review.images.map((img: string, i: number) => (
+                              <img
+                                key={i}
+                                src={img}
+                                className="w-16 h-16 object-cover rounded border"
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
+              </div>
+              {isLoading && <p className="text-center">Loading reviews...</p>}
+
+              <div ref={loadMoreRef} className="h-10 flex justify-center items-center">
+                {isFetchingNextPage && <p>Loading more...</p>}
+                {!hasNextPage && <p>No more reviews</p>}
               </div>
             </div>
           </div>
