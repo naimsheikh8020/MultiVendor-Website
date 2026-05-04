@@ -18,19 +18,19 @@ const PopularProductCard = ({
 }: PopularProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const markAsUserCart = useCartStore((state) => state.markAsUserCart);
+
   const fullStars = Math.floor(rating);
   const emptyStars = 5 - fullStars;
 
   return (
-    <div className="w-full rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden border border-blue-100 shadow-sm bg-white">
+    <div className="w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden border border-blue-100 shadow-sm bg-white flex flex-col">
 
       {/* Image */}
-      <div className="relative">
+      <div className="relative h-40 sm:h-48 md:h-52 lg:h-85">
         <img
           src={image}
           alt={title}
-          className="w-full h-32 sm:h-40 md:h-48 object-cover"
-
+          className="w-full h-full object-cover object-top"
         />
 
         {discount && (
@@ -41,7 +41,7 @@ const PopularProductCard = ({
       </div>
 
       {/* Content */}
-      <div className="p-2 sm:p-3 md:p-4 space-y-1 sm:space-y-1.5 md:space-y-2">
+      <div className="p-2 sm:p-3 md:p-4 space-y-1 sm:space-y-1.5 md:space-y-2 flex flex-col flex-1">
 
         <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-900 line-clamp-2">
           {title}
@@ -59,15 +59,17 @@ const PopularProductCard = ({
             <span key={`e-${i}`} className="text-gray-300">★</span>
           ))}
 
-          <span className="text-gray-400 ml-1 sm:ml-2 text-xs sm:text-sm">({reviewCount})</span>
+          <span className="text-gray-400 ml-1 sm:ml-2 text-xs sm:text-sm">
+            ({reviewCount})
+          </span>
         </div>
 
         <p className="text-xs sm:text-sm text-gray-500">
           By <span className="text-blue-500 font-medium">{author}</span>
         </p>
 
-        {/* Price Row */}
-        <div className="flex items-center justify-between pt-1 sm:pt-2">
+        {/* Push price to bottom */}
+        <div className="mt-auto flex items-center justify-between pt-1 sm:pt-2">
 
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="text-blue-600 text-base sm:text-lg md:text-xl font-bold">

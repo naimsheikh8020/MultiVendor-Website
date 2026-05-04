@@ -29,7 +29,7 @@ const ProductCategory = () => {
       )}
 
       {/* 🔥 PRODUCT GRID */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3  lg:grid-cols-4 gap-4">
         {products.map((product: any) => (
           <Link key={product.id} to={`/product/${product.id}`}>
             <PopularProductCard
