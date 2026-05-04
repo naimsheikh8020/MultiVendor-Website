@@ -6,6 +6,8 @@ export const useAddresses = () =>
   useQuery({
     queryKey: ["addresses"],
     queryFn: getAddresses,
+    staleTime: 1000 * 60 * 60, // Cache for 1 hour
+    gcTime: 1000 * 60 * 60 * 24, // Keep in garbage collection for 24 hours
   });
 
 // export const useDeleteAddress = () => {

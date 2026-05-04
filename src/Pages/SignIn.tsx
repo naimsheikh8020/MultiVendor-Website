@@ -34,7 +34,7 @@ const SignIn: React.FC = () => {
   const accessToken = useAuthStore((state) => state.accessToken);
   const role = useAuthStore((state) => state.role);
   const setAuth = useAuthStore((state) => state.setAuth);
-  const setHydrated = useAuthStore((state) => state.setHydrated);
+  // const setHydrated = useAuthStore((state) => state.setHydrated);
 
   // 🔥 React Hook Form
   const {
@@ -62,6 +62,7 @@ const SignIn: React.FC = () => {
   // 🔥 submit handler
   const onSubmit = (data: FormData) => {
     setLoginError("");
+
     mutate(
       {
         email: data.email,
@@ -69,17 +70,16 @@ const SignIn: React.FC = () => {
       },
       {
         onSuccess: (res: any) => {
-          console.log("LOGIN SUCCESS:", res);
+          const { access, refresh, role } = res.data;
 
-          setAuth({
-            access: res.data.access,
-            refresh: res.data.refresh,
-            role: res.data.role,
-          });
+          setAuth({ access, refresh, role });
 
-          setHydrated();
+          // 🔥 NAVIGATION HERE (not useEffect)
+          if (role === "admin") navigate("/admin");
+          else if (role === "vendor") navigate("/vendor");
+          else navigate("/");
 
-          // cart logic (unchanged)
+          // cart logic
           if (isGuestCart) {
             markAsUserCart();
           } else {
@@ -89,8 +89,7 @@ const SignIn: React.FC = () => {
 
         onError: (err: any) => {
           setLoginError(
-            err?.response?.data?.detail ||
-            "Invalid credentials"
+            err?.response?.data?.detail || "Invalid credentials"
           );
         },
       }

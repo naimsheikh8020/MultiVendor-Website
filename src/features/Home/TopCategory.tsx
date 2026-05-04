@@ -3,7 +3,7 @@ import { useCategories } from "../Hooks/useCategories";
 
 const TopCategory = () => {
   const { data, isLoading } = useCategories();
-  const categories = data?.data || [];
+  const categories = Array.isArray(data?.results) ? data.results : [];
 
   if (isLoading) {
     return <div className="py-10 text-center">Loading...</div>;

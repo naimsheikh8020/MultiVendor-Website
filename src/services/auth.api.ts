@@ -8,8 +8,11 @@ export const registerUser = (data: any) =>
 export const verifyOtp = (data: any) =>
   API.post("/api/v1/accounts/verify-email/", data);
 
-export const loginUser = (data: any) =>
-  API.post("/api/v1/accounts/customer/login/", data);
+// export const loginUser = (data: any) =>
+//   API.post("/api/v1/accounts/customer/login/", data);
+
+export const loginUser = (data: { email: string; password: string | number }) =>
+  API.post("/api/v1/accounts/login/", data);
 
 export const logoutUser = (refreshToken: string) =>
   API.post("/api/v1/accounts/logout/", {
