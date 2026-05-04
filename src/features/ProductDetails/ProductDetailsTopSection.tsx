@@ -291,8 +291,11 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
               </p>
             </div>
 
-            <p className="text-green-600 text-sm">
-              In Stock (45 available)
+            <p
+              className={`text-sm ${product.stock < 10 ? "text-red-600" : "text-green-600"
+                }`}
+            >
+              In Stock {product.stock}
             </p>
 
             {/* Quantity */}
