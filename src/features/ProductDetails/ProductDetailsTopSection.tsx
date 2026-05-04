@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, Link } from "react-router";
 import { ArrowLeft, Star, Minus, Plus, ShoppingCart, Store, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -27,6 +27,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   const [activeTab, setActiveTab] = useState("details");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const {
     data,
@@ -76,7 +77,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
   const tabs = [
     { id: "details", label: "Product Details" },
-    { id: "reviews", label: "Reviews (12)" },
+    { id: "reviews", label: "Reviews" },
     { id: "return", label: "Return Policy" },
     { id: "delivery", label: "Delivery Charge" },
   ];
@@ -393,9 +394,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
             {/* Left Side - Add Review Form */}
             <div>
               <h3 className="text-base font-semibold mb-3">Add your review</h3>
-              <p className="text-xs text-gray-600 mb-3">
-                Your email address will not be published. Required fields are marked
-              </p>
+
 
               {/* Visit Store Link */}
               <div className="flex items-center gap-2 mb-4 text-sm">
@@ -407,9 +406,11 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
               </div>
 
               {/* Login Prompt */}
-              <p className="text-xs text-red-500 mb-2">
-                Please <a href="#" className="underline">login</a> to write review!
-              </p>
+              {!isAuthenticated() && (
+                <p className="text-xs text-red-500 mb-2">
+                  Please <Link to="/login" className="underline">login</Link> to write review!
+                </p>
+              )}
 
               {/* Star Rating */}
               <div className="flex items-center gap-2 mb-4">
@@ -508,9 +509,10 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
             {/* Right Side - Reviews List */}
             <div>
-              <h3 className="text-base font-semibold mb-4"></h3>
+              <h3 className="text-xl font-semibold mb-8">Customer Reviews</h3>
 
               <div className="space-y-6">
+
                 {reviews.map((review: any) => {
                   const timeAgo = new Date(review.created_at).toLocaleDateString();
 
@@ -518,9 +520,20 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                     <div key={review.id} className="border-b border-gray-200 pb-4">
                       <div className="flex items-start gap-3">
 
-                        <div className="w-10 h-10 rounded-full bg-gray-300 shrink-0" />
+                        {/* Avatar */}
+                        <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300 shrink-0">
+                          {review.user_avatar ? (
+                            <img
+                              src={review.user_avatar}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : null}
+                        </div>
 
+                        {/* Content */}
                         <div className="flex-1">
+
+                          {/* Name + Date */}
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-medium text-sm">
                               {review.user_name}
@@ -530,6 +543,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                             </span>
                           </div>
 
+                          {/* Stars */}
                           <div className="flex gap-0.5 mb-2">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
@@ -544,25 +558,53 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                             ))}
                           </div>
 
+                          {/* Comment */}
                           <p className="text-sm text-gray-700 mb-3">
                             {review.comment}
                           </p>
 
-                          <div className="flex gap-2">
-                            {review.images.map((img: string, i: number) => (
-                              <img
-                                key={i}
-                                src={img}
-                                className="w-16 h-16 object-cover rounded border"
-                              />
-                            ))}
-                          </div>
+                          {/* Images */}
+                          {review.images?.length > 0 && (
+                            <div className="flex gap-2 flex-wrap">
+                              {review.images.map((imgObj: any, i: number) => (
+                                <img
+                                  key={i}
+                                  src={imgObj.image}
+                                  onClick={() => setSelectedImage(imgObj.image)}
+                                  className="w-16 h-16 object-cover rounded border cursor-pointer hover:scale-105 transition"
+                                />
+                              ))}
+                            </div>
+                          )}
+
                         </div>
                       </div>
                     </div>
                   );
                 })}
+
               </div>
+              {selectedImage && (
+                <div
+                  className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                  onClick={() => setSelectedImage(null)}
+                >
+
+                  {/* Close button */}
+                  <button
+                    className="absolute top-5 right-5 text-white text-2xl"
+                    onClick={() => setSelectedImage(null)}
+                  >
+                    ✕
+                  </button>
+
+                  {/* Image */}
+                  <img
+                    src={selectedImage}
+                    className="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
+                  />
+                </div>
+              )}
               {isLoading && <p className="text-center">Loading reviews...</p>}
 
               <div ref={loadMoreRef} className="h-10 flex justify-center items-center">
