@@ -23,3 +23,23 @@ export const getProductReviews = async (url: string): Promise<ReviewResponse> =>
   const res = await API.get(url);
   return res.data;
 };
+
+
+export const addReview = async ({
+  productId,
+  formData,
+}: {
+  productId: string;
+  formData: FormData;
+}) => {
+  const res = await API.post(
+    `/api/v1/products/${productId}/reviews/add/`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return res.data;
+};

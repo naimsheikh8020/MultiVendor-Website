@@ -7,6 +7,7 @@ import { isAuthenticated } from "../../utils/auth";
 import { topStores } from "../../assets/assets";
 import { useRef } from "react";
 import { useInfiniteReviews } from "../Hooks/useInfiniteReviews";
+import { useAddReview } from "../Hooks/useAddReview";
 
 interface ProductDetailsTopSectionProps {
   product: any;
@@ -28,6 +29,47 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [images, setImages] = useState<File[]>([]);
+  const { mutate, isPending } = useAddReview(product?.id);
+
+  const handleSubmitReview = () => {
+    if (!isAuthenticated()) {
+      toast.error("Login required");
+      return;
+    }
+
+    if (!reviewText || !reviewRating) {
+      toast.error("Rating & comment required");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("comment", reviewText);
+    formData.append("rating", String(reviewRating));
+
+    images.forEach((img) => {
+      formData.append("uploaded_images", img);
+    });
+
+    mutate(
+      { productId: product.id, formData },
+      {
+        onSuccess: () => {
+          toast.success("Review added");
+
+          setReviewText("");
+          setReviewRating(0);
+          setImages([]);
+        },
+        onError: () => {
+          toast.error("Failed to submit review");
+        },
+      }
+    );
+  };
+
+  
 
   const {
     data,
@@ -450,10 +492,42 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
               <div className="mb-3">
                 <label className="block text-sm font-medium mb-2">File Upload</label>
                 <div className="border border-gray-300 rounded p-3 text-center text-sm text-gray-500 cursor-pointer hover:bg-gray-50">
-                  <input type="file" multiple className="hidden" id="fileUpload" />
+                  <input
+                    type="file"
+                    multiple
+                    id="fileUpload"
+                    className="hidden"
+                    accept="image/jpeg,image/png,image/jpg,image/heic,image/heif"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+
+                      const allowed = [
+                        "image/jpeg",
+                        "image/jpg",
+                        "image/png",
+                        "image/heic",
+                        "image/heif",
+                      ];
+
+                      const valid = files.filter((f) => allowed.includes(f.type));
+
+                      if (valid.length !== files.length) {
+                        toast.error("Only JPG, PNG, JPEG, HEIC allowed");
+                      }
+
+                      if (valid.length > 6) {
+                        toast.error("Max 6 images allowed");
+                        return;
+                      }
+
+                      setImages(valid);
+                    }}
+                  />
                   <label htmlFor="fileUpload" className="cursor-pointer">
                     <span className="text-blue-600">Uploade Image</span>
-                    <span className="ml-20">No File Chosen</span>
+                    <span className="ml-20">
+                      {images.length > 0 ? `${images.length} file(s)` : "No File Chosen"}
+                    </span>
                   </label>
                 </div>
               </div>
@@ -467,8 +541,12 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
               </div>
 
               {/* Submit Button */}
-              <button className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700">
-                Submit
+              <button
+                onClick={handleSubmitReview}
+                disabled={isPending}
+                className="bg-blue-600 text-white px-6 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+              >
+                {isPending ? "Submitting..." : "Submit"}
               </button>
 
               {/* Customer Reviews Stats */}
@@ -593,7 +671,8 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                   {/* Close button */}
                   <button
                     className="absolute top-5 right-5 text-white text-2xl"
-                    onClick={() => setSelectedImage(null)}
+                    onClick={(e) => e.stopPropagation()} // 🔥 ADD THIS
+                  // onClick={() => setSelectedImage(null)}
                   >
                     ✕
                   </button>
