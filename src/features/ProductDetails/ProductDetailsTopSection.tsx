@@ -24,13 +24,22 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
   // UI State
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState<string>(product?.image || product?.thumbnail || "");
+  const [activeImage, setActiveImage] = useState<string>(
+    product?.images?.[0]?.image || product?.image || product?.thumbnail || ""
+  );
   const [activeTab, setActiveTab] = useState("details");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const { mutate, isPending } = useAddReview(product?.id);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+  const [previewImages, setPreviewImages] = useState<{ [key: string]: string }>({});
+
+  const handleImageError = (imageSrc: string) => {
+    setFailedImages(prev => new Set([...prev, imageSrc]));
+    console.error(`Failed to load image: ${imageSrc}`);
+  };
 
   const handleSubmitReview = () => {
     if (!isAuthenticated()) {
@@ -102,8 +111,8 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
   // Initialize image when product is available
   useEffect(() => {
-    if (product?.image || product?.thumbnail) {
-      setActiveImage(product.image || product.thumbnail);
+    if (product?.images?.[0]?.image || product?.image || product?.thumbnail) {
+      setActiveImage(product?.images?.[0]?.image || product.image || product.thumbnail);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [product]);
@@ -227,33 +236,38 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
           <div className="sticky top-6 h-fit flex flex-col gap-4">
 
-            <div className="w-full h-125 rounded-xl overflow-hidden bg-gray-100">
+            <div className="w-full h-125 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
               <img
-                src={activeImage || product?.thumbnail}
+                src={activeImage || product?.images?.[0]?.image || product?.thumbnail}
                 alt={product?.name || product?.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
+                onError={() => handleImageError(activeImage)}
               />
             </div>
 
             <div className="flex gap-3">
-              {[product?.image || product?.thumbnail, product?.image2]
-                .filter(Boolean)
-                .filter((img, index, self) => self.indexOf(img) === index) // Remove duplicates
-                .map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => img && setActiveImage(img)}
-                    className={`rounded-lg overflow-hidden border ${activeImage === img
-                      ? "border-blue-500"
-                      : "border-gray-200"
-                      }`}
-                  >
-                    <img
-                      src={img}
-                      className="w-20 h-20 object-cover"
-                    />
-                  </button>
-                ))}
+              {(product?.images || [product?.image || product?.thumbnail])
+                .filter((img: any) => img?.image || img)
+                .map((img: any, i: number) => {
+                  const imageUrl = img?.image || img;
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => imageUrl && setActiveImage(imageUrl)}
+                      className={`rounded-lg overflow-hidden border ${activeImage === imageUrl
+                        ? "border-blue-500"
+                        : "border-gray-200"
+                        }`}
+                    >
+                      <img
+                        src={imageUrl}
+                        alt={`product-thumb-${i}`}
+                        className="w-20 h-20 object-contain"
+                        onError={() => handleImageError(imageUrl)}
+                      />
+                    </button>
+                  );
+                })}
             </div>
 
           </div>
@@ -338,9 +352,9 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                     for (let i = 0; i < quantity; i++) {
                       addItem({
                         id: product.id,
-                        image: product.image || product.thumbnail,
+                        image: product?.images?.[0]?.image || product.image || product.thumbnail,
                         title: product.name || product.title,
-                        category: product.category_name || product.category,
+                        category: product.category?.name || product.category_name || product.category,
                         author: product.vendor_name || product.author,
                         price: product.discounted_price || product.price,
                       });
@@ -372,9 +386,9 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                       state: {
                         buyNowProduct: {
                           id: product.id,
-                          image: product.image || product.thumbnail,
+                          image: product?.images?.[0]?.image || product.image || product.thumbnail,
                           title: product.name || product.title,
-                          category: product.category_name || product.category,
+                          category: product.category?.name || product.category_name || product.category,
                           author: product.vendor_name || product.author,
                           price: product.discounted_price || product.price,
                           quantity: quantity,
@@ -565,6 +579,19 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                       }
 
                       setImages(valid);
+
+                      // Create previews
+                      const previews: { [key: string]: string } = {};
+                      valid.forEach((file) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                          if (e.target?.result) {
+                            previews[file.name] = e.target.result as string;
+                            setPreviewImages(prev => ({ ...prev, ...previews }));
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      });
                     }}
                   />
                   <label htmlFor="fileUpload" className="cursor-pointer">
@@ -575,6 +602,38 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                   </label>
                 </div>
               </div>
+
+              {/* Image Previews */}
+              {images.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs text-gray-600 mb-2">Previews:</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {images.map((file, i) => (
+                      <div key={i} className="relative group">
+                        <img
+                          src={previewImages[file.name] || ""}
+                          alt={`preview-${i}`}
+                          className="w-16 h-16 object-cover rounded border border-blue-300"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setImages(images.filter((_, idx) => idx !== i));
+                            setPreviewImages(prev => {
+                              const updated = { ...prev };
+                              delete updated[file.name];
+                              return updated;
+                            });
+                          }}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* File Upload Info */}
               <div className="flex items-start gap-2 bg-orange-100 border-l-4 border-orange-500 p-3 mb-4">
@@ -683,14 +742,30 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                           {/* Images */}
                           {review.images?.length > 0 && (
                             <div className="flex gap-2 flex-wrap">
-                              {review.images.map((imgObj: any, i: number) => (
-                                <img
-                                  key={i}
-                                  src={imgObj.image}
-                                  onClick={() => setSelectedImage(imgObj.image)}
-                                  className="w-16 h-16 object-cover rounded border cursor-pointer hover:scale-105 transition"
-                                />
-                              ))}
+                              {review.images.map((imgObj: any, i: number) => {
+                                const imageUrl = imgObj?.image;
+                                const isImageFailed = failedImages.has(imageUrl);
+
+                                return isImageFailed ? (
+                                  <div
+                                    key={i}
+                                    className="w-16 h-16 rounded border border-gray-300 bg-gray-100 flex items-center justify-center text-gray-400 text-xs"
+                                    title="Failed to load image"
+                                  >
+                                    <span>✕</span>
+                                  </div>
+                                ) : (
+                                  <img
+                                    key={i}
+                                    src={imageUrl}
+                                    alt={`review-image-${review.id}-${i}`}
+                                    onClick={() => imageUrl && setSelectedImage(imageUrl)}
+                                    onError={() => handleImageError(imageUrl)}
+                                    className="w-16 h-16 object-cover rounded border cursor-pointer hover:scale-105 transition hover:border-blue-400"
+                                    loading="lazy"
+                                  />
+                                );
+                              })}
                             </div>
                           )}
 
@@ -709,9 +784,12 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
 
                   {/* Close button */}
                   <button
-                    className="absolute top-5 right-5 text-white text-2xl"
-                    onClick={(e) => e.stopPropagation()} // 🔥 ADD THIS
-                  // onClick={() => setSelectedImage(null)}
+                    className="absolute top-5 right-5 text-white text-2xl hover:scale-110 transition"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage(null);
+                    }}
+                    title="Close"
                   >
                     ✕
                   </button>
@@ -719,7 +797,13 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                   {/* Image */}
                   <img
                     src={selectedImage}
+                    alt="review-fullscreen"
                     className="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
+                    onError={() => {
+                      handleImageError(selectedImage);
+                      setSelectedImage(null);
+                      toast.error("Failed to load image");
+                    }}
                   />
                 </div>
               )}
