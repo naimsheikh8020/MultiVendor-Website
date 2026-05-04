@@ -69,7 +69,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
     );
   };
 
-  
+
 
   const {
     data,
@@ -116,6 +116,47 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
     const store = topStores.find(s => s.title.toLowerCase() === author.toLowerCase());
     return store ? store.id : 1;
   };
+
+  // Calculate average rating and rating distribution
+  const calculateRatingStats = () => {
+    if (!reviews.length) {
+      return {
+        average: 0,
+        total: 0,
+        distribution: {
+          5: 0,
+          4: 0,
+          3: 0,
+          2: 0,
+          1: 0
+        }
+      };
+    }
+
+    const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    let totalRating = 0;
+
+    reviews.forEach((review: any) => {
+      totalRating += review.rating;
+      distribution[review.rating as keyof typeof distribution]++;
+    });
+
+    const average = (totalRating / reviews.length).toFixed(1);
+
+    return {
+      average: parseFloat(average),
+      total: reviews.length,
+      distribution
+    };
+  };
+
+  const ratingStats = calculateRatingStats();
+  const ratingDistribution = [
+    { label: "Excellent", rating: 5, percentage: ratingStats.total ? Math.round((ratingStats.distribution[5] / ratingStats.total) * 100) : 0 },
+    { label: "Very Good", rating: 4, percentage: ratingStats.total ? Math.round((ratingStats.distribution[4] / ratingStats.total) * 100) : 0 },
+    { label: "Average", rating: 3, percentage: ratingStats.total ? Math.round((ratingStats.distribution[3] / ratingStats.total) * 100) : 0 },
+    { label: "Poor", rating: 2, percentage: ratingStats.total ? Math.round((ratingStats.distribution[2] / ratingStats.total) * 100) : 0 }
+  ];
 
   const tabs = [
     { id: "details", label: "Product Details" },
@@ -553,22 +594,17 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
               <div className="mt-8">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-sm">Customer reviews</h4>
-                  <span className="text-sm">8 reviews</span>
+                  <span className="text-sm">{ratingStats.total} reviews</span>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <div className="bg-blue-600 text-white rounded px-4 py-3 text-center">
-                    <div className="text-2xl font-bold">4.7</div>
+                    <div className="text-2xl font-bold">{ratingStats.average}</div>
                     <div className="text-xs">Out of 5</div>
                   </div>
 
                   <div className="flex-1 space-y-1">
-                    {[
-                      { label: "Excellent", percentage: 70 },
-                      { label: "Very Good", percentage: 30 },
-                      { label: "Average", percentage: 20 },
-                      { label: "Poor", percentage: 10 }
-                    ].map((item, i) => (
+                    {ratingDistribution.map((item, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs">
                         <span className="w-16 text-right">{item.label}</span>
                         <div className="flex-1 bg-gray-200 rounded-full h-2">
