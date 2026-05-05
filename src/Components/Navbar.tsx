@@ -6,20 +6,31 @@ import {
   ChevronDown,
   User,
 } from "lucide-react";
-import { assets } from "../assets/assets";
-// import type { CategoryName } from "../assets/assets";
-import { useCartStore } from "../store/cartStore";
 
+import { assets } from "../assets/assets";
+import { useCartStore } from "../store/cartStore";
 import { useProfile } from "../features/auth/hooks/useProfile";
 import { useAuthStore } from "../features/auth/store/auth.store";
-import { API } from "../services/api"; // ✅ added
+import { API } from "../services/api";
 import { useSearchProducts } from "../features/Hooks/useSearchProducts";
 import { useDebounce } from "../features/Hooks/useDebounce";
-
 import { useCategories } from "../features/Hooks/useCategories";
 import { useCart } from "../features/Hooks/useCart";
 
+/* ================= HELPERS ================= */
+
+// safe results extractor
+const getSearchResults = (data: any) =>
+  Array.isArray(data) ? data : data?.results || [];
+
+// cart count resolver
+const getCartCount = (isLoggedIn: boolean, cartData: any, localCount: number) =>
+  isLoggedIn ? cartData?.items_count || 0 : localCount;
+
+/* ================= COMPONENT ================= */
+
 const Navbar = () => {
+  /* ---------- STATE ---------- */
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -27,32 +38,35 @@ const Navbar = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
   const navigate = useNavigate();
   const location = useLocation();
 
-  const accessToken = useAuthStore((s) => s.accessToken);
-  const refreshToken = useAuthStore((s) => s.refreshToken); // ✅ added
-  const logout = useAuthStore((s) => s.logout);
+  /* ---------- AUTH ---------- */
+  const { accessToken, refreshToken, logout } = useAuthStore();
   const isLoggedIn = !!accessToken;
 
-  // Get item count from API for authenticated users
-  const { data: cartData } = useCart();
-  const apiItemCount = (cartData as any)?.items_count || 0;
-
-  // Fallback to local store for guest users (count unique items, not total quantity)
-  const localItemCount = useCartStore((state) => state.items.length);
-
-  // Use API count for authenticated users, local store count for guests
-  const displayItemCount = isLoggedIn ? apiItemCount : localItemCount;
-
+  /* ---------- DATA ---------- */
   const { data: profile } = useProfile();
+  const { data: cartData } = useCart();
+  const { data: categories } = useCategories();
+
+  const debouncedSearch = useDebounce(searchQuery, 400);
+  const { data: searchData } = useSearchProducts(debouncedSearch);
+  const results = getSearchResults(searchData);
+
+  /* ---------- CART COUNT ---------- */
+  const localItemCount = useCartStore((s) => s.items.length);
+  const displayItemCount = getCartCount(isLoggedIn, cartData, localItemCount);
+
+  /* ---------- EFFECTS ---------- */
+
+  // reset category on home
   useEffect(() => {
-    if (location.pathname === "/") {
-      setSelectedCategory(null);
-    }
+    if (location.pathname === "/") setSelectedCategory(null);
   }, [location.pathname]);
 
-
+  // outside click handler
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!dropdownRef.current?.contains(e.target as Node)) {
@@ -68,25 +82,29 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  /* ---------- HANDLERS ---------- */
+
   const handleSelect = (category: any) => {
+    setIsOpen(false);
+
     if (category === "All Categories") {
       setSelectedCategory(null);
-      setIsOpen(false);
       navigate("/");
-    } else {
-      setSelectedCategory(category.name); // 👈 show name
-      setIsOpen(false);
-      navigate(`/category/${category.slug}`); // 👈 use slug
+      return;
     }
+
+    setSelectedCategory(category.name);
+    navigate(`/category/${category.slug}`);
   };
 
   const handleSearch = (e?: React.FormEvent<HTMLFormElement>) => {
-    if (e) e.preventDefault();
+    e?.preventDefault();
 
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery("");
-    }
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+    setSearchQuery("");
   };
 
   const handleViewProfile = () => {
@@ -94,12 +112,10 @@ const Navbar = () => {
     navigate("/my-profile");
   };
 
-  // 🔥 UPDATED LOGOUT (API + LOCAL)
   const handleLogout = async () => {
     setIsProfileOpen(false);
 
-    const { clearUserCart } = useCartStore.getState();
-    clearUserCart();
+    useCartStore.getState().clearUserCart();
 
     try {
       if (refreshToken) {
@@ -110,16 +126,10 @@ const Navbar = () => {
     } catch (error) {
       console.error("Logout API failed", error);
     } finally {
-      logout(); // clear zustand
+      logout();
       navigate("/login");
     }
   };
-
-  const debouncedSearch = useDebounce(searchQuery, 400);
-  const { data: searchData } = useSearchProducts(debouncedSearch);
-  const results = Array.isArray(searchData) ? searchData : searchData?.results || [];
-
-  const { data: categories } = useCategories();
   // const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   return (
