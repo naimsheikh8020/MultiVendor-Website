@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   ShoppingCart,
   Search,
@@ -27,6 +27,7 @@ const Navbar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const itemCount = useCartStore((state) => state.getItemCount());
 
@@ -36,6 +37,13 @@ const Navbar = () => {
   const isLoggedIn = !!accessToken;
 
   const { data: profile } = useProfile();
+  // Reset category to "All Categories" when on home page
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setSelectedCategory(null);
+    }
+  }, [location.pathname]);
+
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
