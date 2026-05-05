@@ -2,7 +2,7 @@
 import { API } from "./api";
 
 export const getCategories = () =>
-  API.get("/api/v1/products/categories/").then(response => response.data);
+  API.get("/api/v1/products/categories/").then(response => response.data.results);
 
 export const getProductsByCategory = (slug: string) =>
   API.get(`/api/v1/products/categories/${slug}/`);

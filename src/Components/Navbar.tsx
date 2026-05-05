@@ -6,8 +6,8 @@ import {
   ChevronDown,
   User,
 } from "lucide-react";
-import { assets, categoryNames } from "../assets/assets";
-import type { CategoryName } from "../assets/assets";
+import { assets } from "../assets/assets";
+// import type { CategoryName } from "../assets/assets";
 import { useCartStore } from "../store/cartStore";
 
 import { useProfile } from "../features/auth/hooks/useProfile";
@@ -16,11 +16,12 @@ import { API } from "../services/api"; // ✅ added
 import { useSearchProducts } from "../features/Hooks/useSearchProducts";
 import { useDebounce } from "../features/Hooks/useDebounce";
 
+import { useCategories } from "../features/Hooks/useCategories";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] =
-    useState<CategoryName | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -51,15 +52,15 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelect = (category: CategoryName | "All Categories") => {
+  const handleSelect = (category: any) => {
     if (category === "All Categories") {
       setSelectedCategory(null);
       setIsOpen(false);
       navigate("/");
     } else {
-      setSelectedCategory(category);
+      setSelectedCategory(category.name); // 👈 show name
       setIsOpen(false);
-      navigate(`/category/${category}`);
+      navigate(`/category/${category.slug}`); // 👈 use slug
     }
   };
 
@@ -101,6 +102,8 @@ const Navbar = () => {
   const debouncedSearch = useDebounce(searchQuery, 400);
   const { data: searchData } = useSearchProducts(debouncedSearch);
   const results = searchData?.data || [];
+
+  const { data: categories } = useCategories();
   // const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   return (
@@ -153,13 +156,13 @@ const Navbar = () => {
                     >
                       All Categories
                     </div>
-                    {categoryNames.map((category) => (
+                    {categories.map((category: any) => (
                       <div
-                        key={category}
+                        key={category.id}
                         onClick={() => handleSelect(category)}
                         className="px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer"
                       >
-                        {category}
+                        {category.name}
                       </div>
                     ))}
                   </div>
