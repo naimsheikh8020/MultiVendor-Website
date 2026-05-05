@@ -13,6 +13,8 @@ import { useCartStore } from "../store/cartStore";
 import { useProfile } from "../features/auth/hooks/useProfile";
 import { useAuthStore } from "../features/auth/store/auth.store";
 import { API } from "../services/api"; // ✅ added
+import { useSearchProducts } from "../features/Hooks/useSearchProducts";
+import { useDebounce } from "../features/Hooks/useDebounce";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,6 +98,9 @@ const Navbar = () => {
     }
   };
 
+  const debouncedSearch = useDebounce(searchQuery, 400);
+  const { data: searchData } = useSearchProducts(debouncedSearch);
+  const results = searchData?.data || [];
   // const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   return (
@@ -169,6 +174,38 @@ const Navbar = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 h-full px-2 sm:px-3 lg:px-4 text-xs sm:text-sm outline-none"
               />
+              {debouncedSearch && results.length > 0 && (
+                <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-50 max-h-80 overflow-y-auto">
+
+                  {results.slice(0, 5).map((item: any) => (
+                    <div
+                      key={item.id}
+                      onClick={() => {
+                        navigate(`/product/${item.id}`);
+                        setSearchQuery("");
+                      }}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <img
+                        src={
+                          item.thumbnail
+                            ? item.thumbnail
+                            : "https://via.placeholder.com/50"
+                        }
+                        className="w-10 h-10 object-cover rounded"
+                      />
+
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">{item.name}</span>
+                        <span className="text-xs text-gray-500">
+                          ৳{item.discounted_price}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+
+                </div>
+              )}
 
               {/* BUTTON */}
               <button
@@ -227,9 +264,8 @@ const Navbar = () => {
                   </span>
                   <ChevronDown
                     size={16}
-                    className={`hidden md:inline transition-transform ${
-                      isProfileOpen ? "rotate-180" : ""
-                    }`}
+                    className={`hidden md:inline transition-transform ${isProfileOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </>
               ) : (

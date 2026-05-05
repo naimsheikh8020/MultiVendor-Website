@@ -12,3 +12,6 @@ export const getProductDetails = (id: string) =>
 
 export const getProducts = () =>
   API.get("/api/v1/products/");
+
+export const searchProducts = (query: string) =>
+  API.get(`/api/v1/products/search/?q=${query}`);
