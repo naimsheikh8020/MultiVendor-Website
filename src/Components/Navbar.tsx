@@ -17,6 +17,7 @@ import { useSearchProducts } from "../features/Hooks/useSearchProducts";
 import { useDebounce } from "../features/Hooks/useDebounce";
 
 import { useCategories } from "../features/Hooks/useCategories";
+import { useCart } from "../features/Hooks/useCart";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,15 +30,22 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const itemCount = useCartStore((state) => state.getItemCount());
-
   const accessToken = useAuthStore((s) => s.accessToken);
   const refreshToken = useAuthStore((s) => s.refreshToken); // ✅ added
   const logout = useAuthStore((s) => s.logout);
   const isLoggedIn = !!accessToken;
 
+  // Get item count from API for authenticated users
+  const { data: cartData } = useCart();
+  const apiItemCount = (cartData as any)?.items_count || 0;
+
+  // Fallback to local store for guest users (count unique items, not total quantity)
+  const localItemCount = useCartStore((state) => state.items.length);
+
+  // Use API count for authenticated users, local store count for guests
+  const displayItemCount = isLoggedIn ? apiItemCount : localItemCount;
+
   const { data: profile } = useProfile();
-  // Reset category to "All Categories" when on home page
   useEffect(() => {
     if (location.pathname === "/") {
       setSelectedCategory(null);
@@ -109,7 +117,7 @@ const Navbar = () => {
 
   const debouncedSearch = useDebounce(searchQuery, 400);
   const { data: searchData } = useSearchProducts(debouncedSearch);
-  const results = searchData?.data || [];
+  const results = Array.isArray(searchData) ? searchData : searchData?.results || [];
 
   const { data: categories } = useCategories();
   // const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -185,7 +193,7 @@ const Navbar = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 h-full px-2 sm:px-3 lg:px-4 text-xs sm:text-sm outline-none"
               />
-              {debouncedSearch && results.length > 0 && (
+              {debouncedSearch && results && results.length > 0 && (
                 <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-50 max-h-80 overflow-y-auto">
 
                   {results.slice(0, 5).map((item: any) => (
@@ -195,7 +203,7 @@ const Navbar = () => {
                         navigate(`/product/${item.id}`);
                         setSearchQuery("");
                       }}
-                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
                     >
                       <img
                         src={
@@ -204,12 +212,13 @@ const Navbar = () => {
                             : "https://via.placeholder.com/50"
                         }
                         className="w-10 h-10 object-cover rounded"
+                        alt={item.name}
                       />
 
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">{item.name}</span>
+                      <div className="flex flex-col flex-1">
+                        <span className="text-sm font-medium line-clamp-1">{item.name}</span>
                         <span className="text-xs text-gray-500">
-                          ৳{item.discounted_price}
+                          ${item.discounted_price || item.price}
                         </span>
                       </div>
                     </div>
@@ -238,9 +247,9 @@ const Navbar = () => {
             >
               <div className="relative">
                 <ShoppingCart size={20} />
-                {itemCount > 0 && (
+                {displayItemCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
-                    {itemCount}
+                    {displayItemCount}
                   </span>
                 )}
               </div>

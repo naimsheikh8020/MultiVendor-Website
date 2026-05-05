@@ -1,37 +1,31 @@
 import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import PopularProductCard from "../Components/PopularProductCard";
-import { allProducts, popularProducts, bestProducts, topStores } from "../assets/assets";
+import { useSearchProducts } from "../features/Hooks/useSearchProducts";
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
 
-  // Combine all product arrays and remove duplicates
-  const allSearchableProducts = [
-    ...allProducts,
-    ...popularProducts,
-    ...bestProducts.map(p => ({
-      ...p,
-      reviewCount: p.reviews || 0,
-      author: p.seller || "Unknown"
-    }))
-  ];
+  // Call API for search results
+  const { data: searchData, isLoading, error } = useSearchProducts(query);
+  const products = Array.isArray(searchData) ? searchData : searchData?.results || [];
 
-  // Remove duplicates based on ID
-  const uniqueProducts = Array.from(
-    new Map(allSearchableProducts.map(product => [product.id, product])).values()
-  );
+  if (isLoading) {
+    return (
+      <div className="px-4 md:px-6 py-6 text-center">
+        <p className="text-gray-500">Loading results...</p>
+      </div>
+    );
+  }
 
-  // Filter products based on search query (search in title and category)
-  const filteredProducts = query.trim() ? uniqueProducts.filter((product) => {
-    const searchLower = query.toLowerCase();
-    const titleMatch = product.title?.toLowerCase().includes(searchLower);
-    const categoryMatch = product.category?.toLowerCase().includes(searchLower);
-    const authorMatch = product.author?.toLowerCase().includes(searchLower);
-
-    return titleMatch || categoryMatch || authorMatch;
-  }) : [];
+  if (error) {
+    return (
+      <div className="px-4 md:px-6 py-6 text-center">
+        <p className="text-red-500">Error loading search results. Please try again.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 md:px-6 py-6">
@@ -40,32 +34,29 @@ const SearchResults = () => {
       </h1>
 
       <p className="text-gray-500 mb-6">
-        {filteredProducts.length} products found for{" "}
+        {products.length} products found for{" "}
         <span className="font-semibold text-gray-800">"{query}"</span>
       </p>
 
       {/* Product Grid */}
-      {filteredProducts.length > 0 ? (
+      {products.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {filteredProducts.map((product) => {
-            const store = topStores.find(s => s.id === product.storeId);
-            return (
-              <Link key={product.id} to={`/product/${product.id}`}>
-                <PopularProductCard
-                  id={product.id}
-                  image={product.image}
-                  title={product.title}
-                  category={product.category}
-                  rating={product.rating}
-                  reviewCount={product.reviewCount}
-                  author={store?.title || product.author}
-                  price={product.price}
-                  oldPrice={product.oldPrice}
-                  discount={product.discount}
-                />
-              </Link>
-            );
-          })}
+          {products.map((product: any) => (
+            <Link key={product.id} to={`/product/${product.id}`}>
+              <PopularProductCard
+                id={product.id}
+                image={product.thumbnail || product.image}
+                title={product.name || product.title}
+                category={product.category_name || product.category}
+                rating={product.avg_rating || 0}
+                reviewCount={product.reviews_count || 0}
+                author={product.vendor_name || product.author}
+                price={product.discounted_price || product.price}
+                oldPrice={product.price}
+                discount={product.discount}
+              />
+            </Link>
+          ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-16">

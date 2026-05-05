@@ -2,6 +2,8 @@ import { ShoppingCart } from "lucide-react";
 import type { PopularProductCardProps } from "../types/PopularProductCardProps";
 import { useCartStore } from "../store/cartStore";
 import { isAuthenticated } from "../utils/auth";
+import { useAddToCart } from "../features/Hooks/useAddToCart";
+import toast from "react-hot-toast";
 
 const PopularProductCard = ({
   id,
@@ -17,10 +19,45 @@ const PopularProductCard = ({
   onAddToCart,
 }: PopularProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
-  const markAsUserCart = useCartStore((state) => state.markAsUserCart);
+
+  const { mutate: addToCart, isPending } = useAddToCart();
 
   const fullStars = Math.floor(rating);
   const emptyStars = 5 - fullStars;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (isAuthenticated()) {
+      addToCart(
+        {
+          product: String(id),
+          quantity: 1,
+        },
+        {
+          onSuccess: () => {
+            toast.success(`${title} added to cart!`);
+          },
+          onError: () => {
+            toast.error("Failed to add item to cart");
+          },
+        }
+      );
+    } else {
+      // Add to local store for guest users
+      addItem({
+        id,
+        image,
+        title,
+        category,
+        author,
+        price,
+      });
+      toast.success(`${title} added to cart!`);
+    }
+
+    onAddToCart?.(e);
+  };
 
   return (
     <div className="w-full h-full rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden border border-blue-100 shadow-sm bg-white flex flex-col">
@@ -68,7 +105,7 @@ const PopularProductCard = ({
           By <span className="text-blue-500 font-medium">{author}</span>
         </p>
 
-        {/* Push price to bottom */}
+        {/* Price + Button */}
         <div className="mt-auto flex items-center justify-between pt-1 sm:pt-2">
 
           <div className="flex items-center gap-1 sm:gap-2">
@@ -84,15 +121,9 @@ const PopularProductCard = ({
           </div>
 
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              addItem({ id, image, title, category, author, price });
-              if (isAuthenticated()) {
-                markAsUserCart();
-              }
-              onAddToCart?.(e);
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white p-1.5 sm:p-2.5 md:p-3 rounded-lg sm:rounded-xl transition"
+            onClick={handleAddToCart}
+            disabled={isPending}
+            className="bg-blue-600 hover:bg-blue-700 text-white p-1.5 sm:p-2.5 md:p-3 rounded-lg sm:rounded-xl transition disabled:opacity-50"
           >
             <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>

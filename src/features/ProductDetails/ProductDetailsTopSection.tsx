@@ -8,6 +8,7 @@ import { topStores } from "../../assets/assets";
 import { useRef } from "react";
 import { useInfiniteReviews } from "../Hooks/useInfiniteReviews";
 import { useAddReview } from "../Hooks/useAddReview";
+import { useAddToCart } from "../Hooks/useAddToCart";
 
 interface ProductDetailsTopSectionProps {
   product: any;
@@ -17,7 +18,7 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   const navigate = useNavigate();
   const location = useLocation();
   const addItem = useCartStore((state) => state.addItem);
-  const markAsUserCart = useCartStore((state) => state.markAsUserCart);
+  const { mutate: addToCart, isPending: isAddingToCart } = useAddToCart();
 
   // UI State
   const [loading] = useState(false);
@@ -36,9 +37,11 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
   const [previewImages, setPreviewImages] = useState<{ [key: string]: string }>({});
 
-  const handleImageError = (imageSrc: string) => {
-    setFailedImages(prev => new Set([...prev, imageSrc]));
-    console.error(`Failed to load image: ${imageSrc}`);
+  const handleImageError = (imageSrc: string | null) => {
+    if (imageSrc) {
+      setFailedImages(prev => new Set([...prev, imageSrc]));
+      console.error(`Failed to load image: ${imageSrc}`);
+    }
   };
 
   const handleSubmitReview = () => {
@@ -349,25 +352,53 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
               <button
                 onClick={() => {
                   if (product) {
-                    for (let i = 0; i < quantity; i++) {
-                      addItem({
-                        id: product.id,
-                        image: product?.images?.[0]?.image || product.image || product.thumbnail,
-                        title: product.name || product.title,
-                        category: product.category?.name || product.category_name || product.category,
-                        author: product.vendor_name || product.author,
-                        price: product.discounted_price || product.price,
-                      });
-                    }
-                    // If user is authenticated, mark cart as user cart
                     if (isAuthenticated()) {
-                      markAsUserCart();
+                      // Add via API for authenticated users
+                      addToCart(
+                        {
+                          product: String(product.id),
+                          quantity: quantity,
+                        },
+                        {
+                          onSuccess: () => {
+                            toast.success(
+                              `${quantity} ${quantity > 1 ? "items" : "item"} added to cart!`
+                            );
+                            setQuantity(1);
+                          },
+                          onError: () => {
+                            toast.error("Failed to add to cart");
+                          },
+                        }
+                      );
+                    } else {
+                      // Add to local store for guest users
+                      for (let i = 0; i < quantity; i++) {
+                        addItem({
+                          id: product.id,
+                          image:
+                            product?.images?.[0]?.image ||
+                            product.image ||
+                            product.thumbnail,
+                          title: product.name || product.title,
+                          category:
+                            product.category?.name ||
+                            product.category_name ||
+                            product.category,
+                          author: product.vendor_name || product.author,
+                          price:
+                            product.discounted_price || product.price,
+                        });
+                      }
+                      toast.success(
+                        `${quantity} ${quantity > 1 ? "items" : "item"} added to cart!`
+                      );
+                      setQuantity(1);
                     }
-                    // Reset quantity after adding
-                    setQuantity(1);
                   }
                 }}
-                className="flex items-center justify-center gap-2 bg-blue-600 cursor-pointer text-white py-3 rounded-full hover:bg-blue-700 transition flex-1"
+                disabled={isAddingToCart}
+                className="flex items-center justify-center gap-2 bg-blue-600 cursor-pointer text-white py-3 rounded-full hover:bg-blue-700 transition flex-1 disabled:opacity-50"
               >
                 <ShoppingCart size={18} />
                 Add to Cart
@@ -795,16 +826,18 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
                   </button>
 
                   {/* Image */}
-                  <img
-                    src={selectedImage}
-                    alt="review-fullscreen"
-                    className="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
-                    onError={() => {
-                      handleImageError(selectedImage);
-                      setSelectedImage(null);
-                      toast.error("Failed to load image");
-                    }}
-                  />
+                  {selectedImage && (
+                    <img
+                      src={selectedImage}
+                      alt="review-fullscreen"
+                      className="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
+                      onError={() => {
+                        handleImageError(selectedImage);
+                        setSelectedImage(null);
+                        toast.error("Failed to load image");
+                      }}
+                    />
+                  )}
                 </div>
               )}
               {isLoading && <p className="text-center">Loading reviews...</p>}
@@ -836,6 +869,4 @@ const ProductDetailsTopSection = ({ product }: ProductDetailsTopSectionProps) =>
   );
 };
 
-
-
-export default ProductDetailsTopSection
+export default ProductDetailsTopSection;

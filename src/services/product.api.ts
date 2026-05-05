@@ -13,5 +13,16 @@ export const getProductDetails = (id: string) =>
 export const getProducts = () =>
   API.get("/api/v1/products/");
 
-export const searchProducts = (query: string) =>
-  API.get(`/api/v1/products/search/?q=${query}`);
+export const searchProducts = (query: string) => {
+  const endpoint = `/api/v1/products/search/?q=${encodeURIComponent(query)}`;
+  console.log("🔍 Searching products:", endpoint);
+  return API.get(endpoint)
+    .then(response => {
+      console.log("✅ Search API response:", response.data);
+      return response.data.results || response.data;
+    })
+    .catch(error => {
+      console.error("❌ Search API error:", error);
+      throw error;
+    });
+};

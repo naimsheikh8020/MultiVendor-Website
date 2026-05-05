@@ -1,24 +1,59 @@
-import { useCartStore } from "../store/cartStore";
 import { Minus, Plus, Trash2, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { isAuthenticated } from "../utils/auth";
 import { assets } from "../assets/assets";
+import { useCart } from "../features/Hooks/useCart";
+import { useCartStore } from "../store/cartStore";
+
+interface CartItem {
+  id: number;
+  product_detail: {
+    id: string;
+    name: string;
+    price: string;
+    discount: string;
+    discounted_price: number;
+    vendor_name: string;
+    vendor_id: number;
+    thumbnail: string | null;
+    reviews_count: number;
+    avg_rating: number;
+    category_name: string;
+    is_wishlisted: boolean;
+  };
+  variant_detail: null;
+  quantity: number;
+  unit_price: string;
+  total_price: string;
+  added_at: string;
+}
+
+interface CartResponse {
+  id: string;
+  items: CartItem[];
+  items_count: number;
+  voucher_detail: null;
+  subtotal: string;
+  discount: string;
+  tax: string;
+  delivery_charge: number;
+  total: string;
+}
+
+interface LocalCartItem {
+  id: number | string;
+  title: string;
+  image: string;
+  price: number;
+  author: string;
+  category: string;
+  quantity: number;
+}
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const {
-    items,
-    incrementQuantity,
-    decrementQuantity,
-    removeItem,
-    getSubtotal,
-    getDiscount,
-    getTax,
-    getShippingFee,
-    getTotal,
-  } = useCartStore();
 
   const [couponCode, setCouponCode] = useState("");
 
@@ -36,7 +71,36 @@ const CartPage = () => {
     navigate("/checkout");
   };
 
-  if (items.length === 0) {
+  const { data: cartData, isLoading } = useCart();
+  const apiCartData = cartData as CartResponse | undefined;
+
+  // Get local store items for guest users
+  const localItems = useCartStore((state) => state.items);
+  const {
+    incrementQuantity: incrementLocal,
+    decrementQuantity: decrementLocal,
+    removeItem: removeLocal,
+    getSubtotal: getLocalSubtotal,
+    getDiscount: getLocalDiscount,
+    getTax: getLocalTax,
+    getShippingFee: getLocalShippingFee,
+    getTotal: getLocalTotal,
+  } = useCartStore();
+
+  // Determine if we're showing API data or local store data
+  const isGuest = !isAuthenticated();
+  const showingLocalData = isGuest && localItems.length > 0;
+  const showingApiData = !isGuest && apiCartData && apiCartData.items.length > 0;
+
+  if (isLoading && !showingLocalData) {
+    return (
+      <div className="py-10 text-center">
+        <p className="text-gray-600">Loading cart...</p>
+      </div>
+    );
+  }
+
+  if (!showingApiData && !showingLocalData) {
     return (
       <div className="py-10 text-center">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Shopping Cart</h1>
@@ -53,6 +117,7 @@ const CartPage = () => {
 
   return (
     <div className="py-6 md:py-10">
+
       {/* Header */}
       <div className="mb-6">
         <button
@@ -66,66 +131,142 @@ const CartPage = () => {
 
       <div className="grid lg:grid-cols-[1fr_400px] gap-6">
         {/* Cart Items */}
+
         <div className="space-y-4">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4"
-            >
-              {/* Product Image */}
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-yellow-100 rounded-lg overflow-hidden shrink-0">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+          {showingApiData
+            ? // Display API cart items
+            apiCartData!.items.map((item: CartItem) => (
+              <div
+                key={item.id}
+                className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4"
+              >
+                {/* Product Image */}
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-yellow-100 rounded-lg overflow-hidden shrink-0">
+                  <img
+                    src={
+                      item.product_detail.thumbnail ||
+                      "https://via.placeholder.com/150"
+                    }
+                    alt={item.product_detail.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-              {/* Product Info */}
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
-                  {item.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-500">
-                  By <span className="text-blue-600">{item.author}</span>
-                </p>
-
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-3 mt-3">
-                  <div className="flex items-center border border-gray-300 rounded-lg">
-                    <button
-                      onClick={() => decrementQuantity(item.id)}
-                      className="p-2 hover:bg-gray-100 transition"
-                    >
-                      <Minus size={14} />
-                    </button>
-                    <span className="px-4 text-sm font-medium">
-                      {item.quantity}
+                {/* Product Info */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                    {item.product_detail.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    By{" "}
+                    <span className="text-blue-600">
+                      {item.product_detail.vendor_name}
                     </span>
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {item.product_detail.category_name}
+                  </p>
+
+                  {/* Quantity and Price */}
+                  <div className="flex items-center gap-3 mt-3">
+                    <div className="flex items-center border border-gray-300 rounded-lg">
+                      <button
+                        onClick={() => toast.error("Update via API")}
+                        className="p-2 hover:bg-gray-100 transition"
+                      >
+                        <Minus size={14} />
+                      </button>
+                      <span className="px-4 text-sm font-medium">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => toast.error("Update via API")}
+                        className="p-2 hover:bg-gray-100 transition"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+
+                    {/* Price */}
+                    <span className="text-blue-600 font-bold text-lg">
+                      ${Number(item.unit_price).toFixed(2)}
+                    </span>
+
+                    {/* Remove Button */}
                     <button
-                      onClick={() => incrementQuantity(item.id)}
-                      className="p-2 hover:bg-gray-100 transition"
+                      onClick={() => toast.error("Remove via API")}
+                      className="ml-auto p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
                     >
-                      <Plus size={14} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
-
-                  {/* Price */}
-                  <span className="text-blue-600 font-bold text-lg">
-                    ${item.price.toFixed(2)}
-                  </span>
-
-                  {/* Remove Button */}
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    className="ml-auto p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
-                  >
-                    <Trash2 size={18} />
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+            : // Display local store items for guest users
+            localItems.map((item: LocalCartItem) => (
+              <div
+                key={item.id}
+                className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4"
+              >
+                {/* Product Image */}
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-yellow-100 rounded-lg overflow-hidden shrink-0">
+                  <img
+                    src={item.image || "https://via.placeholder.com/150"}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Product Info */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500">
+                    By{" "}
+                    <span className="text-blue-600">{item.author}</span>
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {item.category}
+                  </p>
+
+                  {/* Quantity and Price */}
+                  <div className="flex items-center gap-3 mt-3">
+                    <div className="flex items-center border border-gray-300 rounded-lg">
+                      <button
+                        onClick={() => decrementLocal(item.id)}
+                        className="p-2 hover:bg-gray-100 transition"
+                      >
+                        <Minus size={14} />
+                      </button>
+                      <span className="px-4 text-sm font-medium">
+                        {item.quantity}
+                      </span>
+                      <button
+                        onClick={() => incrementLocal(item.id)}
+                        className="p-2 hover:bg-gray-100 transition"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+
+                    {/* Price */}
+                    <span className="text-blue-600 font-bold text-lg">
+                      ${item.price.toFixed(2)}
+                    </span>
+
+                    {/* Remove Button */}
+                    <button
+                      onClick={() => removeLocal(item.id)}
+                      className="ml-auto p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
         </div>
 
         {/* Order Summary */}
@@ -156,22 +297,38 @@ const CartPage = () => {
             <div className="flex justify-between">
               <span className="text-gray-600">Shipping fee</span>
               <span className="font-medium">
-                ${getShippingFee().toFixed(2)}
+                $
+                {showingApiData
+                  ? apiCartData!.delivery_charge.toFixed(2)
+                  : getLocalShippingFee().toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Sub total</span>
-              <span className="font-medium">${getSubtotal().toFixed(2)}</span>
+              <span className="font-medium">
+                $
+                {showingApiData
+                  ? Number(apiCartData!.subtotal).toFixed(2)
+                  : getLocalSubtotal().toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Discount</span>
               <span className="font-medium text-red-500">
-                -${getDiscount().toFixed(2)}
+                -$
+                {showingApiData
+                  ? Number(apiCartData!.discount).toFixed(2)
+                  : getLocalDiscount().toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Tax</span>
-              <span className="font-medium">${getTax().toFixed(2)}</span>
+              <span className="font-medium">
+                $
+                {showingApiData
+                  ? Number(apiCartData!.tax).toFixed(2)
+                  : getLocalTax().toFixed(2)}
+              </span>
             </div>
           </div>
 
@@ -179,7 +336,10 @@ const CartPage = () => {
           <div className="flex justify-between items-center mb-6 pt-4 border-t border-gray-200">
             <span className="text-lg font-bold text-gray-900">Total</span>
             <span className="text-2xl font-bold text-blue-600">
-              ${getTotal().toFixed(2)}
+              $
+              {showingApiData
+                ? Number(apiCartData!.total).toFixed(2)
+                : getLocalTotal().toFixed(2)}
             </span>
           </div>
 
@@ -200,8 +360,6 @@ const CartPage = () => {
           </button>
         </div>
       </div>
-
-      {/* Features Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-12 border-t border-gray-200">
         <div className="flex items-start gap-4">
           <img

@@ -2,9 +2,11 @@ import { Star, ShoppingCart } from "lucide-react";
 import { useCartStore } from "../store/cartStore";
 import { isAuthenticated } from "../utils/auth";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useAddToCart } from "../features/Hooks/useAddToCart";
 
 interface BestProductCardProps {
-  id: number;
+  id: number | string;
   image: string;
   title: string;
   category: string;
@@ -29,7 +31,32 @@ const BestProductCard = ({
   discount,
 }: BestProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
-  const markAsUserCart = useCartStore((state) => state.markAsUserCart);
+  const { mutate: addToCart, isPending } = useAddToCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (isAuthenticated()) {
+      addToCart(
+        {
+          product: String(id),
+          quantity: 1,
+        },
+        {
+          onSuccess: () => {
+            toast.success(`${title} added to cart!`);
+          },
+          onError: () => {
+            toast.error("Failed to add item to cart");
+          },
+        }
+      );
+    } else {
+      // Add to local store for guest users
+      addItem({ id, image, title, category, author: seller, price });
+      toast.success(`${title} added to cart!`);
+    }
+  };
   return (
     <Link to={`/product/${id}`} className="block">
       <div className="relative w-full rounded-xl border border-blue-200 bg-white p-3 sm:p-4 lg:p-5 shadow-sm hover:shadow-md transition">
@@ -95,17 +122,12 @@ const BestProductCard = ({
           </div>
 
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              addItem({ id, image, title, category, author: seller, price });
-              if (isAuthenticated()) {
-                markAsUserCart();
-              }
-            }}
-            className="flex items-center gap-1 sm:gap-2 border border-blue-500 text-blue-500 px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-50 transition whitespace-nowrap cursor-pointer"
+            onClick={handleAddToCart}
+            disabled={isPending}
+            className="flex items-center gap-1 sm:gap-2 border border-blue-500 text-blue-500 px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 rounded-lg text-xs sm:text-sm font-medium hover:bg-blue-50 transition whitespace-nowrap cursor-pointer disabled:opacity-50"
           >
             <ShoppingCart size={14} className="sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Add</span>
+            <span className="hidden sm:inline">{isPending ? "Adding..." : "Add"}</span>
           </button>
         </div>
       </div>

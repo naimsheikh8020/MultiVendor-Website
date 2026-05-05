@@ -1,5 +1,5 @@
 export type PopularProductCardProps = {
-  id: number;
+  id: number | string;
   // storeId: number;
   image: string;
   title: string;
@@ -24,7 +24,7 @@ export interface Store {
 }
 
 export interface Product {
-  id: number;
+  id: number | string;
   storeId: number; // 🔥 relation
   title: string;
   image: string;
